@@ -50,7 +50,7 @@ module.exports = configure(function (/* ctx */) {
         node: 'node20'
       },
 
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -82,9 +82,9 @@ module.exports = configure(function (/* ctx */) {
           include: path.resolve(__dirname, './src/i18n/**')
         }],
         ['vite-plugin-checker', {
-          eslint: {
-            lintCommand: 'eslint "./**/*.{js,mjs,cjs,vue}"'
-          }
+          // eslint: {
+          //   lintCommand: 'eslint "./**/*.{js,mjs,cjs,vue}"'
+          // }
         }, { server: false }]
       ]
     },
@@ -97,7 +97,9 @@ module.exports = configure(function (/* ctx */) {
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
-      config: {},
+      config: {
+        dark: true/* look at QuasarConfOptions from the API card */
+      },
 
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
@@ -110,7 +112,9 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'Dialog'
+      ]
     },
 
     // animations: 'all', // --- includes all animations
@@ -200,7 +204,7 @@ module.exports = configure(function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'crydunky'
+        appId: 'crydonkey'
       }
     },
 

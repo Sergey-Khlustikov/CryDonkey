@@ -1,6 +1,6 @@
-# CryDunky (crydunky)
+# CryDonkey (crydonkey)
 
-CryDunky
+CryDonkey
 
 ## Install the dependencies
 ```bash

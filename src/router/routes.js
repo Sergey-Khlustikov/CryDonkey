@@ -2,8 +2,13 @@ const routes = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
+    redirect: { name: 'profiles' },
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') }
+      {
+        name: 'profiles',
+        path: '/profiles',
+        component: () => import('pages/ProfilesPage.vue')
+      }
     ]
   },
 
