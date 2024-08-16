@@ -2,32 +2,38 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "frontend/*": [
+        "frontend/*"
+      ],
       "src/*": [
-        "src/*"
+        "frontend/src/*"
       ],
       "app/*": [
         "*"
       ],
       "components/*": [
-        "src/components/*"
+        "frontend/src/components/*"
       ],
       "layouts/*": [
-        "src/layouts/*"
+        "frontend/src/layouts/*"
       ],
       "pages/*": [
-        "src/pages/*"
+        "frontend/src/pages/*"
       ],
       "assets/*": [
-        "src/assets/*"
+        "frontend/src/assets/*"
       ],
       "boot/*": [
-        "src/boot/*"
+        "frontend/src/boot/*"
       ],
       "stores/*": [
-        "src/stores/*"
+        "frontend/src/stores/*"
       ],
       "vue$": [
         "node_modules/vue/dist/vue.runtime.esm-bundler.js"
+      ],
+      "backend/*": [
+        "backend/*"
       ]
     }
   },
