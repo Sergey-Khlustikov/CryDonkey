@@ -6,6 +6,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import db from 'backend/db/connection.mjs';
 
 import { run as runRcade } from 'backend/automatization/rcade/rcade.mjs';
 import { run as runSwan } from 'backend/automatization/swan/swan.mjs';
