@@ -1,11 +1,14 @@
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+import path from 'path';
+import dotenv from 'dotenv';
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const { run: runRcade } = require('backend/automatization/rcade/rcade.js');
-const { run: runSwan } = require('backend/automatization/swan/swan.js');
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+
+import { run as runRcade } from 'backend/automatization/rcade/rcade.mjs';
+import { run as runSwan } from 'backend/automatization/swan/swan.mjs';
 
 const app = express();
 
@@ -53,9 +56,4 @@ app.post('/runSwan', async (req, res) => {
   }
 });
 
-module.exports = app;
-
-// // Запуск сервера
-// app.listen(port, () => {
-//   console.log(`Server running at http://localhost:${port}`)
-// })
+export default app;

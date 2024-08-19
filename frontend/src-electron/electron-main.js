@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import os from 'os';
-import server from 'backend/server.js';
+import server from 'backend/server.mjs';
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });

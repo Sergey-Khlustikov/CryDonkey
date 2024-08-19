@@ -1,4 +1,4 @@
-const { wait } = require('backend/automatization/helpers/puppeteerHelpers');
+import { wait } from 'backend/automatization/helpers/puppeteerHelpers.mjs';
 
 const randomOptions = {
   minDistance: 77,
@@ -40,7 +40,6 @@ class PageScroller {
     }
   }
 
-  // Метод для прокрутки вниз
   async scrollToBottom({
     minDistance = randomOptions.minDistance,
     maxDistance = randomOptions.maxDistance,
@@ -53,7 +52,6 @@ class PageScroller {
     });
   }
 
-  // Метод для прокрутки вверх
   async scrollToTop({
     minDistance = randomOptions.minDistance,
     maxDistance = randomOptions.maxDistance,
@@ -97,4 +95,4 @@ function calculateRandomScrollDistance(minDistance, maxDistance) {
   return Math.random() * (maxDistance - minDistance) + minDistance;
 }
 
-module.exports = PageScroller;
+export default PageScroller;

@@ -2,7 +2,7 @@ const TASK_TYPES = {
   follow: 'follow',
   like: 'like',
   repost: 'repost',
-  comment: 'comment'
-}
+  comment: 'comment',
+};
 
-module.exports = TASK_TYPES
+export default TASK_TYPES;

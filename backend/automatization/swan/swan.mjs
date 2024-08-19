@@ -1,29 +1,15 @@
-const axios = require('axios');
-const puppeteer = require('puppeteer');
-const TASK_TYPES = require('backend/automatization/swan/structures/taskTypes');
-const { app } = require('electron');
-const fs = require('fs');
-const path = require('path');
-const getRandomArrayElement = require('backend/automatization/helpers/getRandomArrayElement');
-const PageScroller = require('backend/automatization/helpers/PageScroller');
-const {
+import axios from 'axios';
+import puppeteer from 'puppeteer';
+import getRandomArrayElement from 'backend/automatization/helpers/getRandomArrayElement.mjs';
+import {
   hoverAndClick,
-  scrollPage,
   wait,
-} = require('../helpers/puppeteerHelpers.js');
+  scrollPage,
+} from 'backend/automatization/helpers/puppeteerHelpers.mjs';
+import TASK_TYPES from 'backend/automatization/swan/structures/taskTypes.mjs';
+import PageScroller from 'backend/automatization/helpers/PageScroller.mjs';
 
-// Вспомогательная функция для записи логов в файл
-async function logToFile(message) {
-  try {
-    const logPath = path.join(app.getPath('userData'), 'log.txt');
-    const logMessage = `${new Date().toISOString()} - ${message}\n`;
-    await fs.promises.appendFile(logPath, logMessage, 'utf8');
-  } catch (err) {
-    console.error('Failed to write log to file:', err);
-  }
-}
-
-async function run({
+export async function run({
   profileIds,
   dailyFirst,
   dailySecond,
@@ -45,13 +31,11 @@ async function run({
       }
     }
   } catch (e) {
-    logToFile(`Error in run: ${e.message}`);
     console.log('Error in run', e);
   }
 }
 
 async function openProfile(userId, dailyCombo, onlyDaily) {
-  logToFile(`--------- Start profile id ${userId} ---------`);
   console.log(`--------- Start profile id ${userId} ---------`);
   const questsUrl = 'https://mission.swanchain.io/';
 
@@ -83,12 +67,10 @@ async function openProfile(userId, dailyCombo, onlyDaily) {
       //     await scenarioThree(browser, page, dailyCombo, onlyDaily)
       // }
     } catch (err) {
-      logToFile(`Failed profile with id: ${userId}. Error: ${err}`);
       console.log(`Failed profile with id: ${userId}`, err);
     }
   }
 
-  logToFile(`--------- Exit profile id ${userId} ---------`);
   console.log(`--------- Exit profile id ${userId} ---------`);
 }
 
@@ -307,5 +289,3 @@ async function processTwitter(page, taskType) {
 
   await wait(1027, 3261);
 }
-
-module.exports = { run };
