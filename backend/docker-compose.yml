@@ -1,0 +1,25 @@
+services:
+  server:
+    container_name: crydonkey-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - EXPRESS_SERVER_PORT=${EXPRESS_SERVER_PORT}
+      - ADS_API_URL=${ADS_API_URL}
+      - ATLAS_URI=${ATLAS_URI}
+    ports:
+      - "${EXPRESS_SERVER_PORT}:${EXPRESS_SERVER_PORT}"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - redis
+    command: npm run dev
+
+  redis:
+    image: redis:alpine
+    container_name: crydonkey-redis
+    ports:
+      - "6379:6379"

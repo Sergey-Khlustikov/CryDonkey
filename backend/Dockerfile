@@ -2,12 +2,14 @@ FROM node:20
 
 WORKDIR /app
 
-COPY package.json ./
+COPY package*.json ./
 
 RUN npm install
 
 COPY . .
 
-EXPOSE 3001
+EXPOSE ${EXPRESS_SERVER_PORT}
+
+RUN npm install -g nodemon
 
 CMD ["npm", "run", "dev"]
