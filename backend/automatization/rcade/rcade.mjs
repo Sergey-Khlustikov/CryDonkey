@@ -1,8 +1,8 @@
 import axios from 'axios';
 import puppeteer from 'puppeteer';
-import getRandomArrayElement from 'backend/automatization/helpers/getRandomArrayElement.mjs';
-import PageScroller from 'backend/automatization/helpers/PageScroller.mjs';
-import { hoverAndClick, wait } from 'backend/automatization/helpers/puppeteerHelpers.mjs';
+import getRandomArrayElement from '../helpers/getRandomArrayElement.mjs';
+import PageScroller from '../helpers/PageScroller.mjs';
+import { hoverAndClick, wait } from '../helpers/puppeteerHelpers.mjs';
 
 export async function run(profileIds) {
   try {

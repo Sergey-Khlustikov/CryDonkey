@@ -1,13 +1,13 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('src/layouts/MainLayout.vue'),
     redirect: { name: 'profiles' },
     children: [
       {
         name: 'profiles',
         path: '/profiles',
-        component: () => import('pages/ProfilesPage.vue'),
+        component: () => import('src/pages/ProfilesPage.vue'),
       },
     ],
   },
@@ -16,7 +16,7 @@ const routes = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
+    component: () => import('src/pages/ErrorNotFound.vue'),
   },
 ];
 

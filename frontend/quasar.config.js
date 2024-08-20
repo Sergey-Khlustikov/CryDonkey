@@ -10,7 +10,7 @@
 
 const dotenv = require('dotenv');
 
-const env = dotenv.config({ path: '../.env' }).parsed;
+const env = dotenv.config().parsed;
 const { configure } = require('quasar/wrappers');
 const path = require('path');
 
@@ -135,8 +135,8 @@ module.exports = configure((/* ctx */) => {
       // registerServiceWorker: 'src-pwa/register-service-worker',
       // serviceWorker: 'src-pwa/custom-service-worker',
       // pwaManifestFile: 'src-pwa/manifest.json',
-      electronMain: 'frontend/src-electron/electron-main',
-      electronPreload: 'frontend/src-electron/electron-preload',
+      // electronMain: 'src-electron/electron-main',
+      // electronPreload: 'src-electron/electron-preload',
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-ssr/configuring-ssr

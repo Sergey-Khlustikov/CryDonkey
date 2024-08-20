@@ -1,10 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import os from 'os';
-import server from 'backend/server.mjs';
-import * as dotenv from 'dotenv';
-
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform();
@@ -46,9 +42,6 @@ function createWindow() {
 
 app.whenReady()
   .then(() => {
-    server.listen(process.env.VUE_APP_SERVER_PORT, () => {
-      console.log(`Listening on ${process.env.VUE_APP_SERVER_PORT}`);
-    });
     createWindow();
   });
 

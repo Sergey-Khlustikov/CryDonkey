@@ -1,4 +1,4 @@
-import { wait } from 'backend/automatization/helpers/puppeteerHelpers.mjs';
+import { wait } from './puppeteerHelpers.mjs';
 
 const randomOptions = {
   minDistance: 77,

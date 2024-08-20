@@ -1,24 +1,27 @@
-import path from 'path';
-import dotenv from 'dotenv';
-
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
-
+import './loadEnv.mjs';
+import 'express-async-errors';
 import express from 'express';
-import bodyParser from 'body-parser';
 import cors from 'cors';
-import db from 'backend/db/connection.mjs';
+import morgan from 'morgan';
 
-import { run as runRcade } from 'backend/automatization/rcade/rcade.mjs';
-import { run as runSwan } from 'backend/automatization/swan/swan.mjs';
+import { run as runRcade } from './automatization/rcade/rcade.mjs';
+import { run as runSwan } from './automatization/swan/swan.mjs';
+import mongoose from 'mongoose';
 
 const app = express();
 
 // Middleware
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cors());
+app.use(express.urlencoded({ extended: false }));
+app.use(morgan('dev'));
+
+mongoose.connect(process.env.ATLAS_URI)
+  .then(db => console.log('[OK] DB is connected'))
+  .catch(err => console.error(err));
 
 app.get('/status', async (req, res) => {
-  res.send('Everything is OK');
+  res.send('Everything is OK!');
 });
 
 function shuffleArray(array) {
@@ -33,7 +36,7 @@ app.post('/runRcade', async (req, res) => {
   try {
     await runRcade(shuffleArray(req.body.profileIds));
     res.status(200)
-      .send(process.env.VUE_APP_ADS_API_URL);
+      .send('success');
   } catch (error) {
     res.status(500)
       .send('Error running Rcade: ' + error.message);
@@ -57,4 +60,6 @@ app.post('/runSwan', async (req, res) => {
   }
 });
 
-export default app;
+app.listen(process.env.EXPRESS_SERVER_PORT, () => {
+  console.log(`Listening on ${process.env.EXPRESS_SERVER_PORT}`);
+});

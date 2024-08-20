@@ -1,13 +1,13 @@
 import axios from 'axios';
 import puppeteer from 'puppeteer';
-import getRandomArrayElement from 'backend/automatization/helpers/getRandomArrayElement.mjs';
+import getRandomArrayElement from '../helpers/getRandomArrayElement.mjs';
 import {
   hoverAndClick,
   wait,
   scrollPage,
-} from 'backend/automatization/helpers/puppeteerHelpers.mjs';
-import TASK_TYPES from 'backend/automatization/swan/structures/taskTypes.mjs';
-import PageScroller from 'backend/automatization/helpers/PageScroller.mjs';
+} from '../helpers/puppeteerHelpers.mjs';
+import TASK_TYPES from './structures/taskTypes.mjs';
+import PageScroller from '../helpers/PageScroller.mjs';
 
 export async function run({
   profileIds,

@@ -1,11 +1,11 @@
 <script setup>
-import { useProfilesStore } from 'stores/useProfilesStore';
-import ProfilesTable from 'components/ProfilesTable.vue';
-import ProfileGroupsSelect from 'components/ProfileGroupsSelect.vue';
+import { useProfilesStore } from 'src/stores/useProfilesStore';
+import ProfilesTable from 'src/components/ProfilesTable.vue';
+import ProfileGroupsSelect from 'src/components/ProfileGroupsSelect.vue';
 import { computed, ref } from 'vue';
 import Api from 'src/api/Api.js';
 import { useQuasar } from 'quasar';
-import SwanModal from 'components/modals/SwanModal.vue';
+import SwanModal from 'src/components/modals/SwanModal.vue';
 
 const $q = useQuasar();
 

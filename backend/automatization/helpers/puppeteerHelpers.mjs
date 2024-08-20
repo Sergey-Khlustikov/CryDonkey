@@ -1,7 +1,6 @@
 export function wait(minMs, maxMs) {
-  // Генерируем случайное время ожидания в пределах заданного диапазона
   const waitTime = Math.random() * (maxMs - minMs) + minMs;
-  // Возвращаем промис, который будет разрешен после указанного времени
+
   return new Promise(resolve => { setTimeout(resolve, waitTime); });
 }
 
