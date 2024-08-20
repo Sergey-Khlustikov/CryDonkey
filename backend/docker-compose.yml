@@ -1,0 +1,33 @@
+services:
+  server:
+    container_name: crydonkey-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${EXPRESS_SERVER_PORT}:${EXPRESS_SERVER_PORT}"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - redis
+      - mongo
+    command: npm run dev
+
+  redis:
+    image: redis:alpine
+    container_name: crydonkey-redis
+    ports:
+      - "6379:6379"
+
+  mongo:
+    image: mongo:latest
+    container_name: crydonkey-mongo
+    ports:
+      - "${DB_PORT_LOCAL}:${DB_PORT}"
+    volumes:
+      - mongo_data:/data/db
+      - ./db/init.js:/docker-entrypoint-initdb.d/init.js:ro
+
+volumes:
+  mongo_data:

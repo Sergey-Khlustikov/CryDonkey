@@ -1,13 +1,10 @@
-const axios = require('axios');
-const puppeteer = require('puppeteer');
-const getRandomArrayElement = require('backend/automatization/helpers/getRandomArrayElement');
-const PageScroller = require('backend/automatization/helpers/PageScroller');
-const {
-  hoverAndClick,
-  wait,
-} = require('../helpers/puppeteerHelpers.js');
+import axios from 'axios';
+import puppeteer from 'puppeteer';
+import getRandomArrayElement from '../helpers/getRandomArrayElement.mjs';
+import PageScroller from '../helpers/PageScroller.mjs';
+import { hoverAndClick, wait } from '../helpers/puppeteerHelpers.mjs';
 
-async function run(profileIds) {
+export async function run(profileIds) {
   try {
     for (let i = 0; i < profileIds.length; i++) {
       await openProfile(profileIds[i]);
@@ -209,5 +206,3 @@ async function completeCommonQuests(page, browser) {
     }
   }
 }
-
-module.exports = { run };

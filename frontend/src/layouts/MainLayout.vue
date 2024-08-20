@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import EssentialLink from 'components/EssentialLink.vue';
+import EssentialLink from 'src/components/EssentialLink.vue';
 
 defineOptions({
   name: 'MainLayout',

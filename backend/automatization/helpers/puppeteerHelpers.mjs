@@ -1,11 +1,10 @@
-function wait(minMs, maxMs) {
-  // Генерируем случайное время ожидания в пределах заданного диапазона
+export function wait(minMs, maxMs) {
   const waitTime = Math.random() * (maxMs - minMs) + minMs;
-  // Возвращаем промис, который будет разрешен после указанного времени
+
   return new Promise(resolve => { setTimeout(resolve, waitTime); });
 }
 
-async function scrollPage(page, options = {}) {
+export async function scrollPage(page, options = {}) {
   const {
     tag = 'html', // Тег для прокрутки
     direction = 'down', // Направление прокрутки: 'down' или 'up'
@@ -75,14 +74,8 @@ async function getScrollTargetPosition(page, tag, selector, direction) {
   return 0;
 }
 
-async function hoverAndClick(locator) {
+export async function hoverAndClick(locator) {
   await locator.hover();
   await wait(405, 1421);
   await locator.click();
 }
-
-module.exports = {
-  wait,
-  scrollPage,
-  hoverAndClick,
-};
