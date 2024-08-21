@@ -4,7 +4,7 @@ import { computed, ref } from 'vue';
 import Api from 'src/api/Api';
 
 const props = defineProps({
-  profileIds: {
+  profiles: {
     type: Array,
     required: true,
   },
@@ -31,8 +31,10 @@ const allDailyFieldsFilled = computed(() => {
 });
 
 async function onSubmit() {
-  Api.runSwan({
-    profileIds: props.profileIds,
+  await Api.runSwan({
+    profiles: props.profiles.map(profile => {
+      return { id: profile.user_id, name: profile.name };
+    }),
     dailyFirst: dailyFirst.value,
     dailySecond: dailySecond.value,
     dailyThird: dailyThird.value,

@@ -1,0 +1,48 @@
+import BaseQueue from '../../queues/BaseQueue.mjs';
+import { run } from '../../../automatization/rcade/rcade.mjs';
+import QUEUE_NAMES from '../../../structures/queueNames.mjs';
+import minuteToMs from '../../../helpers/minuteToMs.mjs';
+import getRandomNumberBetween from '../../../helpers/getRandomNumberBetween.mjs';
+
+class RcadeQueue extends BaseQueue {
+  constructor() {
+    super(QUEUE_NAMES.rcade, {
+      defaultJobOptions: {
+        attempts: 3,
+        backoff: {
+          type: 'exponential',
+          delay: 5000,
+        },
+      },
+    });
+
+    this.initWorker(async (job) => {
+      await run(job.data);
+    });
+  }
+
+  async addJobs(data) {
+    const { minDelayMinutes, maxDelayMinutes } = data;
+
+    const formattedJobs = data.profiles.map((profile, index) => {
+      return {
+        name: this.queueName,
+        data: { profile },
+        opts: {
+          delay: index === 0 ? 0 : this.calculateJobDelay(minDelayMinutes, maxDelayMinutes, index),
+        },
+      };
+    });
+
+    await super.addJobs(formattedJobs);
+  }
+
+  calculateJobDelay(minDelayMinutes, maxDelayMinutes, index) {
+    const baseDelayMs = minuteToMs(1);
+    const randomDelayMs = getRandomNumberBetween(minuteToMs(minDelayMinutes), minuteToMs(maxDelayMinutes));
+
+    return (baseDelayMs + randomDelayMs) * index;
+  }
+}
+
+export default new RcadeQueue();

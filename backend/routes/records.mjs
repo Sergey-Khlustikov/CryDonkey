@@ -8,7 +8,6 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  console.log(req.body);
   const record = new Record(req.body);
   await record.save();
   res.json({ state: 'success' });

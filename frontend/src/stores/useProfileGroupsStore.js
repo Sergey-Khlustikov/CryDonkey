@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import AdsApi from 'src/api/AdsApi';
+import AdsController from 'src/domains/ads/AdsController';
 
-export const useProfileGroupsStore = defineStore('profileGroups', () => {
+export default defineStore('profileGroups', () => {
   const groups = ref([]);
 
   const loadGroups = async () => {
     try {
-      groups.value = await AdsApi.getGroups();
+      groups.value = await AdsController.getGroups();
     } catch (e) {
       console.log(e);
     }

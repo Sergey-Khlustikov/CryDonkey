@@ -1,5 +1,5 @@
 <script setup>
-import AdsApi from 'src/api/AdsApi';
+import AdsController from 'src/domains/ads/AdsController';
 
 defineOptions({
   name: 'ProfilesTable',
@@ -66,7 +66,7 @@ const pagination = {
   >
     <template #body-cell-actions="props">
       <q-td :props="props">
-        <q-btn @click="AdsApi.openProfile(props.row.user_id)" color="primary" label="Open"></q-btn>
+        <q-btn @click="AdsController.openAdsProfile(props.row.user_id)" color="primary" label="Open"></q-btn>
       </q-td>
     </template>
   </q-table>

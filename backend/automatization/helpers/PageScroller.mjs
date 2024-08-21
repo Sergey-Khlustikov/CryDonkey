@@ -73,8 +73,12 @@ class PageScroller {
     const targetPosition = await this.page.evaluate((el, tag) => {
       const element = document.querySelector(el);
       const container = document.querySelector(tag);
-      return element ? element.getBoundingClientRect().top + container.scrollTop : 0;
+      return element ? element.getBoundingClientRect().top + container.scrollTop : null;
     }, element, this.scrollableTag);
+
+    if (targetPosition === null) {
+      throw new Error(`PageScroller: Element "${element}" not found.`);
+    }
 
     const currentPosition = await this.getScrollTopPosition(this.scrollableTag);
     const direction = currentPosition < targetPosition ? 'down' : 'up';

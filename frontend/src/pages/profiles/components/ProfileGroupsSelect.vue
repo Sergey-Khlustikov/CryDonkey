@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import { useProfileGroupsStore } from 'src/stores/useProfileGroupsStore';
+import useProfileGroupsStore from 'src/stores/useProfileGroupsStore';
 
 const model = defineModel({ type: [String, Object] });
 const store = useProfileGroupsStore();

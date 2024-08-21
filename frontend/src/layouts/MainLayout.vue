@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import EssentialLink from 'src/components/EssentialLink.vue';
+import ROUTE_NAMES from 'src/router/structures/routeNames';
 
 defineOptions({
   name: 'MainLayout',
@@ -9,8 +10,13 @@ defineOptions({
 const linksList = [
   {
     title: 'Profiles',
-    icon: 'school',
-    routeName: 'profiles',
+    icon: 'fact_check',
+    routeName: ROUTE_NAMES.profiles,
+  },
+  {
+    title: 'Queue Jobs',
+    icon: 'queue',
+    routeName: ROUTE_NAMES.jobs,
   },
 ];
 
@@ -40,16 +46,10 @@ function toggleLeftDrawer() {
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
+        <q-item-label header>
+          Navigation
         </q-item-label>
 
         <EssentialLink
