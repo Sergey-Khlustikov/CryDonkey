@@ -1,17 +1,20 @@
 import getRandomArrayElement from '../helpers/getRandomArrayElement.mjs';
-import { hoverAndClick, wait } from '../helpers/puppeteerHelpers.mjs';
+import {hoverAndClick, wait} from '../helpers/puppeteerHelpers.mjs';
 import TASK_TYPES from './structures/taskTypes.mjs';
 import PageScroller from '../helpers/PageScroller.mjs';
 import AdsApi from '../../api/AdsApi.mjs';
 
 export async function run(data) {
+  console.log('data', data);
   try {
     const browser = await AdsApi.connectToPuppeteer(data.profile.id);
 
     try {
       await startQuests({ ...data, browser });
     } finally {
-      await browser.close();
+      if (!data.keepOpenProfileIds.includes(data.profile.id)) {
+        await browser.close();
+      }
     }
   } catch (e) {
     throw e;
@@ -19,6 +22,7 @@ export async function run(data) {
 }
 
 export async function startQuests({ browser, dailyFirst, dailySecond, dailyThird, onlyDaily }) {
+  console.log('onlyDaily', onlyDaily);
   const questsUrl = 'https://mission.swanchain.io/';
   const page = await browser.newPage();
   await page.goto(questsUrl, { waitUntil: 'load' });

@@ -11,10 +11,11 @@ class SwanController {
         profiles,
         minDelayMinutes: params.minDelayMinutes || 1,
         maxDelayMinutes: params.maxDelayMinutes || 5,
-        onlyDaily: params.onlyDaily || true,
+        onlyDaily: params.onlyDaily,
         dailyFirst: params.dailyFirst,
         dailySecond: params.dailySecond,
         dailyThird: params.dailyThird,
+        keepOpenProfileIds: params.keepOpenProfileIds,
       });
 
       res.status(200).send({ message: 'Success' });

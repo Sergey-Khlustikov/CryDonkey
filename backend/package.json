@@ -5,6 +5,7 @@
   "productName": "CryDonkey",
   "private": true,
   "scripts": {
+    "start": "node server.mjs",
     "dev": "nodemon --legacy-watch server.mjs"
   },
   "dependencies": {

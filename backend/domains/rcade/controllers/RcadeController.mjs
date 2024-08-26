@@ -4,10 +4,10 @@ import RcadeQueue from '../queues/RcadeQueue.mjs';
 class RcadeController {
   async run(req, res) {
     try {
-      const { minDelayMinutes = 1, maxDelayMinutes = 5 } = req.body;
+      const {minDelayMinutes = 1, maxDelayMinutes = 5, keepOpenProfileIds} = req.body;
       const profiles = shuffleArray(req.body.profiles);
 
-      await RcadeQueue.addJobs({ profiles, minDelayMinutes, maxDelayMinutes });
+      await RcadeQueue.addJobs({profiles, minDelayMinutes, maxDelayMinutes, keepOpenProfileIds});
 
       res.status(200).send({ message: 'Success' });
     } catch (error) {

@@ -1,8 +1,8 @@
 import BaseQueue from './BaseQueue.mjs';
 import minuteToMs from '../../helpers/minuteToMs.mjs';
 import getRandomNumberBetween from '../../helpers/getRandomNumberBetween.mjs';
-import { startQuests as startRcade } from '../../automatization/rcade/rcade.mjs';
-import { startQuests as startSwan } from '../../automatization/swan/swan.mjs';
+import {startQuests as startRcade} from '../../automatization/rcade/rcade.mjs';
+import {startQuests as startSwan} from '../../automatization/swan/swan.mjs';
 import AdsApi from '../../api/AdsApi.mjs';
 
 // TEMP SOLUTION
@@ -10,6 +10,7 @@ class CustomQueue extends BaseQueue {
   constructor() {
     super('Rcade/Swan', {
       defaultJobOptions: {
+        removeOnComplete: true,
         attempts: 3,
         backoff: {
           type: 'exponential',
@@ -26,7 +27,9 @@ class CustomQueue extends BaseQueue {
           await startRcade({ browser });
           await startSwan({ ...job.data.swanOptions, browser });
         } finally {
-          await browser.close();
+          if (!job.data.keepOpenProfileIds.includes(job.data.profile.id)) {
+            await browser.close();
+          }
         }
 
       } catch (e) {
@@ -36,12 +39,12 @@ class CustomQueue extends BaseQueue {
   }
 
   async addJobs(data) {
-    const { minDelayMinutes, maxDelayMinutes, rcadeOptions, swanOptions } = data;
+    const {minDelayMinutes, maxDelayMinutes, rcadeOptions, swanOptions, keepOpenProfileIds} = data;
 
     const formattedJobs = data.profiles.map((profile, index) => {
       return {
         name: this.queueName,
-        data: { profile, rcadeOptions, swanOptions },
+        data: {profile, rcadeOptions, swanOptions, keepOpenProfileIds},
         opts: {
           delay: index === 0 ? 0 : this.calculateJobDelay(minDelayMinutes, maxDelayMinutes, index),
         },

@@ -1,6 +1,6 @@
 import getRandomArrayElement from '../helpers/getRandomArrayElement.mjs';
 import PageScroller from '../helpers/PageScroller.mjs';
-import { hoverAndClick, wait } from '../helpers/puppeteerHelpers.mjs';
+import {hoverAndClick, wait} from '../helpers/puppeteerHelpers.mjs';
 import AdsApi from '../../api/AdsApi.mjs';
 
 export async function run(data) {
@@ -10,7 +10,9 @@ export async function run(data) {
     try {
       await startQuests({ browser });
     } finally {
-      await browser.close();
+      if (!data.keepOpenProfileIds.includes(data.profile.id)) {
+        await browser.close();
+      }
     }
   } catch (error) {
     throw error;

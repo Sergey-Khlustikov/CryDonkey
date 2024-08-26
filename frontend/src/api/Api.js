@@ -11,19 +11,17 @@ class Api {
     return this.api.get('/status');
   }
 
-  async runRcade(profiles) {
+  async runRcade(params) {
     try {
-      await this.api.post('/rcade/run', { profiles });
+      await this.api.post('/rcade/run', params);
     } catch (e) {
       console.error(e);
     }
   }
 
-  async runSwan({ profiles, dailyFirst, dailySecond, dailyThird, onlyDaily }) {
+  async runSwan(params) {
     try {
-      await this.api.post('/swan/run', {
-        profiles, dailyFirst, dailySecond, dailyThird, onlyDaily,
-      });
+      await this.api.post('/swan/run', params);
     } catch (e) {
       console.error(e);
     }

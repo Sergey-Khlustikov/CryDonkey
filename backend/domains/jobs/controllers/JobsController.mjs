@@ -133,6 +133,7 @@ class JobsController {
         maxDelayMinutes: req.body.maxDelayMinutes || 5,
         rcadeOptions: req.body.rcadeOptions,
         swanOptions: req.body.swanOptions,
+        keepOpenProfileIds: req.body.keepOpenProfileIds,
       });
 
       res.status(200).send({ message: 'Jobs added to a queue' });

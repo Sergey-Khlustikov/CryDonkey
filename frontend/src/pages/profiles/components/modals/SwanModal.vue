@@ -1,7 +1,8 @@
 <script setup>
-import { useDialogPluginComponent } from 'quasar';
-import { computed, ref } from 'vue';
+import {useDialogPluginComponent} from 'quasar';
+import {computed, ref} from 'vue';
 import Api from 'src/api/Api';
+import DontCloseProfiles from 'src/pages/profiles/components/DontCloseProfiles.vue';
 
 const props = defineProps({
   profiles: {
@@ -29,12 +30,14 @@ const onlyDaily = ref(true);
 const allDailyFieldsFilled = computed(() => {
   return dailyFirst.value && dailySecond.value && dailyThird.value;
 });
+const selectedNotToCloseProfiles = ref([]);
 
 async function onSubmit() {
   await Api.runSwan({
     profiles: props.profiles.map(profile => {
       return { id: profile.user_id, name: profile.name };
     }),
+    keepOpenProfileIds: selectedNotToCloseProfiles.value,
     dailyFirst: dailyFirst.value,
     dailySecond: dailySecond.value,
     dailyThird: dailyThird.value,
@@ -80,11 +83,19 @@ async function onSubmit() {
           </div>
 
           <q-checkbox v-model="onlyDaily" label="Only daily task"/>
+
+          <dont-close-profiles v-model="selectedNotToCloseProfiles" :profiles="profiles"></dont-close-profiles>
         </q-card-section>
 
         <q-card-actions align="right" class="q-mr-sm q-mb-sm">
           <q-btn color="primary" label="Cancel" @click="onDialogCancel"></q-btn>
-          <q-btn color="primary" label="OK" style="width: 60px;" type="submit" :disable="!allDailyFieldsFilled"></q-btn>
+          <q-btn
+            color="primary"
+            label="Run"
+            style="width: 60px;"
+            type="submit"
+            :disable="!allDailyFieldsFilled"
+          ></q-btn>
         </q-card-actions>
       </q-form>
     </q-card>
