@@ -1,6 +1,6 @@
 <script setup>
-import { useDialogPluginComponent } from 'quasar';
-import { ref } from 'vue';
+import {useDialogPluginComponent} from 'quasar';
+import {ref} from 'vue';
 import Api from 'src/api/Api';
 import DontCloseProfiles from 'src/pages/profiles/components/DontCloseProfiles.vue';
 import SwanSettings from 'src/pages/profiles/components/modals/SwanSettings.vue';
@@ -43,13 +43,13 @@ async function onSubmit() {
 
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
-    <q-card class="q-dialog-plugin" style="width: 600px; max-width: 80vw;">
+    <q-card class="q-dialog-plugin" style="width: 900px; max-width: 80vw;">
       <q-form @submit="onSubmit" ref="formRef">
-        <div class="text-h6 q-ml-md q-mt-md">Daily Combo</div>
+        <div class="text-h6 q-ml-md q-mt-md">Swan Settings</div>
 
         <q-card-section>
           <swan-settings v-model="settings" :profiles="profiles"></swan-settings>
-
+          <q-separator class="q-mb-md"></q-separator>
           <dont-close-profiles
             v-model="selectedNotToCloseProfiles"
             :profiles="profiles"

@@ -1,6 +1,7 @@
 <script setup>
 import SwanDailyCombo from 'src/pages/profiles/components/modals/SwanDailyCombo.vue';
-import { reactive, watch } from 'vue';
+import {reactive, watch} from 'vue';
+import SwanComments from 'src/pages/profiles/components/modals/SwanComments.vue';
 
 const props = defineProps({
   profiles: {
@@ -25,5 +26,7 @@ watch(settings, (newValue) => {
   <div>
     <q-checkbox v-model="settings.onlyDaily" label="Only daily task"></q-checkbox>
     <swan-daily-combo v-model="settings.dailyCombo"></swan-daily-combo>
+    <q-separator class="q-mb-md"></q-separator>
+    <swan-comments :profiles="profiles"></swan-comments>
   </div>
 </template>
