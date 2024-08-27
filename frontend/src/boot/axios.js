@@ -5,7 +5,7 @@ import { Notify } from 'quasar';
 const api = axios.create({ baseURL: `http://localhost:${process.env.VUE_APP_SERVER_PORT}` });
 
 api.interceptors.response.use(
-  function(response) {
+  (response) => {
     if (response.config.method === 'post' || response.config.method === 'delete') {
       Notify.create({
         type: 'positive',
@@ -18,7 +18,7 @@ api.interceptors.response.use(
 
     return response;
   },
-  function(error) {
+  (error) => {
     Notify.create({
       type: 'negative',
       message: error.message,
@@ -29,7 +29,8 @@ api.interceptors.response.use(
     });
 
     return Promise.reject(error);
-  });
+  },
+);
 
 export default boot(({ app }) => {
   app.config.globalProperties.$axios = axios;
