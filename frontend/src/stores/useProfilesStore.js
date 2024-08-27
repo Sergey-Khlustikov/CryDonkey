@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import AdsApi from 'src/api/AdsApi';
+import AdsController from 'src/domains/ads/AdsController';
 
-export const useProfilesStore = defineStore('profiles', () => {
+export default defineStore('profiles', () => {
   const profiles = ref([]);
 
   const loadProfiles = async () => {
     try {
-      profiles.value = await AdsApi.getProfiles();
+      profiles.value = await AdsController.getProfiles();
     } catch (e) {
       console.log(e);
     }

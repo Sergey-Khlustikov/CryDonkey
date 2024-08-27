@@ -1,208 +1,160 @@
-import axios from 'axios';
-import puppeteer from 'puppeteer';
 import getRandomArrayElement from '../helpers/getRandomArrayElement.mjs';
 import PageScroller from '../helpers/PageScroller.mjs';
-import { hoverAndClick, wait } from '../helpers/puppeteerHelpers.mjs';
+import {hoverAndClick, wait} from '../helpers/puppeteerHelpers.mjs';
+import AdsApi from '../../api/AdsApi.mjs';
 
-export async function run(profileIds) {
+export async function run(data) {
   try {
-    for (let i = 0; i < profileIds.length; i++) {
-      await openProfile(profileIds[i]);
+    const browser = await AdsApi.connectToPuppeteer(data.profile.id);
 
-      if (i !== profileIds.length - 1) {
-        await wait(60000, 200000);
-      }
-    }
-  } catch (e) {
-    console.log('Error in run', e);
-  }
-}
-
-async function openProfile(userId) {
-  const questsUrl = 'https://sidequest.rcade.game/quests';
-
-  const response = await axios.get(`${process.env.VUE_APP_ADS_API_URL}/browser/start`, {
-    params: { user_id: userId },
-  });
-
-  if (response.data.code === 0 && response.data.data.ws && response.data.data.ws.puppeteer) {
     try {
-      const browser = await puppeteer.connect({
-        browserWSEndpoint: response.data.data.ws.puppeteer,
-        defaultViewport: null,
-      });
-      const page = await browser.newPage();
-      await page.goto(questsUrl, { waitUntil: 'load' });
-
-      await page.locator('.missions')
-        .wait();
-
-      await wait(1012, 5012);
-
-      switch (getRandomArrayElement([1, 2, 3])) {
-        case 1:
-          await scenarioOne(page, browser);
-          break;
-
-        case 2:
-          await scenarioTwo(page, browser);
-          break;
-
-        case 3:
-          await scenarioThree(page, browser);
-          break;
-
-        default:
-          console.log('Unknown scenario');
+      await startQuests({ browser });
+    } finally {
+      if (!data.keepOpenProfileIds.includes(data.profile.id)) {
+        await browser.close();
       }
-    } catch (err) {
-      console.log(`Profile id: ${userId}`, err);
     }
+  } catch (error) {
+    throw error;
   }
 }
 
-async function scenarioOne(page, browser) {
-  const Scroller = new PageScroller({ page, scrollableTag: 'html' });
+export async function startQuests({ browser }) {
+  const questsUrl = 'https://sidequest.rcade.game/quests';
+  const page = await browser.newPage();
+  await page.goto(questsUrl, { waitUntil: 'load' });
+  await page.locator('.missions').wait();
 
-  await Scroller.scrollToElement('.mission-list');
-  await wait(1593, 3021);
-  await Scroller.scrollToTop({
-    minDistance: 102,
-    maxDistance: 423,
-  });
+  await wait(1012, 5012);
 
-  await completeDailyQuest(page);
-
-  await wait(1242, 4512);
-
-  await Scroller.scrollToElement('.mission-list');
-
-  await wait(1242, 4512);
-
-  await completeCommonQuests(page, browser);
-
-  await page.close();
-  await browser.close();
+  const scenario = getRandomArrayElement([1, 2, 3]);
+  await runScenario(scenario, page, browser);
 }
 
-async function scenarioTwo(page, browser) {
-  const Scroller = new PageScroller({ page, scrollableTag: 'html' });
-  await completeDailyQuest(page);
+async function runScenario(scenario, page, browser) {
+  const scroller = new PageScroller({ page, scrollableTag: 'html' });
 
-  await wait(3242, 5512);
+  try {
+    switch (scenario) {
+      case 1:
+        await scroller.scrollToElement('.mission-list');
+        await wait(1593, 3021);
+        await scroller.scrollToTop({ minDistance: 102, maxDistance: 423 });
+        await completeDailyQuest(page);
+        await wait(1242, 4512);
+        await scroller.scrollToElement('.mission-list');
+        await wait(1242, 4512);
+        await completeCommonQuests(page, browser);
+        break;
 
-  await Scroller.scrollToElement('.mission-list');
+      case 2:
+        await completeDailyQuest(page);
+        await wait(3242, 5512);
+        await scroller.scrollToElement('.mission-list');
+        await wait(1242, 4512);
+        await completeCommonQuests(page, browser);
+        break;
 
-  await wait(1242, 4512);
+      case 3:
+        await scroller.scrollToElement('.mission-list');
+        await wait(1242, 4512);
+        await completeCommonQuests(page, browser);
+        await wait(1242, 2512);
+        await scroller.scrollToTop({ minDistance: 102, maxDistance: 423 });
+        await wait(1242, 2512);
+        await completeDailyQuest(page);
+        break;
 
-  await completeCommonQuests(page, browser);
-
-  await page.close();
-  await browser.close();
-}
-
-async function scenarioThree(page, browser) {
-  const Scroller = new PageScroller({ page, scrollableTag: 'html' });
-  await Scroller.scrollToElement('.mission-list');
-
-  await wait(1242, 4512);
-
-  await completeCommonQuests(page, browser);
-
-  await wait(1242, 4512);
-  await Scroller.scrollToTop({
-    minDistance: 102,
-    maxDistance: 423,
-  });
-  await wait(1242, 2512);
-
-  await completeDailyQuest(page);
-
-  await page.close();
-  await browser.close();
+      default:
+        throw new Error('Unknown scenario');
+    }
+  } catch (error) {
+    throw error;
+  } finally {
+    await page.close();
+  }
 }
 
 async function completeDailyQuest(page) {
-  if ((await page.$('.spin-container .spin-content button')) === null) {
-    return;
+  try {
+    const button = await page.$('.spin-container .spin-content button');
+
+    if (!button) {
+      return;
+    }
+
+    await hoverAndClick(button);
+
+    const modalSpinBtn = await page.locator('.modal-content button.spin-btn');
+    await modalSpinBtn.wait();
+    await wait(1051, 5012);
+    await hoverAndClick(modalSpinBtn);
+
+    await page.locator('.rewards .reward-points').wait();
+    await wait(1051, 5012);
+
+    const closeBtn = await page.locator('.modal .modal-container .modal-content button.close-btn');
+    await hoverAndClick(closeBtn);
+  } catch (error) {
+    throw error;
   }
-
-  const mainBtn = await page.locator('.spin-container .spin-content button');
-
-  await hoverAndClick(mainBtn);
-
-  // @todo failed to hover
-  const modalSpinBtn = await page.locator('.modal-content button.spin-btn');
-  await modalSpinBtn.wait();
-  await wait(1051, 5012);
-  await hoverAndClick(modalSpinBtn);
-
-  await page.locator('.rewards .reward-points')
-    .wait();
-  await wait(1051, 5012);
-
-  const closeBtn = await page.locator('.modal .modal-container .modal-content button.close-btn');
-  await hoverAndClick(closeBtn);
 }
 
 async function completeCommonQuests(page, browser) {
-  await page.waitForSelector('.mission-list');
-  const pageTarget = page.target();
+  try {
+    await page.waitForSelector('.mission-list');
+    const pageTarget = page.target();
 
-  const buttonHandles = await page.evaluateHandle(() => {
-    const missionElements = document.querySelectorAll('.mission');
+    const buttonHandles = await page.evaluateHandle(() => {
+      const missionElements = document.querySelectorAll('.mission');
 
-    return Array.from(missionElements)
-      .filter(mission => {
-        const isCompleted = mission.classList.contains('completed');
-        const title = mission.querySelector('.title')
-          .textContent
-          .trim()
-          .toLowerCase();
+      return Array.from(missionElements)
+        .filter(mission => {
+          const isCompleted = mission.classList.contains('completed');
+          const title = mission.querySelector('.title')
+            .textContent
+            .trim()
+            .toLowerCase();
 
-        return !isCompleted && !title.includes('wallet') && !title.includes('telegram');
-      })
-      .map(mission => mission.querySelector('button'));
-  });
+          return !isCompleted && !title.includes('wallet') && !title.includes('telegram');
+        })
+        .map(mission => mission.querySelector('button'));
+    });
 
-  const buttons = await buttonHandles.getProperties();
+    const buttons = await buttonHandles.getProperties();
 
-  if (buttons.length === 0) {
-    return;
-  }
-
-  const buttonLocators = [];
-
-  for (const buttonHandle of buttons.values()) {
-    if (buttonHandle) {
-      buttonLocators.push(buttonHandle.asElement());
+    if (buttons.length === 0) {
+      return;
     }
-  }
 
-  for (const buttonLocator of buttonLocators) {
-    if (buttonLocator) {
-      await buttonLocator.hover();
-      await wait(212, 563);
-      await buttonLocator.click();
+    for (const buttonHandle of buttons.values()) {
+      if (buttonHandle) {
+        const buttonLocator = buttonHandle.asElement();
+        await buttonLocator.hover();
+        await wait(212, 563);
+        await buttonLocator.click();
 
-      await page.waitForSelector('.mission-details .btn-container button');
-      const redirectBtn = await page.locator('.mission-details .btn-container button');
-      await hoverAndClick(redirectBtn);
+        await page.waitForSelector('.mission-details .btn-container button');
+        const redirectBtn = await page.locator('.mission-details .btn-container button');
+        await hoverAndClick(redirectBtn);
 
-      const newTarget = await browser.waitForTarget(target => target.opener() === pageTarget);
-      const newPage = await newTarget.page();
+        const newTarget = await browser.waitForTarget(target => target.opener() === pageTarget);
+        const newPage = await newTarget.page();
 
-      if (newPage) {
-        await wait(1421, 3012);
-        await newPage.close();
+        if (newPage) {
+          await wait(1421, 3012);
+          await newPage.close();
+        }
+
+        await page.bringToFront();
+        await page.waitForSelector('.rewards .congratulations');
+        await wait(1224, 4012);
+        await hoverAndClick(await page.locator('.modal .close-btn'));
+
+        await wait(2016, 5921);
       }
-
-      await page.bringToFront();
-      await page.waitForSelector('.rewards .congratulations');
-      await wait(1224, 4012);
-      await hoverAndClick(await page.locator('.modal .close-btn'));
-
-      await wait(2016, 5921);
     }
+  } catch (error) {
+    throw error;
   }
 }

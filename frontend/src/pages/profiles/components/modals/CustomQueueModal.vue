@@ -1,10 +1,11 @@
 <script setup>
-import { useDialogPluginComponent } from 'quasar';
-import { computed, ref } from 'vue';
-import Api from 'src/api/Api';
+import {useDialogPluginComponent} from 'quasar';
+import {computed, ref} from 'vue';
+import JobsController from 'src/domains/jobs/JobsController';
+import DontCloseProfiles from 'src/pages/profiles/components/DontCloseProfiles.vue';
 
 const props = defineProps({
-  profileIds: {
+  profiles: {
     type: Array,
     required: true,
   },
@@ -30,13 +31,18 @@ const allDailyFieldsFilled = computed(() => {
   return dailyFirst.value && dailySecond.value && dailyThird.value;
 });
 
+const selectedNotToCloseProfiles = ref([]);
+
 async function onSubmit() {
-  Api.runSwan({
-    profileIds: props.profileIds,
-    dailyFirst: dailyFirst.value,
-    dailySecond: dailySecond.value,
-    dailyThird: dailyThird.value,
-    onlyDaily: onlyDaily.value,
+  await JobsController.runCustom({
+    profiles: props.profiles.map(profile => ({id: profile.user_id, name: profile.name})),
+    keepOpenProfileIds: selectedNotToCloseProfiles.value,
+    swanOptions: {
+      dailyFirst: dailyFirst.value,
+      dailySecond: dailySecond.value,
+      dailyThird: dailyThird.value,
+      onlyDaily: onlyDaily.value,
+    },
   });
 
   onDialogOK();
@@ -47,7 +53,7 @@ async function onSubmit() {
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="q-dialog-plugin" style="width: 600px; max-width: 80vw;">
       <q-form @submit="onSubmit">
-        <div class="text-h6 q-ml-md q-mt-md">Daily Combo</div>
+        <div class="text-h6 q-ml-md q-mt-md">Swan Daily Combo</div>
 
         <q-card-section>
           <div class="row no-wrap q-gutter-md">
@@ -58,7 +64,7 @@ async function onSubmit() {
               lazy-rules
               :rules="[ val => val && val.length > 0]"
               type="number"
-            />
+            ></q-input>
             <q-input
               filled
               v-model="dailySecond"
@@ -66,7 +72,7 @@ async function onSubmit() {
               lazy-rules
               :rules="[ val => val && val.length > 0]"
               type="number"
-            />
+            ></q-input>
             <q-input
               filled
               v-model="dailyThird"
@@ -74,15 +80,23 @@ async function onSubmit() {
               lazy-rules
               :rules="[ val => val && val.length > 0]"
               type="number"
-            />
+            ></q-input>
           </div>
 
-          <q-checkbox v-model="onlyDaily" label="Only daily task"/>
+          <q-checkbox v-model="onlyDaily" label="Only daily task"></q-checkbox>
+
+          <dont-close-profiles v-model="selectedNotToCloseProfiles" :profiles="profiles"></dont-close-profiles>
         </q-card-section>
 
         <q-card-actions align="right" class="q-mr-sm q-mb-sm">
           <q-btn color="primary" label="Cancel" @click="onDialogCancel"></q-btn>
-          <q-btn color="primary" label="OK" style="width: 60px;" type="submit" :disable="!allDailyFieldsFilled"></q-btn>
+          <q-btn
+            color="primary"
+            label="Run"
+            style="width: 60px;"
+            type="submit"
+            :disable="!allDailyFieldsFilled"
+          ></q-btn>
         </q-card-actions>
       </q-form>
     </q-card>

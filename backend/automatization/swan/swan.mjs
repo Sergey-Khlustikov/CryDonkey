@@ -1,169 +1,109 @@
-import axios from 'axios';
-import puppeteer from 'puppeteer';
 import getRandomArrayElement from '../helpers/getRandomArrayElement.mjs';
-import {
-  hoverAndClick,
-  wait,
-  scrollPage,
-} from '../helpers/puppeteerHelpers.mjs';
+import {hoverAndClick, wait} from '../helpers/puppeteerHelpers.mjs';
 import TASK_TYPES from './structures/taskTypes.mjs';
 import PageScroller from '../helpers/PageScroller.mjs';
+import AdsApi from '../../api/AdsApi.mjs';
 
-export async function run({
-  profileIds,
-  dailyFirst,
-  dailySecond,
-  dailyThird,
-  onlyDaily,
-}) {
+export async function run(data) {
+  console.log('data', data);
   try {
-    const dailyCombo = {
-      dailyFirst,
-      dailySecond,
-      dailyThird,
-    };
+    const browser = await AdsApi.connectToPuppeteer(data.profile.id);
 
-    for (let i = 0; i < profileIds.length; i++) {
-      await openProfile(profileIds[i], dailyCombo, onlyDaily);
-
-      if (i !== profileIds.length - 1) {
-        await wait(60000, 200000);
+    try {
+      await startQuests({ ...data, browser });
+    } finally {
+      if (!data.keepOpenProfileIds.includes(data.profile.id)) {
+        await browser.close();
       }
     }
   } catch (e) {
-    console.log('Error in run', e);
+    throw e;
   }
 }
 
-async function openProfile(userId, dailyCombo, onlyDaily) {
-  console.log(`--------- Start profile id ${userId} ---------`);
+export async function startQuests({ browser, dailyFirst, dailySecond, dailyThird, onlyDaily }) {
+  console.log('onlyDaily', onlyDaily);
   const questsUrl = 'https://mission.swanchain.io/';
+  const page = await browser.newPage();
+  await page.goto(questsUrl, { waitUntil: 'load' });
 
-  const response = await axios.get(`${process.env.ADS_API_URL}/browser/start`, {
-    params: { user_id: userId },
+  await wait(1012, 5012);
+
+  const dailyCombo = { dailyFirst, dailySecond, dailyThird };
+  const scenario = getRandomArrayElement([1, 2, 3]);
+
+  await runScenario({
+    page, browser, scenario, dailyCombo, onlyDaily,
   });
+}
 
-  if (response.data.code === 0 && response.data.data.ws && response.data.data.ws.puppeteer) {
-    try {
-      const browser = await puppeteer.connect({
-        browserWSEndpoint: response.data.data.ws.puppeteer,
-        defaultViewport: null,
-      });
-      const page = await browser.newPage();
-      await page.goto(questsUrl, { waitUntil: 'load' });
+async function runScenario({ page, browser, scenario, dailyCombo, onlyDaily }) {
+  const scroller = new PageScroller({ page, scrollableTag: '.el-main' });
 
-      await wait(1012, 5012);
-      await scenarioThree(browser, page, dailyCombo, onlyDaily);
-      // switch (getRandomArrayElement([1, 2, 3])) {
-      //   case 1:
-      //     await scenarioOne(browser, page, dailyCombo, onlyDaily)
-      //     break
-      //
-      //   case 2:
-      //     await scenarioTwo(browser, page, dailyCombo, onlyDaily)
-      //     break
-      //
-      //   case 3:
-      //     await scenarioThree(browser, page, dailyCombo, onlyDaily)
-      // }
-    } catch (err) {
-      console.log(`Failed profile with id: ${userId}`, err);
+  try {
+    switch (scenario) {
+      case 1:
+        await scroller.scrollToElement('.total-referral');
+        await wait(1214, 3521);
+        await completeDailyQuest(page, dailyCombo);
+        await wait(1214, 3521);
+
+        if (!onlyDaily) {
+          await scroller.scrollToElement('.task-all');
+          await completeCommonQuests(browser, page);
+          await wait(1214, 3521);
+        }
+
+        break;
+
+      case 2:
+        if (!onlyDaily) {
+          await scroller.scrollToElement('.task-all');
+          await completeCommonQuests(browser, page);
+          await wait(1214, 3521);
+        }
+
+        await scroller.scrollToElement('.total-referral', {
+          minDistance: 102,
+          maxDistance: 423,
+        });
+
+        await wait(1214, 3521);
+        await completeDailyQuest(page, dailyCombo);
+        await wait(1214, 3521);
+        break;
+
+      case 3:
+        await scroller.scrollToElement('.faq', {
+          minDistance: 102,
+          maxDistance: 523,
+        });
+        await wait(1214, 3521);
+        await scroller.scrollToElement('.total-referral', {
+          minDistance: 102,
+          maxDistance: 523,
+        });
+
+        await wait(1214, 3521);
+        await completeDailyQuest(page, dailyCombo);
+        await wait(1214, 3521);
+
+        if (!onlyDaily) {
+          await scroller.scrollToElement('.task-all');
+          await completeCommonQuests(browser, page);
+          await wait(1214, 3521);
+        }
+
+        break;
+
+      default:
+        throw new Error('Unsupported scenario');
     }
+  } catch (e) {
+    throw e;
+  } finally {
+    await page.close();
   }
-
-  console.log(`--------- Exit profile id ${userId} ---------`);
-}
-
-async function scenarioOne(browser, page, dailyCombo, onlyDaily) {
-  await scrollPage(page, {
-    tag: '.el-main',
-    selector: '.total-referral',
-  });
-
-  await wait(1214, 3521);
-  await completeDailyQuest(page, dailyCombo);
-  await wait(1214, 3521);
-
-  if (!onlyDaily) {
-    await scrollPage(page, {
-      tag: '.el-main',
-      selector: '.task-all',
-    });
-
-    await completeCommonQuests(browser, page);
-    await wait(1214, 3521);
-  }
-
-  await page.close();
-  await browser.close();
-}
-
-async function scenarioTwo(browser, page, dailyCombo, onlyDaily) {
-  if (!onlyDaily) {
-    await scrollPage(page, {
-      tag: '.el-main',
-      selector: '.task-all',
-    });
-
-    await completeCommonQuests(browser, page);
-    await wait(1214, 3521);
-  }
-
-  await scrollPage(page, {
-    tag: '.el-main',
-    selector: '.reward-card',
-    direction: !onlyDaily ? 'up' : 'down',
-    minDistance: 102,
-    maxDistance: 423,
-  });
-
-  await wait(1214, 3521);
-  await completeDailyQuest(page, dailyCombo);
-  await wait(1214, 3521);
-
-  await page.close();
-  await browser.close();
-}
-
-async function scenarioThree(browser, page, dailyCombo, onlyDaily) {
-  const Scroller = new PageScroller({ page, scrollableTag: '.el-main' });
-
-  await Scroller.scrollToBottom();
-
-  // await scrollPage(page, {
-  //   tag: '.el-main',
-  //   selector: '.faq',
-  //   minDistance: 102,
-  //   maxDistance: 523,
-  // });
-  //
-  //
-  // await wait(1214, 3521);
-  //
-  // await scrollPage(page, {
-  //   tag: '.el-main',
-  //   selector: '.reward-card',
-  //   direction: 'up',
-  //   minDistance: 102,
-  //   maxDistance: 523,
-  // });
-
-  // await wait(1214, 3521)
-  // await completeDailyQuest(page, dailyCombo)
-  // await wait(1214, 3521)
-  //
-  // if (!onlyDaily) {
-  //   await scrollPage(page, {
-  //     tag: '.el-main',
-  //     selector: '.task-all'
-  //   })
-  //
-  //   await completeCommonQuests(browser, page)
-  //   await wait(1214, 3521)
-  // }
-  //
-  // await page.close()
-  // await browser.close()
 }
 
 async function completeDailyQuest(page, dailyCombo) {
@@ -171,7 +111,9 @@ async function completeDailyQuest(page, dailyCombo) {
     return;
   }
 
-  await hoverAndClick(await page.locator('.reward-card .reward-card-btn'));
+  const startDailyBtn = await page.locator('.reward-card .reward-card-btn');
+  await startDailyBtn.wait();
+  await hoverAndClick(startDailyBtn);
   await page.waitForSelector('.daliy-card .random-container');
 
   await wait(2027, 4126);
@@ -190,9 +132,11 @@ async function completeDailyQuest(page, dailyCombo) {
 async function clickDailyNumber(page, number) {
   const element = await page.$(`.random-image${number}`);
 
-  if (element) {
-    await element.click();
+  if (!element) {
+    throw new Error('Daily number image not found.');
   }
+
+  await element.click();
 }
 
 async function completeCommonQuests(browser, page) {
@@ -212,19 +156,15 @@ async function completeCommonQuests(browser, page) {
     }
 
     const taskTitle = await page.evaluate(el => el.textContent.trim(), taskTitleElement);
-
     let taskType;
-    if (taskTitle.toLowerCase()
-      .includes('follow')) {
+
+    if (taskTitle.toLowerCase().includes('follow')) {
       taskType = TASK_TYPES.follow;
-    } else if (taskTitle.toLowerCase()
-      .includes('like')) {
+    } else if (taskTitle.toLowerCase().includes('like')) {
       taskType = TASK_TYPES.like;
-    } else if (taskTitle.toLowerCase()
-      .includes('repost')) {
+    } else if (taskTitle.toLowerCase().includes('repost')) {
       taskType = TASK_TYPES.repost;
-    } else if (taskTitle.toLowerCase()
-      .includes('comment')) {
+    } else if (taskTitle.toLowerCase().includes('comment')) {
       taskType = TASK_TYPES.comment;
       continue;
     } else {

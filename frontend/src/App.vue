@@ -1,6 +1,6 @@
 <script setup>
-import { useProfilesStore } from 'src/stores/useProfilesStore';
-import { useProfileGroupsStore } from 'src/stores/useProfileGroupsStore';
+import useProfilesStore from 'src/stores/useProfilesStore';
+import useProfileGroupsStore from 'src/stores/useProfileGroupsStore';
 
 defineOptions({
   name: 'App',

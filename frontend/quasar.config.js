@@ -63,7 +63,6 @@ module.exports = configure((/* ctx */) => {
       // publicPath: '/',
       // analyze: true,
       env: {
-        VUE_APP_ADS_API_URL: env.VUE_APP_ADS_API_URL,
         VUE_APP_SERVER_PORT: env.VUE_APP_EXPRESS_SERVER_PORT,
       },
       // rawDefine: {}
@@ -120,6 +119,7 @@ module.exports = configure((/* ctx */) => {
       // Quasar plugins
       plugins: [
         'Dialog',
+        'Notify',
       ],
     },
 

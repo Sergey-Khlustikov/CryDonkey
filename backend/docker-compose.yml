@@ -12,6 +12,8 @@ services:
     depends_on:
       - redis
       - mongo
+    networks:
+      - crydonkey-network
     command: npm run dev
 
   redis:
@@ -19,6 +21,10 @@ services:
     container_name: crydonkey-redis
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - crydonkey-network
 
   mongo:
     image: mongo:latest
@@ -28,6 +34,13 @@ services:
     volumes:
       - mongo_data:/data/db
       - ./db/init.js:/docker-entrypoint-initdb.d/init.js:ro
+    networks:
+      - crydonkey-network
 
 volumes:
   mongo_data:
+  redis_data:
+
+networks:
+  crydonkey-network:
+    driver: bridge
