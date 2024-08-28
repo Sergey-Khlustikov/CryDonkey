@@ -1,11 +1,11 @@
 import getRandomArrayElement from '../helpers/getRandomArrayElement.mjs';
-import {hoverAndClick, wait} from '../helpers/puppeteerHelpers.mjs';
+import { hoverAndClick, wait } from '../helpers/puppeteerHelpers.mjs';
 import TASK_TYPES from './structures/taskTypes.mjs';
 import PageScroller from '../helpers/PageScroller.mjs';
 import AdsApi from '../../api/AdsApi.mjs';
+import typeWithRandomDelay from '../helpers/typeWithRandomDelay.mjs';
 
 export async function run(data) {
-  console.log('data', data);
   try {
     const browser = await AdsApi.connectToPuppeteer(data.profile.id);
 
@@ -21,23 +21,21 @@ export async function run(data) {
   }
 }
 
-export async function startQuests({ browser, dailyFirst, dailySecond, dailyThird, onlyDaily }) {
-  console.log('onlyDaily', onlyDaily);
+export async function startQuests({ browser, dailyCombo, onlyDaily, commentQuests }) {
   const questsUrl = 'https://mission.swanchain.io/';
   const page = await browser.newPage();
   await page.goto(questsUrl, { waitUntil: 'load' });
 
   await wait(1012, 5012);
 
-  const dailyCombo = { dailyFirst, dailySecond, dailyThird };
   const scenario = getRandomArrayElement([1, 2, 3]);
 
   await runScenario({
-    page, browser, scenario, dailyCombo, onlyDaily,
+    page, browser, scenario, dailyCombo, onlyDaily, commentQuests,
   });
 }
 
-async function runScenario({ page, browser, scenario, dailyCombo, onlyDaily }) {
+async function runScenario({ page, browser, scenario, dailyCombo, onlyDaily, commentQuests }) {
   const scroller = new PageScroller({ page, scrollableTag: '.el-main' });
 
   try {
@@ -50,7 +48,8 @@ async function runScenario({ page, browser, scenario, dailyCombo, onlyDaily }) {
 
         if (!onlyDaily) {
           await scroller.scrollToElement('.task-all');
-          await completeCommonQuests(browser, page);
+          await wait(1214, 3521);
+          await completeCommonQuests(browser, page, commentQuests);
           await wait(1214, 3521);
         }
 
@@ -59,7 +58,8 @@ async function runScenario({ page, browser, scenario, dailyCombo, onlyDaily }) {
       case 2:
         if (!onlyDaily) {
           await scroller.scrollToElement('.task-all');
-          await completeCommonQuests(browser, page);
+          await wait(1214, 3521);
+          await completeCommonQuests(browser, page, commentQuests);
           await wait(1214, 3521);
         }
 
@@ -90,7 +90,8 @@ async function runScenario({ page, browser, scenario, dailyCombo, onlyDaily }) {
 
         if (!onlyDaily) {
           await scroller.scrollToElement('.task-all');
-          await completeCommonQuests(browser, page);
+          await wait(1214, 3521);
+          await completeCommonQuests(browser, page, commentQuests);
           await wait(1214, 3521);
         }
 
@@ -117,11 +118,11 @@ async function completeDailyQuest(page, dailyCombo) {
   await page.waitForSelector('.daliy-card .random-container');
 
   await wait(2027, 4126);
-  await clickDailyNumber(page, dailyCombo.dailyFirst);
+  await clickDailyNumber(page, dailyCombo.first);
   await wait(1027, 3126);
-  await clickDailyNumber(page, dailyCombo.dailySecond);
+  await clickDailyNumber(page, dailyCombo.second);
   await wait(1027, 3126);
-  await clickDailyNumber(page, dailyCombo.dailyThird);
+  await clickDailyNumber(page, dailyCombo.third);
   await wait(1027, 3126);
 
   await hoverAndClick(await page.locator('.daliy-card .confirm-btn'));
@@ -139,7 +140,7 @@ async function clickDailyNumber(page, number) {
   await element.click();
 }
 
-async function completeCommonQuests(browser, page) {
+async function completeCommonQuests(browser, page, commentQuests) {
   const pageTarget = page.target();
   const tasks = await page.$$('.tasks:first-of-type .tasks-list.item');
 
@@ -158,15 +159,19 @@ async function completeCommonQuests(browser, page) {
     const taskTitle = await page.evaluate(el => el.textContent.trim(), taskTitleElement);
     let taskType;
 
-    if (taskTitle.toLowerCase().includes('follow')) {
+    const taskTitleFirstWord = taskTitle
+      .toLowerCase()
+      .trim()
+      .split(' ')[0];
+
+    if (taskTitleFirstWord === 'follow') {
       taskType = TASK_TYPES.follow;
-    } else if (taskTitle.toLowerCase().includes('like')) {
+    } else if (taskTitleFirstWord === 'like') {
       taskType = TASK_TYPES.like;
-    } else if (taskTitle.toLowerCase().includes('repost')) {
+    } else if (taskTitleFirstWord === 'repost') {
       taskType = TASK_TYPES.repost;
-    } else if (taskTitle.toLowerCase().includes('comment')) {
+    } else if (taskTitleFirstWord === 'comment') {
       taskType = TASK_TYPES.comment;
-      continue;
     } else {
       continue;
     }
@@ -181,7 +186,7 @@ async function completeCommonQuests(browser, page) {
     if (twitterPage) {
       await twitterPage.waitForNavigation({ waitUntil: 'load' });
       await wait(3421, 6012);
-      await processTwitter(twitterPage, taskType);
+      await processTwitter(twitterPage, taskType, taskTitle, commentQuests);
       await twitterPage.close();
     }
 
@@ -196,7 +201,7 @@ async function completeCommonQuests(browser, page) {
   }
 }
 
-async function processTwitter(page, taskType) {
+async function processTwitter(page, taskType, taskTitle, commentQuests) {
   if (taskType === TASK_TYPES.follow) {
     const btn = await page.$('button::-p-text(Follow)');
 
@@ -227,5 +232,29 @@ async function processTwitter(page, taskType) {
     }
   }
 
+  if (taskType === TASK_TYPES.comment) {
+    const commentQuest = commentQuests.find(quest => quest.title === taskTitle);
+
+    if (!commentQuest) {
+      return;
+    }
+
+    await commentTwitterPost(page, commentQuest.comment);
+  }
+
   await wait(1027, 3261);
+}
+
+async function commentTwitterPost(page, comment) {
+  const textareaSelector = '.public-DraftStyleDefault-ltr > span';
+  await page.locator(textareaSelector).wait();
+  await typeWithRandomDelay(page, textareaSelector, comment);
+
+  const btn = await page.$('button[data-testid="tweetButton"]');
+
+  if (btn) {
+    await hoverAndClick(btn);
+  } else {
+    throw new Error('Reply button not found');
+  }
 }

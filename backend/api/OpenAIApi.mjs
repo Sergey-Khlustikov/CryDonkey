@@ -6,12 +6,12 @@ class OpenAIApi {
     this.model = 'gpt-4o-mini';
   }
 
-  async generateMessage(message) {
+  async generateMessage(userMessage) {
     const completion = await this.api.chat.completions.create({
       model: this.model,
       messages: [{
         role: 'user',
-        content: message,
+        content: userMessage,
       }],
     });
 

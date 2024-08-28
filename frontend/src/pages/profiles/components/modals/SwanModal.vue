@@ -1,6 +1,6 @@
 <script setup>
-import {useDialogPluginComponent} from 'quasar';
-import {ref} from 'vue';
+import { useDialogPluginComponent } from 'quasar';
+import { ref } from 'vue';
 import Api from 'src/api/Api';
 import DontCloseProfiles from 'src/pages/profiles/components/DontCloseProfiles.vue';
 import SwanSettings from 'src/pages/profiles/components/modals/SwanSettings.vue';

@@ -1,6 +1,6 @@
 <script setup>
 import SwanDailyCombo from 'src/pages/profiles/components/modals/SwanDailyCombo.vue';
-import {reactive, watch} from 'vue';
+import { reactive, watch } from 'vue';
 import SwanComments from 'src/pages/profiles/components/modals/SwanComments.vue';
 
 const props = defineProps({
@@ -15,6 +15,7 @@ const emit = defineEmits(['update:modelValue']);
 const settings = reactive({
   onlyDaily: false,
   dailyCombo: {},
+  commentQuests: [],
 });
 
 watch(settings, (newValue) => {
@@ -27,6 +28,6 @@ watch(settings, (newValue) => {
     <q-checkbox v-model="settings.onlyDaily" label="Only daily task"></q-checkbox>
     <swan-daily-combo v-model="settings.dailyCombo"></swan-daily-combo>
     <q-separator class="q-mb-md"></q-separator>
-    <swan-comments :profiles="profiles"></swan-comments>
+    <swan-comments v-model="settings.commentQuests" :profiles="profiles"></swan-comments>
   </div>
 </template>
