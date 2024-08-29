@@ -3,6 +3,7 @@ import swanRoutes from './swanRoutes.mjs';
 import recordsRoutes from './records.mjs';
 import jobRoutes from './jobRoutes.mjs';
 import adsRoutes from './adsRoutes.mjs';
+import aiRoutes from './aiRoutes.mjs';
 
 const initRoutes = (app) => {
   app.use('/rcade', rcadeRoutes);
@@ -10,6 +11,7 @@ const initRoutes = (app) => {
   app.use('/records', recordsRoutes);
   app.use('/jobs', jobRoutes);
   app.use('/ads', adsRoutes)
+  app.use('/ai', aiRoutes);
 
   app.get('/status', async (req, res) => {
     res.send('OK');

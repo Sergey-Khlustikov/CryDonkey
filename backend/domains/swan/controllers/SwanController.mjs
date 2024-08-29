@@ -1,22 +1,23 @@
 import shuffleArray from '../../../automatization/helpers/shuffleArray.mjs';
 import SwanQueue from '../queues/SwanQueue.mjs';
+import SwanRunDTO from '../dto/SwanRunDTO.mjs';
+import SWAN_COMMENT_AUTOMATION_TYPES from '../structures/SwanCommentAutomationTypes.mjs';
 
 class SwanController {
   async run(req, res) {
     try {
       const params = req.body;
-      const profiles = shuffleArray(params.profiles);
 
-      await SwanQueue.addJobs({
-        profiles,
+      await SwanQueue.addJobs(new SwanRunDTO({
+        profiles: shuffleArray(params.profiles),
         minDelayMinutes: params.minDelayMinutes || 1,
         maxDelayMinutes: params.maxDelayMinutes || 5,
         onlyDaily: params.onlyDaily,
-        dailyFirst: params.dailyFirst,
-        dailySecond: params.dailySecond,
-        dailyThird: params.dailyThird,
+        dailyCombo: params.dailyCombo,
         keepOpenProfileIds: params.keepOpenProfileIds,
-      });
+        automationType: params.commentSettings.automationType || SWAN_COMMENT_AUTOMATION_TYPES.skip,
+        commentQuests: params.commentSettings.quests || null,
+      }));
 
       res.status(200).send({ message: 'Success' });
     } catch (error) {
