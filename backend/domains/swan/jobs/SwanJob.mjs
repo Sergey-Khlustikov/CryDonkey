@@ -1,10 +1,11 @@
 import AdsApi from '../../../api/AdsApi.mjs';
-import { hoverAndClick, wait } from '../../../automatization/helpers/puppeteerHelpers.mjs';
+import {hoverAndClick, wait} from '../../../automatization/helpers/puppeteerHelpers.mjs';
 import getRandomArrayElement from '../../../automatization/helpers/getRandomArrayElement.mjs';
 import PageScroller from '../../../automatization/helpers/PageScroller.mjs';
 import TASK_TYPES from '../../../automatization/swan/structures/taskTypes.mjs';
 import typeWithRandomDelay from '../../../automatization/helpers/typeWithRandomDelay.mjs';
-import SWAN_COMMENT_AUTOMATION_TYPES from '../structures/swanCommentAutomationTypes.mjs';
+import SWAN_COMMENT_AUTOMATION_TYPES from '../structures/SwanCommentAutomationTypes.mjs';
+import OpenAIApi from '../../../api/OpenAIApi.mjs';
 
 class SwanJob {
   constructor({ profile, onlyDaily, dailyCombo, commentQuests, keepOpenProfileIds, commentAutomationType }) {
@@ -246,7 +247,7 @@ class SwanJob {
     }
 
     if (taskType === TASK_TYPES.comment) {
-      await this.processCommentTask(taskTitle);
+      await this.processCommentTask(page, taskTitle);
     }
 
     await wait(1027, 3261);
@@ -258,14 +259,24 @@ class SwanJob {
     if (this.commentAutomationType === SWAN_COMMENT_AUTOMATION_TYPES.manual) {
       const commentQuest = this.commentQuests.find(quest => quest.title === taskTitle);
 
-      if (!commentQuest) {
+      comment = commentQuest?.comment;
+    }
 
-      }
-
-      comment = commentQuest.comment;
+    if (!comment) {
+      comment = await this.getAIComment(page);
     }
 
     await this.commentTwitterPost(page, comment);
+  }
+
+  async getAIComment(page) {
+    const postElement = await page.$('div[data-testid="tweetText"]');
+    const postElementText = await page.evaluate(el => el.textContent, postElement);
+
+    let userMessage = `"${postElementText}"\n`;
+    userMessage += 'Generate short neutral response to this twitter post. No emojis, only short response, 1 sentence.';
+
+    return await OpenAIApi.generateMessage(userMessage);
   }
 
   async commentTwitterPost(page, comment) {

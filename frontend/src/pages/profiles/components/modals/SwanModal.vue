@@ -1,6 +1,6 @@
 <script setup>
-import { useDialogPluginComponent } from 'quasar';
-import { ref } from 'vue';
+import {useDialogPluginComponent} from 'quasar';
+import {ref} from 'vue';
 import Api from 'src/api/Api';
 import DontCloseProfiles from 'src/pages/profiles/components/DontCloseProfiles.vue';
 import SwanSettings from 'src/pages/profiles/components/modals/SwanSettings.vue';
@@ -44,12 +44,12 @@ async function onSubmit() {
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="q-dialog-plugin" style="width: 900px; max-width: 80vw;">
-      <q-form @submit="onSubmit" ref="formRef">
+      <q-form @submit="onSubmit" ref="formRef" no-error-focus greedy>
         <div class="text-h6 q-ml-md q-mt-md">Swan Settings</div>
 
         <q-card-section>
-          <swan-settings v-model="settings" :profiles="profiles"></swan-settings>
-          <q-separator class="q-mb-md"></q-separator>
+          <swan-settings v-model="settings" :profiles="profiles" class="q-mb-md"></swan-settings>
+
           <dont-close-profiles
             v-model="selectedNotToCloseProfiles"
             :profiles="profiles"
@@ -57,9 +57,9 @@ async function onSubmit() {
         </q-card-section>
 
         <q-card-actions align="right" class="q-mr-sm q-mb-sm">
-          <q-btn color="primary" label="Cancel" @click="onDialogCancel"></q-btn>
+          <q-btn color="red" label="Cancel" @click="onDialogCancel"></q-btn>
           <q-btn
-            color="primary"
+            color="green"
             label="Run"
             style="width: 60px;"
             type="submit"

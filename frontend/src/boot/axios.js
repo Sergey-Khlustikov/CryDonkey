@@ -1,6 +1,6 @@
-import { boot } from 'quasar/wrappers';
+import {boot} from 'quasar/wrappers';
 import axios from 'axios';
-import { Notify } from 'quasar';
+import {Notify} from 'quasar';
 
 const api = axios.create({ baseURL: `http://localhost:${process.env.VUE_APP_SERVER_PORT}` });
 
@@ -9,7 +9,7 @@ api.interceptors.response.use(
     if (response.config.method === 'post' || response.config.method === 'delete') {
       Notify.create({
         type: 'positive',
-        message: response.data.message,
+        message: response.data.message || 'Success',
         position: 'top-right',
         progress: true,
         closeBtn: true,

@@ -52,6 +52,10 @@ class SwanRunDTO {
   }
 
   getCommentQuestsByProfileId(profileId) {
+    if (!this.commentQuests) {
+      return null;
+    }
+
     return this.commentQuests.map(quest => {
       const filteredComments = quest.comments.filter(comment => comment.profileId === profileId);
 

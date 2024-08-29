@@ -1,7 +1,7 @@
 import shuffleArray from '../../../automatization/helpers/shuffleArray.mjs';
 import SwanQueue from '../queues/SwanQueue.mjs';
 import SwanRunDTO from '../dto/SwanRunDTO.mjs';
-import SWAN_COMMENT_AUTOMATION_TYPES from '../structures/swanCommentAutomationTypes.mjs';
+import SWAN_COMMENT_AUTOMATION_TYPES from '../structures/SwanCommentAutomationTypes.mjs';
 
 class SwanController {
   async run(req, res) {
@@ -15,8 +15,8 @@ class SwanController {
         onlyDaily: params.onlyDaily,
         dailyCombo: params.dailyCombo,
         keepOpenProfileIds: params.keepOpenProfileIds,
-        commentAutomationType: params.commentAutomationType || SWAN_COMMENT_AUTOMATION_TYPES.skip,
-        commentQuests: params.commentQuests || null,
+        automationType: params.commentSettings.automationType || SWAN_COMMENT_AUTOMATION_TYPES.skip,
+        commentQuests: params.commentSettings.quests || null,
       }));
 
       res.status(200).send({ message: 'Success' });
