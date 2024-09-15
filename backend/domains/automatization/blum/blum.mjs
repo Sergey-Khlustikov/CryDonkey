@@ -1,5 +1,5 @@
 import AdsApi from '../../../api/AdsApi.mjs';
-import { hoverAndClick, wait } from '../../../automatization/helpers/puppeteerHelpers.mjs';
+import {hoverAndClick, wait} from '../../../automatization/helpers/puppeteerHelpers.mjs';
 import PageScroller from '../../../automatization/helpers/PageScroller.mjs';
 
 export async function run() {
@@ -21,7 +21,7 @@ async function startQuests(browser) {
   await scroller.scrollToBottom();
   await wait(2150, 4057);
 
-  await playGame(blumFrame, tgPage);
+  await runClickerGame(blumFrame, tgPage);
 }
 
 async function openBlumBot(browser) {
@@ -56,10 +56,19 @@ async function getBlumBotFrame(tgPage) {
   return iframeContent;
 }
 
-async function playGame(frame, tgPage) {
-  await frame.waitForSelector('.index-page');
-  await frame.click('a.play-btn');
+async function runClickerGame(blumFrame, tgPage) {
+  await blumFrame.waitForSelector('.index-page');
+  await blumFrame.click('a.play-btn');
 
+  try {
+    await playGame(blumFrame, tgPage);
+  } catch (e) {
+    console.log('isDetached', blumFrame.detached);
+    console.log('error', e);
+  }
+}
+
+async function playGame(frame, tgPage) {
   const canvasElement = await frame.waitForSelector('canvas');
 
   setInterval(async () => {
@@ -71,46 +80,12 @@ async function playGame(frame, tgPage) {
 
       const greenElements = [];
 
-      // Устанавливаем диапазоны цветов
-      const targetColorRanges = [
-        { r: [63, 63], g: [219, 219], b: [0, 0] }, // rgb(63, 219, 0) с разбросом
-        { r: [129, 129], g: [255, 255], b: [41, 41] }, // rgb(129, 255, 41) с разбросом
-        { r: [176, 176], g: [243, 243243], b: [14, 14] },  // rgb(176, 243, 14) с разбросом
-      ];
-
-      const excludedColorRanges = [
-        { r: [190, 200], g: [190, 200], b: [190, 200] }, // rgb(63, 219, 0) с разбросом
-        { r: [130, 140], g: [130, 140], b: [130, 140] }, // rgb(129, 255, 41) с разбросом
-        { r: [245, 255], g: [240, 250], b: [145, 155] },  // rgb(176, 243, 14) с разбросом
-        { r: [90, 100], g: [90, 100], b: [90, 100] },  // rgb(176, 243, 14) с разбросом
-        { r: [5, 15], g: [35, 45], b: [10, 20] },  // rgb(176, 243, 14) с разбросом
-        { r: [15, 20], g: [70, 80], b: [27, 37] },  // rgb(176, 243, 14) с разбросом
-      ];
-
-      // Проверка пикселя на соответствие любому из диапазонов
-      const isInRange = (r, g, b) => {
-        const isTarget = targetColorRanges.some(range =>
-          r >= range.r[0] && r <= range.r[1] &&
-          g >= range.g[0] && g <= range.g[1] &&
-          b >= range.b[0] && b <= range.b[1],
-        );
-
-        // const excluded = excludedColorRanges.some(range =>
-        //   r >= range.r[0] && r <= range.r[1] &&
-        //   g >= range.g[0] && g <= range.g[1] &&
-        //   b >= range.b[0] && b <= range.b[1],
-        // );
-
-        return isTarget;
-      };
-
-      // Пробегаемся по каждому пикселю и проверяем цвет
       for (let i = 0; i < pixels.length; i += 4) {
-        const r = pixels[i];      // Красный канал
-        const g = pixels[i + 1];  // Зеленый канал
-        const b = pixels[i + 2];  // Синий канал
+        const r = pixels[i];
+        const g = pixels[i + 1];
+        const b = pixels[i + 2];
 
-        if (isInRange(r, g, b)) {
+        if (r === 129 && g === 255 && b === 41) {
           const x = (i / 4) % canvas.width;
           const y = Math.floor((i / 4) / canvas.width);
           greenElements.push({ x, y });
@@ -120,34 +95,37 @@ async function playGame(frame, tgPage) {
       return greenElements;
     });
 
-    const uniquePositions = [];
-    greenElements.forEach(pos => {
-      const { x, y } = pos;
-      const isNearby = uniquePositions.some(p => Math.abs(p.x - x) < 20 && Math.abs(p.y - y) < 20);
-      if (!isNearby) {
-        uniquePositions.push({ x, y });
-      }
-    });
+    if (greenElements.length > 0) {
+      const uniquePositions = [];
 
-    // Получаем bounding box canvas для вычисления реальных координат кликов
-    const boundingBox = await canvasElement.boundingBox();
+      greenElements.forEach(pos => {
+        const {x, y} = pos;
+        const isNearby = uniquePositions.some(p => Math.abs(p.x - x) < 50 && Math.abs(p.y - y) < 50);
 
-    // Функция для клика с задержкой
-    const clickWithDelay = async (positions, delay) => {
-      for (let i = 0; i < positions.length; i++) {
-        const pos = positions[i];
-        const absoluteX = boundingBox.x + pos.x;
-        const absoluteY = boundingBox.y + pos.y;
+        if (!isNearby) {
+          uniquePositions.push({x, y});
+        }
+      });
 
-        await tgPage.mouse.click(absoluteX, absoluteY);
+      // Получаем bounding box canvas для вычисления реальных координат кликов
+      const boundingBox = await canvasElement.boundingBox();
 
-        // Ждем перед следующим кликом
-        await new Promise(resolve => setTimeout(resolve, delay));
-      }
-    };
+      // Функция для клика с задержкой
+      const clickWithDelay = async (positions, delay) => {
+        for (let i = 0; i < positions.length; i++) {
+          const pos = positions[i];
+          const absoluteX = boundingBox.x + pos.x;
+          const absoluteY = boundingBox.y + pos.y;
 
-    // Запускаем клики с задержкой 500 миллисекунд
-    await clickWithDelay(uniquePositions, 100);
+          await tgPage.mouse.click(absoluteX, absoluteY);
 
-  }, 100); // Периодичность анализа каждые 100 миллисекунд
+          // Ждем перед следующим кликом
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      };
+
+      // Запускаем клики с задержкой 100 миллисекунд
+      await clickWithDelay(uniquePositions, 100);
+    }
+  }, 50); // Периодичность анализа каждые 100 миллисекунд
 }
