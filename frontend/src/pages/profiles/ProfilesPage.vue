@@ -26,7 +26,6 @@ const filteredProfiles = computed(() => {
 
 <template>
   <q-page padding>
-    TEST
     <div class="filters flex justify-between q-mb-md">
       <profile-groups-select v-model="selectedGroup" style="width: 300px"></profile-groups-select>
       <job-queues-dropdown :profiles="selectedProfiles"></job-queues-dropdown>
