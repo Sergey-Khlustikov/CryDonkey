@@ -84,7 +84,7 @@ class SwanJob {
           break;
 
         case 3:
-          await scroller.scrollToElement('.faq', {
+          await scroller.scrollToBottom({
             minDistance: 102,
             maxDistance: 523,
           });
