@@ -12,6 +12,8 @@ const ENV = {
 
   REDIS_HOST: process.env.REDIS_HOST || 'localhost',
   REDIS_PORT: process.env.REDIS_PORT || 6379,
+
+  RABBY_PASSWORD: process.env.RABBY_PASSWORD,
 };
 
 export default ENV;
