@@ -6,9 +6,10 @@ import TASK_TYPES from '../../../automatization/swan/structures/taskTypes.mjs';
 import typeWithRandomDelay from '../../../automatization/helpers/typeWithRandomDelay.mjs';
 import SWAN_COMMENT_AUTOMATION_TYPES from '../structures/SwanCommentAutomationTypes.mjs';
 import OpenAIApi from '../../../api/OpenAIApi.mjs';
+import unlockRabbyWallet from '../../../automatization/helpers/unlockRabbyWallet.mjs';
 
 class SwanJob {
-  constructor({ profile, onlyDaily, dailyCombo, commentQuests, keepOpenProfileIds, commentAutomationType }) {
+  constructor({profile, onlyDaily, dailyCombo, commentQuests, keepOpenProfileIds, commentAutomationType}) {
     this.profile = profile;
     this.onlyDaily = onlyDaily;
     this.dailyCombo = dailyCombo;
@@ -36,17 +37,17 @@ class SwanJob {
 
   async startQuests(browser) {
     const page = await browser.newPage();
-    await page.goto(this.questUrl, { waitUntil: 'load' });
+    await page.goto(this.questUrl, {waitUntil: 'load'});
 
     await wait(1012, 5012);
 
     const scenario = getRandomArrayElement([1, 2, 3]);
 
-    await this.runScenario({ browser, page, scenario });
+    await this.runScenario({browser, page, scenario: 1});
   }
 
-  async runScenario({ browser, page, scenario }) {
-    const scroller = new PageScroller({ page, scrollableTag: '.el-main' });
+  async runScenario({browser, page, scenario}) {
+    const scroller = new PageScroller({page, scrollableTag: '.el-main'});
 
     try {
       switch (scenario) {
@@ -57,17 +58,22 @@ class SwanJob {
           await wait(1214, 3521);
 
           if (!this.onlyDaily) {
-            await scroller.scrollToElement('.task-all');
+            await scroller.scrollToElement('.reward-card');
             await wait(1214, 3521);
             await this.completeCommonQuests(browser, page);
             await wait(1214, 3521);
           }
 
+          await scroller.scrollToTop();
+          await wait(1452, 5312);
+          await this.completeOnChainTasks(browser, page, scroller);
+          await wait(1452, 5312);
+
           break;
 
         case 2:
           if (!this.onlyDaily) {
-            await scroller.scrollToElement('.task-all');
+            await scroller.scrollToElement('.reward-card');
             await wait(1214, 3521);
             await this.completeCommonQuests(browser, page);
             await wait(1214, 3521);
@@ -81,10 +87,16 @@ class SwanJob {
           await wait(1214, 3521);
           await this.completeDailyQuest(page);
           await wait(1214, 3521);
+
+          await scroller.scrollToTop();
+          await wait(1452, 5312);
+          await this.completeOnChainTasks(browser, page, scroller);
+          await wait(1452, 5312);
+
           break;
 
         case 3:
-          await scroller.scrollToElement('.faq', {
+          await scroller.scrollToBottom({
             minDistance: 102,
             maxDistance: 523,
           });
@@ -99,11 +111,16 @@ class SwanJob {
           await wait(1214, 3521);
 
           if (!this.onlyDaily) {
-            await scroller.scrollToElement('.task-all');
+            await scroller.scrollToElement('.reward-card');
             await wait(1214, 3521);
             await this.completeCommonQuests(browser, page);
             await wait(1214, 3521);
           }
+
+          await scroller.scrollToTop();
+          await wait(1452, 5312);
+          await this.completeOnChainTasks(browser, page, scroller);
+          await wait(1452, 5312);
 
           break;
       }
@@ -111,6 +128,67 @@ class SwanJob {
       throw e;
     } finally {
       await page.close();
+    }
+  }
+
+  async completeOnChainTasks(browser, page, scroller) {
+    await unlockRabbyWallet(browser);
+
+    const onChainTabBtn = page.locator('#tab-OnchainMission');
+    await hoverAndClick(onChainTabBtn);
+    await wait(1241, 3120);
+    await scroller.scrollToBottom({minDistance: 102, maxDistance: 523});
+
+    const tasks = await page.$$('.interact-container-card');
+
+    if (tasks.length === 0) {
+      return;
+    }
+
+    for (let i = 0; i < tasks.length; i++) {
+      const task = tasks[i];
+      const taskTitleElement = await task.$('.item-title span');
+
+      if (!taskTitleElement) {
+        continue;
+      }
+
+      const taskTitle = await page.evaluate(el => el.textContent, taskTitleElement);
+
+      if (taskTitle === 'Daily Check-in') {
+        const verifyBtn = await task.$('.item-title-right .btn:last-of-type');
+
+        if (!verifyBtn) {
+          throw new Error('Onchain daily. Verify btn not found.');
+        }
+
+        const buttonText = await verifyBtn.evaluate(el => el.innerText.trim());
+        console.log(buttonText);
+        if (buttonText === 'Verify') {
+          await hoverAndClick(verifyBtn);
+        } else {
+          continue;
+        }
+
+        const newPagePromise = new Promise(resolve => browser.once('targetcreated', target => resolve(target.page())));
+        const extensionPage = await newPagePromise;
+
+        await wait(2024, 5123);
+
+        await extensionPage
+          .locator('button')
+          .filter(button => button.innerText === 'Sign')
+          .click();
+
+        await wait(2121, 5121);
+
+        await extensionPage
+          .locator('button')
+          .filter(button => button.innerText === 'Confirm')
+          .click();
+
+        await wait(2121, 5121);
+      }
     }
   }
 
@@ -196,7 +274,7 @@ class SwanJob {
 
       if (twitterPage) {
         try {
-          await twitterPage.waitForNavigation({ waitUntil: 'load' });
+          await twitterPage.waitForNavigation({waitUntil: 'load'});
           await wait(3421, 6012);
           await this.processTwitter(twitterPage, taskType, taskTitle);
         } finally {
