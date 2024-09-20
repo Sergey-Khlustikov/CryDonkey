@@ -21,11 +21,13 @@ class SwanJob {
 
   async run() {
     try {
+      console.log(`------- Start profile ${this.profile.name} -------`);
       const browser = await AdsApi.connectToPuppeteer(this.profile.id);
 
       try {
         await this.startQuests(browser);
       } finally {
+        console.log(`------- Stop profile ${this.profile.name} --------`);
         if (!this.keepOpenProfileIds.includes(this.profile.id)) {
           await browser.close();
         }
@@ -37,18 +39,18 @@ class SwanJob {
 
   async startQuests(browser) {
     const page = await browser.newPage();
-    await page.goto(this.questUrl, {waitUntil: 'load'});
+    await page.goto(this.questUrl, {waitUntil: 'networkidle2'});
 
     await wait(1012, 5012);
 
     const scenario = getRandomArrayElement([1, 2, 3]);
 
-    await this.runScenario({browser, page, scenario: 1});
+    await this.runScenario({browser, page, scenario});
   }
 
   async runScenario({browser, page, scenario}) {
     const scroller = new PageScroller({page, scrollableTag: '.el-main'});
-
+    console.log(`run scenario ${scenario}`);
     try {
       switch (scenario) {
         case 1:
@@ -132,6 +134,7 @@ class SwanJob {
   }
 
   async completeOnChainTasks(browser, page, scroller) {
+    console.log('Start onchain');
     await unlockRabbyWallet(browser);
 
     const onChainTabBtn = page.locator('#tab-OnchainMission');
@@ -190,9 +193,11 @@ class SwanJob {
         await wait(2121, 5121);
       }
     }
+    console.log('end onchain');
   }
 
   async completeDailyQuest(page) {
+    console.log('Start daily');
     if ((await page.$('.reward-card .reward-card-btn')) === null) {
       return;
     }
@@ -213,6 +218,7 @@ class SwanJob {
     await hoverAndClick(await page.locator('.daliy-card .confirm-btn'));
     await wait(4027, 7126);
     await hoverAndClick(await page.locator('.daliy-card .close-btn'));
+    console.log('End daily');
   }
 
   async clickDailyNumber(page, number) {
@@ -226,6 +232,7 @@ class SwanJob {
   }
 
   async completeCommonQuests(browser, page) {
+    console.log('Start common');
     const pageTarget = page.target();
     const tasks = await page.$$('.tasks:first-of-type .tasks-list.item');
 
@@ -234,6 +241,7 @@ class SwanJob {
     }
 
     for (let i = 0; i < tasks.length; i++) {
+      console.log('start common task');
       const task = tasks[i];
       const taskTitleElement = await task.$('.title-url');
 
@@ -265,16 +273,21 @@ class SwanJob {
         continue;
       }
 
+      console.log('try hover');
       await taskTitleElement.hover();
       await wait(141, 953);
+      console.log('try click');
       await taskTitleElement.click();
+      console.log('success click');
 
       const twitterTarget = await browser.waitForTarget(target => target.opener() === pageTarget);
       const twitterPage = await twitterTarget.page();
 
       if (twitterPage) {
         try {
-          await twitterPage.waitForNavigation({waitUntil: 'load'});
+          console.log('wait for twitter load');
+          await twitterPage.waitForNavigation({waitUntil: 'networkidle2'});
+          console.log('twitter loaded');
           await wait(3421, 6012);
           await this.processTwitter(twitterPage, taskType, taskTitle);
         } finally {
@@ -290,7 +303,9 @@ class SwanJob {
       await wait(152, 563);
       verifyBtn.click();
       await wait(2163, 4601);
+      console.log('task verified btn clicked');
     }
+    console.log('end common');
   }
 
   async processTwitter(page, taskType, taskTitle) {
