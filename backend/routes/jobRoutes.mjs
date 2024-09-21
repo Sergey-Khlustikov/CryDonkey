@@ -10,6 +10,4 @@ router.delete('/:id/remove', (req, res) => JobsController.removeJob(req, res));
 router.delete('/deleteAll',  (req, res) => JobsController.deleteAll(req, res));
 router.post('/retryFailed', (req, res) => JobsController.retryFailed(req, res));
 
-router.post('/runCustom', (req, res) => JobsController.runCustom(req, res));
-
 export default router;

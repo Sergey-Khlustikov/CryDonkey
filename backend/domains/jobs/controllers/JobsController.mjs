@@ -2,8 +2,6 @@ import RcadeQueue from '../../rcade/queues/RcadeQueue.mjs';
 import JobResource from '../resources/JobResource.mjs';
 import QUEUE_NAMES from '../../../structures/queueNames.mjs';
 import SwanQueue from '../../swan/queues/SwanQueue.mjs';
-import CustomQueue from '../../queues/CustomQueue.mjs';
-import shuffleArray from '../../../automatization/helpers/shuffleArray.mjs';
 
 class JobsController {
   async getList(req, res) {
@@ -11,7 +9,7 @@ class JobsController {
       const { status, queue } = req.query;
       const statuses = status ? [status] : [];
 
-      const allQueues = [RcadeQueue, SwanQueue, CustomQueue];
+      const allQueues = [RcadeQueue, SwanQueue];
       const jobs = [];
 
       if (queue) {
@@ -49,10 +47,6 @@ class JobsController {
         case QUEUE_NAMES.swan:
           queue = SwanQueue;
           break;
-
-        case QUEUE_NAMES.custom:
-          queue = CustomQueue;
-          break;
       }
 
       const job = await queue.getJob(id);
@@ -83,10 +77,6 @@ class JobsController {
         case QUEUE_NAMES.swan:
           queue = SwanQueue;
           break;
-
-        case QUEUE_NAMES.custom:
-          queue = CustomQueue;
-          break;
       }
 
       await queue.removeJob(id);
@@ -99,7 +89,7 @@ class JobsController {
 
   async retryFailed(req, res) {
     try {
-      const queues = [RcadeQueue, SwanQueue, CustomQueue];
+      const queues = [RcadeQueue, SwanQueue];
 
       for (const queue of queues) {
         await queue.retryJobs({ state: 'failed' });
@@ -113,7 +103,7 @@ class JobsController {
 
   async deleteAll(req, res) {
     try {
-      const queues = [RcadeQueue, SwanQueue, CustomQueue];
+      const queues = [RcadeQueue, SwanQueue];
 
       for (const queue of queues) {
         await queue.obliterate({ force: true });
@@ -122,23 +112,6 @@ class JobsController {
       res.status(200).json({ message: 'Success' });
     } catch (e) {
       res.status(500).json({ message: e.message });
-    }
-  }
-
-  async runCustom(req, res) {
-    try {
-      await CustomQueue.addJobs({
-        profiles: shuffleArray(req.body.profiles),
-        minDelayMinutes: req.body.minDelayMinutes || 1,
-        maxDelayMinutes: req.body.maxDelayMinutes || 5,
-        rcadeOptions: req.body.rcadeOptions,
-        swanOptions: req.body.swanOptions,
-        keepOpenProfileIds: req.body.keepOpenProfileIds,
-      });
-
-      res.status(200).send({ message: 'Jobs added to a queue' });
-    } catch (error) {
-      res.status(500).send({ message: error.message });
     }
   }
 }

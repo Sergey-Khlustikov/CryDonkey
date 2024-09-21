@@ -2,8 +2,8 @@
 import {useDialogPluginComponent} from 'quasar';
 import {ref} from 'vue';
 import Api from 'src/api/Api';
-import DontCloseProfiles from 'src/pages/profiles/components/DontCloseProfiles.vue';
 import SwanSettings from 'src/pages/profiles/components/modals/SwanSettings.vue';
+import GeneralJobSettings from 'src/pages/profiles/components/modals/GeneralJobSettings.vue';
 
 const props = defineProps({
   profiles: {
@@ -25,14 +25,16 @@ const {
 
 const formRef = ref(null);
 const settings = ref({});
-const selectedNotToCloseProfiles = ref([]);
+const generalSettings = ref({
+  keepOpenProfileIds: [],
+});
 
 async function onSubmit() {
   await Api.runSwan({
     profiles: props.profiles.map(profile => {
       return { id: profile.user_id, name: profile.name };
     }),
-    keepOpenProfileIds: selectedNotToCloseProfiles.value,
+    keepOpenProfileIds: generalSettings.value.keepOpenProfileIds,
     ...settings.value,
   });
 
@@ -48,12 +50,13 @@ async function onSubmit() {
         <div class="text-h6 q-ml-md q-mt-md">Swan Settings</div>
 
         <q-card-section>
-          <swan-settings v-model="settings" :profiles="profiles" class="q-mb-md"></swan-settings>
-
-          <dont-close-profiles
-            v-model="selectedNotToCloseProfiles"
+          <general-job-settings
+            v-model="generalSettings"
             :profiles="profiles"
-          ></dont-close-profiles>
+            class="q-mb-md"
+          ></general-job-settings>
+
+          <swan-settings v-model="settings" :profiles="profiles" class="q-mb-md"></swan-settings>
         </q-card-section>
 
         <q-card-actions align="right" class="q-mr-sm q-mb-sm">
