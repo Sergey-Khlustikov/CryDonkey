@@ -11,15 +11,22 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-const dontCloseProfiles = ref(false);
 const selectedProfiles = ref([]);
+const selectAll = ref(false);
 
-watch(dontCloseProfiles, (newValue) => {
-  if (!newValue) {
-    selectedProfiles.value = [];
-    emit('update:modelValue', selectedProfiles.value);
-  }
+watch(selectedProfiles, (newValue) => {
+  selectAll.value = newValue.length === props.profiles.length;
 });
+
+const toggleSelectAll = (value) => {
+  selectAll.value = value;
+
+  if (value) {
+    onSelectedUpdated(props.profiles.map(profile => (profile.user_id)));
+  } else {
+    onSelectedUpdated([]);
+  }
+};
 
 const onSelectedUpdated = (value) => {
   selectedProfiles.value = value;
@@ -29,14 +36,19 @@ const onSelectedUpdated = (value) => {
 
 <template>
   <div>
-    <q-checkbox v-model="dontCloseProfiles" label="Don't close profiles:"></q-checkbox>
-
-    <div v-if="dontCloseProfiles">
-      <select-profiles-checkboxes
-        :model-value="selectedProfiles"
-        @update:model-value="onSelectedUpdated"
-        :profiles="profiles"
-      ></select-profiles-checkboxes>
+    <div>Don't close profiles:</div>
+    <div>
+      <q-checkbox
+        v-model="selectAll"
+        label="Select All"
+        @update:model-value="toggleSelectAll"
+      ></q-checkbox>
     </div>
+
+    <select-profiles-checkboxes
+      :model-value="selectedProfiles"
+      @update:model-value="onSelectedUpdated"
+      :profiles="profiles"
+    ></select-profiles-checkboxes>
   </div>
 </template>
