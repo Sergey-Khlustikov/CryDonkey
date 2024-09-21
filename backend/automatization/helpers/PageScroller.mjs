@@ -1,8 +1,8 @@
-import { wait } from './puppeteerHelpers.mjs';
+import {wait} from './puppeteerHelpers.mjs';
 
 const randomOptions = {
   minDistance: 77,
-  maxDistance: 159,
+  maxDistance: 152,
   minDelay: 79,
   maxDelay: 1021,
 };
@@ -16,7 +16,9 @@ class PageScroller {
   async scroll({ minDistance, maxDistance, minDelay, maxDelay, direction, targetPosition }) {
     let scrolled = direction === 'down' ? 0 : await this.getScrollTopPosition(this.scrollableTag);
 
-    const isScrolling = () => (direction === 'down' ? scrolled < targetPosition : scrolled > targetPosition);
+    const isScrolling = () => {
+      return (direction === 'down' ? scrolled < targetPosition : scrolled > targetPosition);
+    };
 
     while (isScrolling()) {
       const distance = calculateRandomScrollDistance(minDistance, maxDistance);
@@ -74,6 +76,32 @@ class PageScroller {
       const element = document.querySelector(el);
       const container = document.querySelector(tag);
       return element ? element.getBoundingClientRect().top + container.scrollTop : null;
+    }, element, this.scrollableTag);
+
+    if (targetPosition === null) {
+      throw new Error(`PageScroller: Element "${element}" not found.`);
+    }
+
+    const currentPosition = await this.getScrollTopPosition(this.scrollableTag);
+    const direction = currentPosition < targetPosition ? 'down' : 'up';
+
+    await this.scroll({minDistance, maxDistance, minDelay, maxDelay, direction, targetPosition});
+  }
+
+  async scrollToElementCenter(element, {
+    minDistance = randomOptions.minDistance,
+    maxDistance = randomOptions.maxDistance,
+    minDelay = randomOptions.minDelay,
+    maxDelay = randomOptions.maxDelay,
+  } = {}) {
+    const targetPosition = await this.page.evaluate((el, tag) => {
+      const element = document.querySelector(el);
+      const container = document.querySelector(tag);
+      const containerScrollTop = container.scrollTop;
+      const elementPosition = element.getBoundingClientRect().top + containerScrollTop;
+      const containerHeight = container.clientHeight;
+
+      return elementPosition - (containerHeight / 2);
     }, element, this.scrollableTag);
 
     if (targetPosition === null) {

@@ -41,7 +41,9 @@ onMounted(() => {
       v-model:dailyCombo="settings.dailyCombo"
       v-model:onlyDaily="settings.onlyDaily"
     ></swan-daily-combo>
+
     <q-separator class="q-mb-md"></q-separator>
+
     <swan-comments v-model="settings.commentSettings" :profiles="profiles"></swan-comments>
   </div>
 </template>

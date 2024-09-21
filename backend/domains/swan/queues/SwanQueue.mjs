@@ -18,7 +18,7 @@ class SwanQueue extends BaseQueue {
     });
 
     this.initWorker(async (job) => {
-      await new SwanJob(job.data).run();
+      await new SwanJob(job, job.data).run();
     });
   }
 
