@@ -1,20 +1,21 @@
 import AdsApi from '../../../api/AdsApi.mjs';
-import {wait} from '../../../automatization/helpers/puppeteerHelpers.mjs';
+import { wait } from '../../../automatization/helpers/puppeteerHelpers.mjs';
 import getRandomArrayElement from '../../../automatization/helpers/getRandomArrayElement.mjs';
 import PageScroller from '../../../automatization/helpers/PageScroller.mjs';
 import SwanDailyTaskHandler from './handlers/SwanDailyTaskHandler.mjs';
 import SwanSocialQuestsHandler from './handlers/SwanSocialQuestsHandler.mjs';
 import SwanOnChainQuestsHandler from './handlers/SwanOnChainQuestsHandler.mjs';
+import { retryMethodWithReload } from '../../../helpers/retryMethod.mjs';
 
 class SwanJob {
-  constructor(job, {profile, onlyDaily, dailyCombo, commentQuests, keepOpenProfileIds, commentAutomationType}) {
+  constructor(job, { profile, onlyDaily, dailyCombo, commentQuests, keepOpenProfileIds, commentAutomationType }) {
     this.job = job;
     this.profile = profile;
     this.onlyDaily = onlyDaily;
     this.keepOpenProfileIds = keepOpenProfileIds;
     this.questUrl = 'https://mission.swanchain.io/';
 
-    this.DailyTaskHandler = new SwanDailyTaskHandler(job, {dailyCombo});
+    this.DailyTaskHandler = new SwanDailyTaskHandler(job, { dailyCombo });
     this.CommonQuestsHandler = new SwanSocialQuestsHandler({
       commentAutomationType, commentQuests,
     });
@@ -41,7 +42,7 @@ class SwanJob {
 
   async startQuests(browser) {
     const page = await browser.newPage();
-    await page.goto(this.questUrl, {waitUntil: 'networkidle2'});
+    await page.goto(this.questUrl, { waitUntil: 'networkidle2' });
 
     await wait(1012, 5012);
 
@@ -50,8 +51,8 @@ class SwanJob {
     await this.runScenario({browser, page, scenario});
   }
 
-  async runScenario({browser, page, scenario}) {
-    const scroller = new PageScroller({page, scrollableTag: '.el-main'});
+  async runScenario({ browser, page, scenario }) {
+    const scroller = new PageScroller({ page, scrollableTag: '.el-main' });
     console.log(`run scenario ${scenario}`);
 
     try {
@@ -71,7 +72,7 @@ class SwanJob {
 
           await scroller.scrollToTop();
           await wait(1452, 5312);
-          await this.OnChainQuestsHandler.run(browser, page);
+          await retryMethodWithReload(page, () => this.OnChainQuestsHandler.run(browser, page));
           await wait(1452, 5312);
 
           break;
@@ -95,7 +96,7 @@ class SwanJob {
 
           await scroller.scrollToTop();
           await wait(1452, 5312);
-          await this.OnChainQuestsHandler.run(browser, page);
+          await retryMethodWithReload(page, () => this.OnChainQuestsHandler.run(browser, page));
           await wait(1452, 5312);
 
           break;
@@ -124,7 +125,7 @@ class SwanJob {
 
           await scroller.scrollToTop();
           await wait(1452, 5312);
-          await this.OnChainQuestsHandler.run(browser, page);
+          await retryMethodWithReload(page, () => this.OnChainQuestsHandler.run(browser, page));
           await wait(1452, 5312);
 
           break;
