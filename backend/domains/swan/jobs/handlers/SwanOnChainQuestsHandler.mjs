@@ -1,4 +1,4 @@
-import { hoverAndClick, wait } from '../../../../automatization/helpers/puppeteerHelpers.mjs';
+import {hoverAndClick, wait} from '../../../../automatization/helpers/puppeteerHelpers.mjs';
 import PageScroller from '../../../../automatization/helpers/PageScroller.mjs';
 import Rabby from '../../../extensions/rabby/Rabby.mjs';
 
@@ -19,7 +19,6 @@ class SwanOnChainQuestsHandler {
 
       await Rabby.unlockFullPage(this.browser);
       this.page.bringToFront();
-      await Rabby.trigger(this.browser, this.page);
 
       const onChainTabBtn = page.locator('#tab-OnchainMission');
       await hoverAndClick(onChainTabBtn);
@@ -69,9 +68,9 @@ class SwanOnChainQuestsHandler {
 
       console.log('try open rabby');
       const newPagePromise = new Promise(resolve => this.browser.once('targetcreated', target => resolve(target.page())));
+      await wait(4912, 8124);
       const extensionPage = await newPagePromise;
 
-      await extensionPage.waitForNavigation({ waitUntil: 'load' });
       console.log('rabby opened');
 
       await wait(5024, 8123);
