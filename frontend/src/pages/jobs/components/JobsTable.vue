@@ -4,6 +4,7 @@ import JobStatusLabel from 'src/pages/jobs/components/JobStatusLabel.vue';
 import JOB_STATUSES from 'src/domains/jobs/structures/jobStatuses';
 import Timer from 'src/components/Timer.vue';
 import JobActions from 'src/pages/jobs/components/JobActions.vue';
+import AdsController from 'src/domains/ads/AdsController';
 
 defineOptions({
   name: 'JobsTable',
@@ -99,6 +100,19 @@ const pagination = {
       <q-inner-loading showing color="primary"/>
     </template>
 
+    <template #body-cell-profile="props">
+      <q-td :props="props">
+        <div>Name: {{ props.row.data.profile.name }}</div>
+        <div>ID: {{ props.row.data.profile.id }}</div>
+        <q-btn
+          @click="AdsController.openAdsProfile(props.row.data.profile.id)"
+          color="primary"
+          size="xs"
+          label="Open"
+        ></q-btn>
+      </q-td>
+    </template>
+
     <template #body-cell-status="props">
       <q-td :props="props">
         <job-status-label :status="props.row.status">
@@ -111,13 +125,6 @@ const pagination = {
           :delay="props.row.opts.delay"
           :timestamp="props.row.timestamp"
         ></timer>
-      </q-td>
-    </template>
-
-    <template #body-cell-profile="props">
-      <q-td :props="props">
-        <div>ID: {{ props.row.data.profile.id }}</div>
-        <div>Name: {{ props.row.data.profile.name }}</div>
       </q-td>
     </template>
 
