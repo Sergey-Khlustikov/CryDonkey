@@ -1,9 +1,9 @@
 import TASK_TYPES from '../../structures/taskTypes.mjs';
 import SWAN_COMMENT_AUTOMATION_TYPES from '../../structures/SwanCommentAutomationTypes.mjs';
-import {hoverAndClick, wait} from '../../../../automatization/helpers/puppeteerHelpers.mjs';
+import { hoverAndClick, wait } from '../../../../automatization/helpers/puppeteerHelpers.mjs';
 import OpenAIApi from '../../../../api/OpenAIApi.mjs';
 import typeWithRandomDelay from '../../../../automatization/helpers/typeWithRandomDelay.mjs';
-import retryMethod from '../../../../helpers/retryMethod.mjs';
+import { retryMethod } from '../../../../helpers/retryMethod.mjs';
 import checkTwitterAuth from '../../../../automatization/helpers/checkTwitterAuth.mjs';
 
 class SwanSocialQuestsHandler {
