@@ -5,7 +5,7 @@ import PageScroller from '../../../automatization/helpers/PageScroller.mjs';
 import SwanDailyTaskHandler from './handlers/SwanDailyTaskHandler.mjs';
 import SwanSocialQuestsHandler from './handlers/SwanSocialQuestsHandler.mjs';
 import SwanOnChainQuestsHandler from './handlers/SwanOnChainQuestsHandler.mjs';
-import { retryMethodWithReload } from '../../../helpers/retryMethod.mjs';
+import {retryMethodWithReload} from '../../../helpers/retryMethod.mjs';
 
 class SwanJob {
   constructor(job, { profile, onlyDaily, dailyCombo, commentQuests, keepOpenProfileIds, commentAutomationType }) {
@@ -58,13 +58,13 @@ class SwanJob {
     try {
       switch (scenario) {
         case 1:
-          await scroller.scrollToElement('.community-boost');
+          await scroller.scrollToElementCenter('.reward-card');
           await wait(1214, 3521);
           await this.DailyTaskHandler.run(page);
           await wait(1214, 3521);
 
           if (!this.onlyDaily) {
-            await scroller.scrollToElementCenter('.task-all');
+            await scroller.scrollToElement('.reward-card');
             await wait(1214, 3521);
             await this.CommonQuestsHandler.run(browser, page);
             await wait(1214, 3521);
@@ -85,7 +85,7 @@ class SwanJob {
             await wait(1214, 3521);
           }
 
-          await scroller.scrollToElement('.total-referral', {
+          await scroller.scrollToElementCenter('.reward-card', {
             minDistance: 102,
             maxDistance: 423,
           });
@@ -107,7 +107,7 @@ class SwanJob {
             maxDistance: 523,
           });
           await wait(1214, 3521);
-          await scroller.scrollToElement('.total-referral', {
+          await scroller.scrollToElementCenter('.reward-card', {
             minDistance: 102,
             maxDistance: 523,
           });
@@ -117,7 +117,7 @@ class SwanJob {
           await wait(1214, 3521);
 
           if (!this.onlyDaily) {
-            await scroller.scrollToElementCenter('.task-all');
+            await scroller.scrollToElement('.reward-card');
             await wait(1214, 3521);
             await this.CommonQuestsHandler.run(browser, page);
             await wait(1214, 3521);
