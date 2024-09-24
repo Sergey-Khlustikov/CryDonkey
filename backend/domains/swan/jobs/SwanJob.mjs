@@ -1,5 +1,5 @@
 import AdsApi from '../../../api/AdsApi.mjs';
-import {wait} from '../../../automatization/helpers/puppeteerHelpers.mjs';
+import { wait } from '../../../automatization/helpers/puppeteerHelpers.mjs';
 import getRandomArrayElement from '../../../automatization/helpers/getRandomArrayElement.mjs';
 import PageScroller from '../../../automatization/helpers/PageScroller.mjs';
 import SwanDailyTaskHandler from './handlers/SwanDailyTaskHandler.mjs';
