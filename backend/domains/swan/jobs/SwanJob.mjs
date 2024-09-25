@@ -1,5 +1,5 @@
 import AdsApi from '../../../api/AdsApi.mjs';
-import { wait } from '../../../automatization/helpers/puppeteerHelpers.mjs';
+import {wait} from '../../../automatization/helpers/puppeteerHelpers.mjs';
 import getRandomArrayElement from '../../../automatization/helpers/getRandomArrayElement.mjs';
 import PageScroller from '../../../automatization/helpers/PageScroller.mjs';
 import SwanDailyTaskHandler from './handlers/SwanDailyTaskHandler.mjs';
@@ -64,7 +64,7 @@ class SwanJob {
           await wait(1214, 3521);
 
           if (!this.onlyDaily) {
-            await scroller.scrollToElement('.reward-card');
+            await scroller.scrollToElementCenter('.reward-card');
             await wait(1214, 3521);
             await this.CommonQuestsHandler.run(browser, page);
             await wait(1214, 3521);
@@ -117,7 +117,7 @@ class SwanJob {
           await wait(1214, 3521);
 
           if (!this.onlyDaily) {
-            await scroller.scrollToElement('.reward-card');
+            await scroller.scrollToElementCenter('.reward-card');
             await wait(1214, 3521);
             await this.CommonQuestsHandler.run(browser, page);
             await wait(1214, 3521);
