@@ -2,6 +2,7 @@ import RcadeQueue from '../../rcade/queues/RcadeQueue.mjs';
 import JobResource from '../resources/JobResource.mjs';
 import QUEUE_NAMES from '../../../structures/queueNames.mjs';
 import SwanQueue from '../../swan/queues/SwanQueue.mjs';
+import TwitterPostQueue from '../../twitter/queues/TwitterPostQueue.mjs';
 
 class JobsController {
   async getList(req, res) {
@@ -9,7 +10,7 @@ class JobsController {
       const { status, queue } = req.query;
       const statuses = status ? [status] : [];
 
-      const allQueues = [RcadeQueue, SwanQueue];
+      const allQueues = [RcadeQueue, SwanQueue, TwitterPostQueue];
       const jobs = [];
 
       if (queue) {
@@ -47,6 +48,10 @@ class JobsController {
         case QUEUE_NAMES.swan:
           queue = SwanQueue;
           break;
+
+        case QUEUE_NAMES.twitterPost:
+          queue = TwitterPostQueue;
+          break;
       }
 
       const job = await queue.getJob(id);
@@ -77,6 +82,10 @@ class JobsController {
         case QUEUE_NAMES.swan:
           queue = SwanQueue;
           break;
+
+        case QUEUE_NAMES.twitterPost:
+          queue = TwitterPostQueue;
+          break;
       }
 
       await queue.removeJob(id);
@@ -89,7 +98,7 @@ class JobsController {
 
   async retryFailed(req, res) {
     try {
-      const queues = [RcadeQueue, SwanQueue];
+      const queues = [RcadeQueue, SwanQueue, TwitterPostQueue];
 
       for (const queue of queues) {
         await queue.retryJobs({ state: 'failed' });
@@ -103,7 +112,7 @@ class JobsController {
 
   async deleteAll(req, res) {
     try {
-      const queues = [RcadeQueue, SwanQueue];
+      const queues = [RcadeQueue, SwanQueue, TwitterPostQueue];
 
       for (const queue of queues) {
         await queue.obliterate({ force: true });
