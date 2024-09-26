@@ -1,9 +1,8 @@
 import TASK_TYPES from '../../structures/taskTypes.mjs';
 import SWAN_COMMENT_AUTOMATION_TYPES from '../../structures/SwanCommentAutomationTypes.mjs';
-import { hoverAndClick, wait } from '../../../../automatization/helpers/puppeteerHelpers.mjs';
+import {hoverAndClick, wait} from '../../../../automatization/helpers/puppeteerHelpers.mjs';
 import OpenAIApi from '../../../../api/OpenAIApi.mjs';
 import typeWithRandomDelay from '../../../../automatization/helpers/typeWithRandomDelay.mjs';
-import { retryMethod } from '../../../../helpers/retryMethod.mjs';
 import checkTwitterAuth from '../../../../automatization/helpers/checkTwitterAuth.mjs';
 
 class SwanSocialQuestsHandler {
@@ -87,8 +86,9 @@ class SwanSocialQuestsHandler {
   }
 
   async handleQuest(taskTitleElement, taskType) {
+    console.log('handleQuest');
     try {
-      const twitterPage = await retryMethod(() => this.openTwitterPage(taskTitleElement));
+      const twitterPage = await this.openTwitterPage(taskTitleElement);
 
       if (twitterPage) {
         await wait(2041, 5123);
@@ -139,14 +139,11 @@ class SwanSocialQuestsHandler {
     try {
       switch (taskType) {
         case TASK_TYPES.follow:
-          await this.handleTwitterAction(twitterPage, 'Follow');
-          break;
         case TASK_TYPES.like:
-          await this.handleTwitterAction(twitterPage, 'Like');
-          break;
         case TASK_TYPES.repost:
-          await this.handleTwitterAction(twitterPage, 'Repost');
+          await this.handleTwitterAction(twitterPage, taskType);
           break;
+
         case TASK_TYPES.comment:
           await this.processCommentTask(twitterPage, taskTitle);
           break;
@@ -156,14 +153,14 @@ class SwanSocialQuestsHandler {
     }
   }
 
-  async handleTwitterAction(page, actionText) {
-    const btn = await page.$(`button::-p-text(${actionText})`);
+  async handleTwitterAction(page, taskType) {
+    const btn = await page.$(`div[data-testid="confirmationSheetDialog"] button[data-testid="confirmationSheetConfirm"]`);
 
     if (btn) {
       await hoverAndClick(btn);
       await wait(2121, 4912);
     } else {
-      throw new Error(`${actionText} button not found`);
+      throw new Error(`${taskType} button not found`);
     }
   }
 
