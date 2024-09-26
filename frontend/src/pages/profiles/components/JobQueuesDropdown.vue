@@ -1,8 +1,8 @@
 <script setup>
 import SwanModal from 'src/pages/profiles/components/modals/SwanModal.vue';
 import {useQuasar} from 'quasar';
-import CustomQueueModal from 'src/pages/profiles/components/modals/CustomQueueModal.vue';
 import RcadeModal from 'src/pages/profiles/components/modals/RcadeModal.vue';
+import TwitterPostModal from 'src/domains/twitter/modals/twitterPostModal/TwitterPostModal.vue';
 
 const $q = useQuasar();
 const props = defineProps({
@@ -30,9 +30,9 @@ function openRcadeModal() {
   });
 }
 
-function openCustomQueueModal() {
+function openTwitterPostModal() {
   $q.dialog({
-    component: CustomQueueModal,
+    component: TwitterPostModal,
     componentProps: {
       profiles: props.profiles,
     },
@@ -62,11 +62,11 @@ function openCustomQueueModal() {
           </q-item-section>
         </q-item>
 
-        <q-item clickable v-close-popup @click="openCustomQueueModal">
+        <q-item clickable v-close-popup @click="openTwitterPostModal">
           <q-item-section>
             <q-item-label>
               <q-icon name="play_arrow"></q-icon>
-              Rcade + Swan
+              Twitter Post
             </q-item-label>
           </q-item-section>
         </q-item>

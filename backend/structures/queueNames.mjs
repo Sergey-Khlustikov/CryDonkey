@@ -1,7 +1,7 @@
 const QUEUE_NAMES = {
   rcade: 'Rcade',
   swan: 'Swan',
-  custom: 'Rcade/Swan',
+  twitterPost: 'Twitter Post',
 };
 
 export default QUEUE_NAMES;
