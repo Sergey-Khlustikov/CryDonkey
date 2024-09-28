@@ -116,7 +116,7 @@ async function completeCommonQuests(page, browser) {
             .trim()
             .toLowerCase();
 
-          return !isCompleted && !title.includes('wallet') && !title.includes('telegram');
+          return !isCompleted && !title.includes('wallet') && !title.includes('login with telegram');
         })
         .map(mission => mission.querySelector('button'));
     });
