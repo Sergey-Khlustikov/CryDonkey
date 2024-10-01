@@ -12,6 +12,7 @@
     "axios": "^1.2.1",
     "body-parser": "^1.20.2",
     "bullmq": "^5.12.9",
+    "canvas": "^2.11.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "eslint-config-airbnb-base": "^15.0.0",
