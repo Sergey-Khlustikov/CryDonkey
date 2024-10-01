@@ -5,6 +5,7 @@ import jobRoutes from './jobRoutes.mjs';
 import adsRoutes from './adsRoutes.mjs';
 import aiRoutes from './aiRoutes.mjs';
 import twitterRoutes from './twitterRoutes.mjs';
+import blumRoutes from './blumRoutes.mjs';
 
 const initRoutes = (app) => {
   app.use('/rcade', rcadeRoutes);
@@ -14,6 +15,7 @@ const initRoutes = (app) => {
   app.use('/ads', adsRoutes)
   app.use('/ai', aiRoutes);
   app.use('/twitter', twitterRoutes);
+  app.use('/blum', blumRoutes);
 
   app.get('/status', async (req, res) => {
     res.send('OK');

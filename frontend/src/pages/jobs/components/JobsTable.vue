@@ -1,5 +1,5 @@
 <script setup>
-import { date } from 'quasar';
+import {date} from 'quasar';
 import JobStatusLabel from 'src/pages/jobs/components/JobStatusLabel.vue';
 import JOB_STATUSES from 'src/domains/jobs/structures/jobStatuses';
 import Timer from 'src/components/Timer.vue';

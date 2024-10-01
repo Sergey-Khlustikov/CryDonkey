@@ -3,6 +3,7 @@ import SwanModal from 'src/pages/profiles/components/modals/SwanModal.vue';
 import {useQuasar} from 'quasar';
 import RcadeModal from 'src/pages/profiles/components/modals/RcadeModal.vue';
 import TwitterPostModal from 'src/domains/twitter/modals/twitterPostModal/TwitterPostModal.vue';
+import BlumModal from 'src/pages/profiles/components/modals/BlumModal.vue';
 
 const $q = useQuasar();
 const props = defineProps({
@@ -38,6 +39,16 @@ function openTwitterPostModal() {
     },
   });
 }
+
+function openBlumModal() {
+  $q.dialog({
+    component: BlumModal,
+    componentProps: {
+      profiles: props.profiles,
+    },
+  });
+}
+
 </script>
 
 <template>
@@ -67,6 +78,15 @@ function openTwitterPostModal() {
             <q-item-label>
               <q-icon name="play_arrow"></q-icon>
               Twitter Post
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable v-close-popup @click="openBlumModal">
+          <q-item-section>
+            <q-item-label>
+              <q-icon name="play_arrow"></q-icon>
+              Blum
             </q-item-label>
           </q-item-section>
         </q-item>
