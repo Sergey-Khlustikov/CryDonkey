@@ -1,4 +1,4 @@
-import {api} from 'src/boot/axios';
+import { api } from 'src/boot/axios';
 
 class AIController {
   constructor() {
@@ -6,7 +6,7 @@ class AIController {
   }
 
   async generate(message) {
-    const response = await this.api.post('/ai/generate', {message});
+    const response = await this.api.post('/ai/generate', { message });
 
     return response.data;
   }

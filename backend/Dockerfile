@@ -1,15 +1,25 @@
-FROM node:20
+ARG NODE_VERSION=20
 
-WORKDIR /app
+FROM node:${NODE_VERSION} as base
 
-COPY package*.json ./
+WORKDIR /usr/src/app
 
-RUN npm install
+EXPOSE 3001
 
+# Сначала копируем только package.json и yarn.lock
+COPY package.json yarn.lock ./
+
+# Устанавливаем зависимости
+RUN yarn install --frozen-lockfile
+
+# Затем копируем остальные файлы
 COPY . .
 
-EXPOSE ${EXPRESS_SERVER_PORT}
+# Этап разработки
+FROM base as dev
+CMD ["yarn", "dev"]
 
-RUN npm install -g nodemon
-
-CMD ["npm", "run", "dev"]
+# Этап продакшна
+FROM base as production
+RUN yarn build
+CMD ["yarn", "start"]
