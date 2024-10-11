@@ -8,7 +8,7 @@ const routes = [
     children: [
       {
         name: ROUTE_NAMES.profiles,
-        path: '/profiles',
+        path: '/profile',
         component: () => import('src/pages/profiles/ProfilesPage.vue'),
       },
       {
