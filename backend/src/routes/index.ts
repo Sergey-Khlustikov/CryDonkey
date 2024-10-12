@@ -6,8 +6,9 @@ import adsRoutes from './adsRoutes.mjs';
 import aiRoutes from './aiRoutes.mjs';
 import twitterRoutes from './twitterRoutes.mjs';
 import blumRoutes from './blumRoutes.mjs';
+import {Application, Request, Response} from 'express';
 
-const initRoutes = (app) => {
+const initRoutes = (app: Application) => {
   app.use('/rcade', rcadeRoutes);
   app.use('/swan', swanRoutes);
   app.use('/records', recordsRoutes);
@@ -17,7 +18,7 @@ const initRoutes = (app) => {
   app.use('/twitter', twitterRoutes);
   app.use('/blum', blumRoutes);
 
-  app.get('/status', async (req, res) => {
+  app.get('/status', async (req: Request, res: Response) => {
     res.send('OK');
   });
 };

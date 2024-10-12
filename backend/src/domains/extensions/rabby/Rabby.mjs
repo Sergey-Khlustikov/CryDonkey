@@ -1,5 +1,5 @@
-import { wait } from '../../../automatization/helpers/puppeteerHelpers.mjs';
-import ENV from '../../../structures/env.mjs';
+import {wait} from '../../../automatization/helpers/puppeteerHelpers.mjs';
+import ENV from '../../../structures/env';
 import triggerBrowserExtension from '../../../automatization/helpers/triggerBrowserExtension.mjs';
 
 class Rabby {

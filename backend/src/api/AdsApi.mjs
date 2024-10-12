@@ -1,5 +1,5 @@
 import axios from 'axios';
-import ENV from '../structures/env.mjs';
+import ENV from '../structures/env';
 import puppeteer from 'puppeteer';
 
 class AdsApi {

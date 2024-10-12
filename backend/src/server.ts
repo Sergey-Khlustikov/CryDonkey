@@ -1,11 +1,10 @@
-import './loadEnv.mjs';
+import './loadEnv';
 import 'express-async-errors';
-import ENV from './structures/env.mjs';
+import ENV from './structures/env';
 import express from 'express';
 import cors from 'cors'
-import initRoutes from './routes/index.mjs';
-import connectDB from './config/db.mjs';
-import errorHandler from './middlewares/errorHandler.mjs';
+import initRoutes from './routes';
+import connectDB from './config/db';
 
 await connectDB()
 
@@ -14,7 +13,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
-app.use(errorHandler)
 
 initRoutes(app)
 

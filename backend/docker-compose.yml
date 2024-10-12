@@ -33,7 +33,7 @@ services:
       - "${DB_PORT_LOCAL}:${DB_PORT}"
     volumes:
       - mongo_data:/data/db
-      - ./db/init.js:/docker-entrypoint-initdb.d/init.js:ro
+      - ./src/db/init.js:/docker-entrypoint-initdb.d/init.js:ro
     networks:
       - crydonkey-network
 

@@ -1,4 +1,4 @@
-import { Queue, Worker } from 'bullmq';
+import {Queue, Worker} from 'bullmq';
 import RedisConnection from '../../config/redis.mjs';
 
 class BaseQueue {

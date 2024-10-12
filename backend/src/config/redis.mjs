@@ -1,5 +1,5 @@
 import IORedis from 'ioredis';
-import ENV from '../structures/env.mjs';
+import ENV from '../structures/env';
 
 class RedisConnection {
   constructor() {
