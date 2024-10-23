@@ -4,7 +4,7 @@ const routes = [
   {
     path: '/',
     component: () => import('src/layouts/MainLayout.vue'),
-    redirect: {name: ROUTE_NAMES.profiles},
+    redirect: { name: ROUTE_NAMES.profiles },
     children: [
       {
         name: ROUTE_NAMES.profiles,
