@@ -19,7 +19,7 @@ class Rabby {
 
       if (page.$('.unlock')) {
         await wait(1211, 2102);
-        await page.locator('#password').fill(ENV.RABBY_PASSWORD);
+        await page.locator('#password').fill(ENV.RABBY_PASSWORD.trim());
         await wait(1211, 2102);
         await page.locator('button[type=submit]').click();
         await wait(1211, 2102);
