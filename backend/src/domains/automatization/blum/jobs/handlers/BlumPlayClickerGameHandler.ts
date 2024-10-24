@@ -1,4 +1,3 @@
-// @ts-nocheck
 import PageScroller from "#src/automatization/helpers/PageScroller.js";
 import {hoverAndClick, wait} from '#src/automatization/helpers/puppeteerHelpers.js';
 import {ElementHandle, Frame, Page} from "puppeteer";
@@ -43,6 +42,12 @@ class BlumPlayClickerGameHandler {
           await this.clickOnPixels(greenPixels, canvasElement, tgPage);
         }
 
+        const whitePixels = await this.findPixelsByColor(frame, 255, 255, 255);
+
+        if (canvasElement && whitePixels && whitePixels.length > 0) {
+          await this.clickOnWhitePixels(whitePixels, canvasElement, tgPage);
+        }
+
         const bluePixels = await this.findPixelsByColor(frame, 96, 207, 222);
 
         if (canvasElement && bluePixels && bluePixels.length > 0) {
@@ -55,7 +60,6 @@ class BlumPlayClickerGameHandler {
               await this.clickOnPixels(lowerBluePixels, canvasElement, tgPage);
             }
           }
-
         }
       }
     } catch (e) {
@@ -102,6 +106,35 @@ class BlumPlayClickerGameHandler {
     }
   }
 
+  async clickOnWhitePixels(pixels: IPixel[], canvasElement: ElementHandle<HTMLCanvasElement>, tgPage: Page) {
+    const uniquePositions = await this.filterPixelsByCloseness(pixels);
+    const boundingBox = await canvasElement.boundingBox();
+
+    if (!boundingBox) {
+      return;
+    }
+
+    for (const position of uniquePositions) {
+      const {x, y} = position;
+      const nearbyPixels = await this.getNearbyPixels(position, pixels);
+
+      if (nearbyPixels.length >= 5) {
+        const absoluteX = boundingBox.x + x;
+        const absoluteY = boundingBox.y + y;
+
+        await tgPage.mouse.click(absoluteX, absoluteY);
+        await wait(5, 10);
+      }
+    }
+  }
+
+  async getNearbyPixels(pixel: IPixel, allPixels: IPixel[]) {
+    const {x, y} = pixel;
+    return allPixels.filter(p =>
+      Math.abs(p.x - x) < 5 && Math.abs(p.y - y) < 8
+    );
+  }
+
   async clickOnPixels(pixels: IPixel[], canvasElement: ElementHandle<HTMLCanvasElement>, tgPage: Page) {
     const uniquePositions = await this.filterPixelsByCloseness(pixels);
     const boundingBox = await canvasElement.boundingBox();
@@ -144,10 +177,6 @@ class BlumPlayClickerGameHandler {
   async processGameEnd(blumFrame: Frame, tgPage: Page) {
     await wait(2012, 4021);
 
-    if (!await blumFrame.$('.pages-game-end')) {
-      throw new Error('Game failed');
-    }
-
     if (await tgPage.$('.ChatOrUserPicker_slide')) {
       const modalBtn = await tgPage.$('.ChatOrUserPicker_slide .modal-header button[aria-label="Close"]');
 
@@ -157,26 +186,41 @@ class BlumPlayClickerGameHandler {
       }
     }
 
-    const button = await blumFrame.$('.buttons button:last-of-type');
+    let button = await this.findButtonByText(blumFrame, 'play');
 
-    if (!button) {
-      throw new Error('Play button not found');
-    }
-
-    const buttonText = await button.evaluate(el => {
-      const text = el.textContent;
-      return text ? text.toLowerCase() : '';
-    });
-
-    if (buttonText.includes('continue')) {
+    if (button) {
       await hoverAndClick(button);
+      await this.playGame(blumFrame, tgPage);
       return;
     }
 
-    if (buttonText.includes('play')) {
-      await hoverAndClick(button);
-      await this.playGame(blumFrame, tgPage);
+    if (!button) {
+      button = await this.findButtonByText(blumFrame, 'continue');
     }
+
+    if (!button) {
+      button = await this.findButtonByText(blumFrame, 'return');
+    }
+
+    if (!button) {
+      throw new Error('No valid button found (play, continue, return)');
+    }
+
+    await hoverAndClick(button);
+  }
+
+  async findButtonByText(frame: Frame, text: string) {
+    const buttons = await frame.$$('.buttons button');
+
+    for (const button of buttons) {
+      const buttonText = await button.evaluate(el => el.textContent?.toLowerCase() || '');
+
+      if (buttonText.includes(text.toLowerCase())) {
+        return button;
+      }
+    }
+
+    return null;
   }
 }
 

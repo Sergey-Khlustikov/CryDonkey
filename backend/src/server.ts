@@ -8,7 +8,9 @@ import connectDB from "#src/config/db.js";
 
 (async () => {
   await connectDB();
+
   const app: Express = express();
+
   app.use(express.json());
   app.use(cors());
   app.use(express.urlencoded({extended: false}));

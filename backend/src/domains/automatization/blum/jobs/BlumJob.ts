@@ -1,5 +1,5 @@
 import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
-import {hoverAndClick, wait} from '#src/automatization/helpers/puppeteerHelpers.js';
+import {hoverAndClick, minimizeBrowser, wait} from '#src/automatization/helpers/puppeteerHelpers.js';
 import {retryMethodWithReload} from '#src/helpers/retryMethod.js';
 import BlumPlayClickerGameHandler from "#src/domains/automatization/blum/jobs/handlers/BlumPlayClickerGameHandler.js";
 import {Job} from "bullmq";
@@ -44,6 +44,8 @@ class BlumJob {
       } finally {
         if (!this.keepOpenProfileIds.includes(this.profile.id)) {
           await browser.close();
+        } else {
+          await minimizeBrowser(browser)
         }
       }
     } catch (e) {
