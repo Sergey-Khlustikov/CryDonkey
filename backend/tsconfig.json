@@ -6,6 +6,30 @@
     "allowJs": true,
     "esModuleInterop": true,
     "isolatedModules": true,
+    "strict": true,
+    // Включает строгие проверки типов
+    "noImplicitAny": true,
+    // Сообщает об использовании неявного типа any
+    "strictNullChecks": true,
+    // Строгая проверка на null и undefined
+    "strictFunctionTypes": true,
+    // Проверка совместимости типов функций
+    "strictPropertyInitialization": true,
+    // Проверка инициализации свойств классов
+    "noImplicitThis": true,
+    // Сообщает об использовании this без явно указанного типа
+    "alwaysStrict": true,
+    // Включает строгий режим для всех файлов
+    "noUnusedLocals": true,
+    // Сообщает о неиспользуемых локальных переменных
+    "noUnusedParameters": true,
+    // Сообщает о неиспользуемых параметрах функций
+    "noImplicitReturns": true,
+    // Сообщает о функциях, которые могут неявно возвращать undefined
+    "skipLibCheck": true,
+    // Пропускает проверку типов в библиотечных файлах
+    "forceConsistentCasingInFileNames": true,
+    // Обеспечивает одинаковое написание имен файлов
     "baseUrl": "./",
     "paths": {
       "#src/*": [

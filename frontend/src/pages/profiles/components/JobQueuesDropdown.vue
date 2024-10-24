@@ -1,9 +1,10 @@
 <script setup>
-import SwanModal from 'src/pages/profiles/components/modals/SwanModal.vue';
-import {useQuasar} from 'quasar';
+import SwanModal from 'src/domains/projects/swan/components/modals/SwanModal.vue';
+import { useQuasar } from 'quasar';
 import RcadeModal from 'src/pages/profiles/components/modals/RcadeModal.vue';
 import TwitterPostModal from 'src/domains/twitter/modals/twitterPostModal/TwitterPostModal.vue';
 import BlumModal from 'src/pages/profiles/components/modals/BlumModal.vue';
+import IdaoModal from 'src/domains/projects/idao/components/modals/IdaoModal.vue';
 
 const $q = useQuasar();
 const props = defineProps({
@@ -49,6 +50,15 @@ function openBlumModal() {
   });
 }
 
+function openIdaoModal() {
+  $q.dialog({
+    component: IdaoModal,
+    componentProps: {
+      profiles: props.profiles,
+    },
+  });
+}
+
 </script>
 
 <template>
@@ -87,6 +97,15 @@ function openBlumModal() {
             <q-item-label>
               <q-icon name="play_arrow"></q-icon>
               Blum
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable v-close-popup @click="openIdaoModal">
+          <q-item-section>
+            <q-item-label>
+              <q-icon name="play_arrow"></q-icon>
+              IDAO
             </q-item-label>
           </q-item-section>
         </q-item>

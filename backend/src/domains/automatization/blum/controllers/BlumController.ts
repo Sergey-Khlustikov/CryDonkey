@@ -1,6 +1,6 @@
 import BlumQueue from "#src/domains/automatization/blum/queues/BlumQueue.js";
 import BlumRunDTO from "#src/domains/automatization/blum/dto/BlumRunDTO.js";
-import shuffleArray from "#src/automatization/helpers/shuffleArray.js";
+import shuffleArray from "#src/helpers/shuffleArray.js";
 import {Request, Response} from "express";
 
 class BlumController {

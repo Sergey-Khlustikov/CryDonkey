@@ -1,5 +1,5 @@
 // @ts-nocheck
-import {hoverAndClick, wait} from '#src/automatization/helpers/puppeteerHelpers.js';
+import {hoverAndClick, wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
 
 class SwanDailyTaskHandler {
   constructor(job, {dailyCombo}) {

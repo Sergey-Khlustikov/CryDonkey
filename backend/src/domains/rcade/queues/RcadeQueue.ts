@@ -1,9 +1,7 @@
-// @ts-nocheck
 import BaseQueue from "#src/domains/queues/BaseQueue.js";
 import {run} from '#src/automatization/rcade/rcade.js';
 import QUEUE_NAMES from "#src/structures/queueNames.js";
-import minuteToMs from "#src/helpers/minuteToMs.js";
-import getRandomNumberBetween from "#src/helpers/getRandomNumberBetween.js";
+import {Job} from "bullmq";
 
 class RcadeQueue extends BaseQueue {
   constructor() {
@@ -23,7 +21,7 @@ class RcadeQueue extends BaseQueue {
     });
   }
 
-  async addJobs(data) {
+  async addJobs(data): Promise<Job[]> {
     const {minDelayMinutes, maxDelayMinutes, keepOpenProfileIds} = data;
 
     const formattedJobs = data.profiles.map((profile, index) => {
@@ -36,14 +34,7 @@ class RcadeQueue extends BaseQueue {
       };
     });
 
-    await super.addJobs(formattedJobs);
-  }
-
-  calculateJobDelay(minDelayMinutes, maxDelayMinutes, index) {
-    const baseDelayMs = minuteToMs(1);
-    const randomDelayMs = getRandomNumberBetween(minuteToMs(minDelayMinutes), minuteToMs(maxDelayMinutes));
-
-    return (baseDelayMs + randomDelayMs) * index;
+    return super.addJobs(formattedJobs);
   }
 }
 

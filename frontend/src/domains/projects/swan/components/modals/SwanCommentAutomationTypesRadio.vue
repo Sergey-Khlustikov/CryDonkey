@@ -1,5 +1,5 @@
 <script setup>
-import SWAN_COMMENT_AUTOMATION_TYPES from 'src/domains/swan/SwanCommentAutomationTypes.mjs';
+import SWAN_COMMENT_AUTOMATION_TYPES from 'src/domains/projects/swan/structures/SwanCommentAutomationTypes.mjs';
 
 const model = defineModel({
   type: String,

@@ -1,8 +1,8 @@
 // @ts-nocheck
 import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
-import {hoverAndClick, wait} from '#src/automatization/helpers/puppeteerHelpers.js';
+import {hoverAndClick, wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
 import TwitterService from "#src/domains/twitter/services/TwitterService.js";
-import typeWithRandomDelay from "#src/automatization/helpers/typeWithRandomDelay.js";
+import typeWithRandomDelay from "#src/domains/puppeteer/helpers/typeWithRandomDelay.js";
 import {TWITTER_POST_AUTOMATION_TYPES} from "#src/domains/twitter/structures/TwitterAutomationTypes.js";
 import OpenAIApi from "#src/api/OpenAIApi.js";
 

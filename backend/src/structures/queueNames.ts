@@ -3,6 +3,7 @@ const QUEUE_NAMES = {
   swan: 'Swan',
   twitterPost: 'Twitter Post',
   blum: 'Blum',
+  idao: 'Idao',
 };
 
 export default QUEUE_NAMES;

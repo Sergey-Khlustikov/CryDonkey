@@ -1,8 +1,6 @@
 // @ts-nocheck
 import BaseQueue from "#src/domains/queues/BaseQueue.js";
 import QUEUE_NAMES from "#src/structures/queueNames.js";
-import minuteToMs from "#src/helpers/minuteToMs.js";
-import getRandomNumberBetween from "#src/helpers/getRandomNumberBetween.js";
 import TwitterPostJob from "#src/domains/twitter/jobs/TwitterPostJob.js";
 
 class TwitterPostQueue extends BaseQueue {
@@ -41,18 +39,7 @@ class TwitterPostQueue extends BaseQueue {
       };
     });
 
-    await super.addJobs(formattedJobs);
-  }
-
-  calculateJobDelay(minDelayMinutes, maxDelayMinutes, index) {
-    if (index === 0) {
-      return 0;
-    }
-
-    const baseDelayMs = minuteToMs(1);
-    const randomDelayMs = getRandomNumberBetween(minuteToMs(minDelayMinutes), minuteToMs(maxDelayMinutes));
-
-    return (baseDelayMs + randomDelayMs) * index;
+    return super.addJobs(formattedJobs);
   }
 }
 

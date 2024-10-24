@@ -1,5 +1,5 @@
 // @ts-nocheck
-import shuffleArray from "#src/automatization/helpers/shuffleArray.js";
+import shuffleArray from "#src/helpers/shuffleArray.js";
 import SwanQueue from "#src/domains/swan/queues/SwanQueue.js";
 import SwanRunDTO from "#src/domains/swan/dto/SwanRunDTO.js";
 import SWAN_COMMENT_AUTOMATION_TYPES from "#src/domains/swan/structures/SwanCommentAutomationTypes.js";

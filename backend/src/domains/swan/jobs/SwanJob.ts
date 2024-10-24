@@ -1,8 +1,8 @@
 // @ts-nocheck
 import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
-import {wait} from '#src/automatization/helpers/puppeteerHelpers.js';
-import getRandomArrayElement from "#src/automatization/helpers/getRandomArrayElement.js";
-import PageScroller from "#src/automatization/helpers/PageScroller.js";
+import {wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
+import getRandomArrayElement from "#src/helpers/getRandomArrayElement.js";
+import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
 import SwanDailyTaskHandler from "#src/domains/swan/jobs/handlers/SwanDailyTaskHandler.js";
 import SwanSocialQuestsHandler from "#src/domains/swan/jobs/handlers/SwanSocialQuestsHandler.js";
 import SwanOnChainQuestsHandler from "#src/domains/swan/jobs/handlers/SwanOnChainQuestsHandler.js";

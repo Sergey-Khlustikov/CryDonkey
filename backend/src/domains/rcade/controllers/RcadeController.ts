@@ -1,5 +1,5 @@
 // @ts-nocheck
-import shuffleArray from "#src/automatization/helpers/shuffleArray.js";
+import shuffleArray from "#src/helpers/shuffleArray.js";
 import RcadeQueue from "#src/domains/rcade/queues/RcadeQueue.js";
 
 class RcadeController {

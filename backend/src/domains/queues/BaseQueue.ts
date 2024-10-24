@@ -1,13 +1,15 @@
-import {JobType, ObliterateOpts, Queue, Worker} from "bullmq";
+import {Job, JobType, ObliterateOpts, Queue, QueueOptions, Worker} from "bullmq";
 import RedisConnection from "#src/config/redis.js";
 import {Redis} from "ioredis";
+import minuteToMs from "#src/helpers/minuteToMs";
+import getRandomNumberBetween from "#src/helpers/getRandomNumberBetween";
 
 class BaseQueue {
   queueName: string;
   connection: Redis;
   queue: Queue;
 
-  constructor(queueName: string, opts = {}) {
+  constructor(queueName: string, opts: Partial<QueueOptions> = {}) {
     this.queueName = queueName;
     this.connection = RedisConnection.getConnection();
     this.queue = new Queue(queueName, {
@@ -20,28 +22,39 @@ class BaseQueue {
     new Worker(this.queueName, workerFunction, {connection: this.connection});
   }
 
-  async addJobs(jobs: any) {
-    await this.queue.addBulk(jobs);
+  async addJobs(jobs: any): Promise<Job[]> {
+    return this.queue.addBulk(jobs);
   }
 
   async getJobs(statuses: JobType[]) {
-    return await this.queue.getJobs(statuses);
+    return this.queue.getJobs(statuses);
   }
 
   async getJob(id: string) {
-    return await this.queue.getJob(id);
+    return this.queue.getJob(id);
   }
 
   async obliterate(opts: ObliterateOpts) {
-    return await this.queue.obliterate(opts);
+    return this.queue.obliterate(opts);
   }
 
   async retryJobs() {
-    return await this.queue.retryJobs();
+    return this.queue.retryJobs();
   }
 
   async removeJob(id: string) {
-    return await this.queue.remove(id);
+    return this.queue.remove(id);
+  }
+
+  calculateJobDelay(minDelayMinutes: number, maxDelayMinutes: number, index: number): number {
+    if (index === 0) {
+      return 0;
+    }
+
+    const baseDelayMs: number = minuteToMs(1);
+    const randomDelayMs: number = getRandomNumberBetween(minuteToMs(minDelayMinutes), minuteToMs(maxDelayMinutes));
+
+    return (baseDelayMs + randomDelayMs) * index;
   }
 }
 

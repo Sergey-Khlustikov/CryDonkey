@@ -1,5 +1,4 @@
-// @ts-nocheck
-const minuteToMs = (minutes) => {
+const minuteToMs = (minutes: number): number => {
   return minutes * 60 * 1000;
 }
 

@@ -1,5 +1,5 @@
-import PageScroller from "#src/automatization/helpers/PageScroller.js";
-import {hoverAndClick, wait} from '#src/automatization/helpers/puppeteerHelpers.js';
+import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
+import {hoverAndClick, wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
 import {ElementHandle, Frame, Page} from "puppeteer";
 
 interface IPixel {
@@ -118,7 +118,7 @@ class BlumPlayClickerGameHandler {
       const {x, y} = position;
       const nearbyPixels = await this.getNearbyPixels(position, pixels);
 
-      if (nearbyPixels.length >= 5) {
+      if (nearbyPixels.length >= 12) {
         const absoluteX = boundingBox.x + x;
         const absoluteY = boundingBox.y + y;
 
@@ -131,7 +131,7 @@ class BlumPlayClickerGameHandler {
   async getNearbyPixels(pixel: IPixel, allPixels: IPixel[]) {
     const {x, y} = pixel;
     return allPixels.filter(p =>
-      Math.abs(p.x - x) < 5 && Math.abs(p.y - y) < 8
+      Math.abs(p.x - x) < 5 && Math.abs(p.y - y) < 12
     );
   }
 
