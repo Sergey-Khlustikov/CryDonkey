@@ -1,44 +1,39 @@
-// @ts-nocheck
 import RcadeQueue from "#src/domains/rcade/queues/RcadeQueue.js";
 import JobResource from "#src/domains/jobs/resources/JobResource.js";
 import QUEUE_NAMES from "#src/structures/queueNames.js";
 import SwanQueue from "#src/domains/swan/queues/SwanQueue.js";
 import TwitterPostQueue from "#src/domains/twitter/queues/TwitterPostQueue.js";
 import BlumQueue from "#src/domains/automatization/blum/queues/BlumQueue.js";
+import BaseQueue from "#src/domains/queues/BaseQueue";
+import IdaoQueue from "#src/domains/automatization/idao/queues/IdaoQueue";
+import {Request, Response} from "express";
 
 class JobsController {
-  async getList(req, res) {
+  private allQueues: BaseQueue[] = [RcadeQueue, SwanQueue, TwitterPostQueue, BlumQueue, IdaoQueue];
+
+  async getList(req: Request, res: Response) {
     try {
-      const { status, queue } = req.query;
+      const {status} = req.query;
       const statuses = status ? [status] : [];
 
-      const allQueues = [RcadeQueue, SwanQueue, TwitterPostQueue, BlumQueue];
       const jobs = [];
 
-      if (queue) {
-        switch (queue) {
-          case QUEUE_NAMES.rcade:
-            const response = await RcadeQueue.getJobs(statuses);
-            jobs.push(...response);
-        }
-      } else {
-        for (const queue of allQueues) {
-          const response = await queue.getJobs(statuses);
-          jobs.push(...response);
-        }
+      for (const queue of this.allQueues) {
+        const response = await queue.getJobs(statuses);
+        jobs.push(...response);
       }
 
       const filteredJobs = jobs.sort((a, b) => b.id - a.id);
 
       res.status(200).json(await new JobResource(filteredJobs).getFormatted());
     } catch (e) {
-      res.status(500).json({ message: e.message });
+      res.status(500).json({message: e.message});
     }
   }
 
-  async retryJob(req, res) {
+  async retryJob(req: Request, res: Response) {
     try {
-      const { id } = req.params;
+      const {id} = req.params;
 
       let queue;
 
@@ -58,25 +53,32 @@ class JobsController {
         case QUEUE_NAMES.blum:
           queue = BlumQueue;
           break;
+
+        case QUEUE_NAMES.idao:
+          queue = IdaoQueue;
+          break
+
+        default:
+          return res.status(500).json({message: 'Unknown queue name'});
       }
 
       const job = await queue.getJob(id);
 
       if (!job) {
-        return res.status(404).json({ error: 'Job not found' });
+        return res.status(404).json({error: 'Job not found'});
       }
 
       await job.retry();
 
-      res.status(200).json({ message: 'Job retried successfully', jobId: job.id });
+      res.status(200).json({message: 'Job retried successfully', jobId: job.id});
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({message: error.message});
     }
   }
 
   async removeJob(req, res) {
     try {
-      const { id } = req.params;
+      const {id} = req.params;
 
       let queue;
 
@@ -96,41 +98,41 @@ class JobsController {
         case QUEUE_NAMES.blum:
           queue = BlumQueue;
           break;
+
+        case QUEUE_NAMES.idao:
+          queue = IdaoQueue
+          break
       }
 
       await queue.removeJob(id);
 
-      res.status(200).json({ message: 'Job removed successfully' });
+      res.status(200).json({message: 'Job removed successfully'});
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({message: error.message});
     }
   }
 
   async retryFailed(req, res) {
     try {
-      const queues = [RcadeQueue, SwanQueue, TwitterPostQueue, BlumQueue];
-
-      for (const queue of queues) {
-        await queue.retryJobs({ state: 'failed' });
+      for (const queue of this.allQueues) {
+        await queue.retryJobs({state: 'failed'});
       }
 
-      res.status(200).json({ message: 'Success' });
+      res.status(200).json({message: 'Success'});
     } catch (e) {
-      res.status(500).json({ message: e.message });
+      res.status(500).json({message: e.message});
     }
   }
 
   async deleteAll(req, res) {
     try {
-      const queues = [RcadeQueue, SwanQueue, TwitterPostQueue, BlumQueue];
-
-      for (const queue of queues) {
-        await queue.obliterate({ force: true });
+      for (const queue of this.allQueues) {
+        await queue.obliterate({force: true});
       }
 
-      res.status(200).json({ message: 'Success' });
+      res.status(200).json({message: 'Success'});
     } catch (e) {
-      res.status(500).json({ message: e.message });
+      res.status(500).json({message: e.message});
     }
   }
 }

@@ -4,6 +4,7 @@ services:
     build:
       context: .
       target: ${ENVIRONMENT}
+    image: crydonkey-server:${ENVIRONMENT}
     ports:
       - "${EXPRESS_SERVER_PORT}:${EXPRESS_SERVER_PORT}"
     depends_on:
@@ -30,11 +31,13 @@ services:
     image: mongo:latest
     container_name: crydonkey-mongo
     restart: always
+    command: [ "mongod", "--config", "/etc/mongod.conf" ]
     ports:
       - "${DB_PORT_LOCAL}:${DB_PORT}"
     volumes:
       - mongo_data:/data/db
       - ./src/db/init.js:/docker-entrypoint-initdb.d/init.js:ro
+      - ./mongod.conf:/etc/mongod.conf:ro
     networks:
       - crydonkey-network
 

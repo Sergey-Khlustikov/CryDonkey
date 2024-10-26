@@ -1,8 +1,9 @@
 <script setup>
-import {reactive, ref, watch} from 'vue';
+import { reactive, ref, watch } from 'vue';
 import AIController from 'src/domains/ai/AIController';
-import SWAN_COMMENT_AUTOMATION_TYPES from 'src/domains/swan/SwanCommentAutomationTypes.mjs';
-import SwanCommentAutomationTypesRadio from 'src/domains/swan/components/SwanCommentAutomationTypesRadio.vue';
+import SWAN_COMMENT_AUTOMATION_TYPES from 'src/domains/projects/swan/structures/SwanCommentAutomationTypes.mjs';
+import SwanCommentAutomationTypesRadio
+  from 'src/domains/projects/swan/components/modals/SwanCommentAutomationTypesRadio.vue';
 import ArrowBtn from 'src/components/ArrowBtn.vue';
 
 const props = defineProps({

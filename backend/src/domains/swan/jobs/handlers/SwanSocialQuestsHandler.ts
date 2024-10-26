@@ -1,10 +1,10 @@
 // @ts-nocheck
 import TASK_TYPES from "#src/domains/swan/structures/taskTypes.js";
 import SWAN_COMMENT_AUTOMATION_TYPES from "#src/domains/swan/structures/SwanCommentAutomationTypes.js";
-import {hoverAndClick, wait} from '#src/automatization/helpers/puppeteerHelpers.js';
+import {hoverAndClick, wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
 import OpenAIApi from "#src/api/OpenAIApi.js";
-import typeWithRandomDelay from "#src/automatization/helpers/typeWithRandomDelay.js";
-import checkTwitterAuth from "#src/automatization/helpers/checkTwitterAuth.js";
+import typeWithRandomDelay from "#src/domains/puppeteer/helpers/typeWithRandomDelay.js";
+import checkTwitterAuth from "#src/domains/puppeteer/helpers/checkTwitterAuth.js";
 
 class SwanSocialQuestsHandler {
   constructor({commentAutomationType, commentQuests}) {

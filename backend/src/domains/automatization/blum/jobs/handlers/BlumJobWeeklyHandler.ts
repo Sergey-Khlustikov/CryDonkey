@@ -1,5 +1,5 @@
 // @ts-nocheck
-import {wait} from '#src/automatization/helpers/puppeteerHelpers.js';
+import {wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
 
 class BlumJobWeeklyHandler {
   constructor(browser, tgPage, blumFrame) {

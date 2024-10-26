@@ -6,6 +6,7 @@ import aiRoutes from "#src/routes/aiRoutes.js";
 import twitterRoutes from "#src/routes/twitterRoutes.js";
 import blumRoutes from "#src/routes/blumRoutes.js";
 import {Application} from "express";
+import idaoRoutes from "#src/routes/idaoRoutes";
 
 const initRoutes = (app: Application) => {
   app.use('/rcade', rcadeRoutes);
@@ -15,6 +16,7 @@ const initRoutes = (app: Application) => {
   app.use('/ai', aiRoutes);
   app.use('/twitter', twitterRoutes);
   app.use('/blum', blumRoutes);
+  app.use('/idao', idaoRoutes);
 
   app.get('/status', async (req, res) => {
     res.send('OK');

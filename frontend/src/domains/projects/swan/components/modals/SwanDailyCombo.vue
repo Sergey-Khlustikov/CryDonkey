@@ -1,6 +1,6 @@
 <script setup>
 import ArrowBtn from 'src/components/ArrowBtn.vue';
-import {ref} from 'vue';
+import { ref } from 'vue';
 
 const dailyCombo = defineModel('dailyCombo');
 const onlyDaily = defineModel('onlyDaily');

@@ -1,6 +1,6 @@
 // @ts-nocheck
-import {hoverAndClick, wait} from "#src/automatization/helpers/puppeteerHelpers.js";
-import PageScroller from "#src/automatization/helpers/PageScroller.js";
+import {hoverAndClick, wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
+import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
 import Rabby from "#src/domains/extensions/rabby/Rabby.js";
 
 class SwanOnChainQuestsHandler {

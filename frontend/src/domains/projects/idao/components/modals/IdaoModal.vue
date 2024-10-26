@@ -1,9 +1,9 @@
 <script setup>
-import {useDialogPluginComponent} from 'quasar';
-import {ref} from 'vue';
-import Api from 'src/api/Api';
-import SwanSettings from 'src/pages/profiles/components/modals/SwanSettings.vue';
+import { useDialogPluginComponent } from 'quasar';
+import { ref } from 'vue';
 import GeneralJobSettings from 'src/pages/profiles/components/modals/GeneralJobSettings.vue';
+import IdaoModalSettings from 'src/domains/projects/idao/components/modals/IdaoModalSettings.vue';
+import IdaoController from 'src/domains/projects/idao/controllers/IdaoController';
 
 const props = defineProps({
   profiles: {
@@ -30,7 +30,7 @@ const generalSettings = ref({
 });
 
 async function onSubmit() {
-  await Api.runSwan({
+  await IdaoController.run({
     profiles: props.profiles.map(profile => {
       return { id: profile.user_id, name: profile.name };
     }),
@@ -47,7 +47,7 @@ async function onSubmit() {
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="q-dialog-plugin" style="width: 900px; max-width: 80vw;">
       <q-form @submit="onSubmit" ref="formRef" no-error-focus greedy>
-        <div class="text-h6 q-ml-md q-mt-md">Swan Settings</div>
+        <div class="text-h6 q-ml-md q-mt-md">Idao Settings</div>
 
         <q-card-section>
           <general-job-settings
@@ -56,7 +56,7 @@ async function onSubmit() {
             class="q-mb-md"
           ></general-job-settings>
 
-          <swan-settings v-model="settings" :profiles="profiles" class="q-mb-md"></swan-settings>
+          <idao-modal-settings v-model="settings" :profiles="profiles" class="q-mb-md"></idao-modal-settings>
         </q-card-section>
 
         <q-card-actions align="right" class="q-mr-sm q-mb-sm">

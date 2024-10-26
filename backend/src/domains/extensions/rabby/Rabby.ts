@@ -1,14 +1,14 @@
-// @ts-nocheck
-import {wait} from "#src/automatization/helpers/puppeteerHelpers.js";
+import {wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
 import ENV from "#src/structures/env.js";
-import triggerBrowserExtension from "#src/automatization/helpers/triggerBrowserExtension.js";
+import triggerBrowserExtension from "#src/domains/puppeteer/helpers/triggerBrowserExtension.js";
+import {Browser, Page} from "puppeteer";
 
 class Rabby {
   getId() {
     return 'acmacodkjbdgmoleebolmdjonilkdbch';
   }
 
-  async unlockFullPage(browser) {
+  async unlockFullPage(browser: Browser) {
     const loginUrl = `chrome-extension://${this.getId()}/index.html#/unlock`;
     const page = await browser.newPage();
 
@@ -17,7 +17,7 @@ class Rabby {
 
       await page.waitForSelector('body');
 
-      if (page.$('.unlock')) {
+      if (await page.$('.unlock')) {
         await wait(1211, 2102);
         await page.locator('#password').fill(ENV.RABBY_PASSWORD.trim());
         await wait(1211, 2102);
@@ -31,7 +31,7 @@ class Rabby {
     }
   }
 
-  async trigger(browser, page) {
+  async trigger(browser: Browser, page: Page) {
     return triggerBrowserExtension(browser, page, this.getId());
   }
 }

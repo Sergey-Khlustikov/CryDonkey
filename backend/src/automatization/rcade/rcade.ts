@@ -1,7 +1,7 @@
 // @ts-nocheck
-import getRandomArrayElement from "#src/automatization/helpers/getRandomArrayElement.js";
-import PageScroller from "#src/automatization/helpers/PageScroller.js";
-import {hoverAndClick, wait} from "#src/automatization/helpers/puppeteerHelpers.js";
+import getRandomArrayElement from "#src/helpers/getRandomArrayElement.js";
+import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
+import {hoverAndClick, wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
 import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
 
 export async function run(data) {

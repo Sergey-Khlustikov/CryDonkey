@@ -77,6 +77,7 @@ module.exports = {
     'no-shadow': 'off',
     'no-await-in-loop': 'off',
     'no-trailing-spaces': 'off',
+    'max-len': ['error', { 'code': 120 }],
 
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'

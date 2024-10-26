@@ -1,8 +1,8 @@
 <script setup>
-import SwanDailyCombo from 'src/pages/profiles/components/modals/SwanDailyCombo.vue';
-import {onMounted, reactive, watch} from 'vue';
-import SwanComments from 'src/pages/profiles/components/modals/SwanComments.vue';
-import SWAN_COMMENT_AUTOMATION_TYPES from 'src/domains/swan/SwanCommentAutomationTypes.mjs';
+import SwanDailyCombo from 'src/domains/projects/swan/components/modals/SwanDailyCombo.vue';
+import { onMounted, reactive, watch } from 'vue';
+import SwanComments from 'src/domains/projects/swan/components/modals/SwanComments.vue';
+import SWAN_COMMENT_AUTOMATION_TYPES from 'src/domains/projects/swan/structures/SwanCommentAutomationTypes.mjs';
 
 const props = defineProps({
   profiles: {

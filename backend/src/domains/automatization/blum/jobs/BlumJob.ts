@@ -1,5 +1,5 @@
 import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
-import {hoverAndClick, minimizeBrowser, wait} from '#src/automatization/helpers/puppeteerHelpers.js';
+import {hoverAndClick, minimizeBrowser, wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
 import {retryMethodWithReload} from '#src/helpers/retryMethod.js';
 import BlumPlayClickerGameHandler from "#src/domains/automatization/blum/jobs/handlers/BlumPlayClickerGameHandler.js";
 import {Job} from "bullmq";
@@ -60,9 +60,9 @@ class BlumJob {
       this.tgPage = await this.openBlumBot();
       await wait(4000, 7000);
       await retryMethodWithReload(this.tgPage, async () => this.blumFrame = await this.getBlumBotFrame(this.tgPage));
-
-      await this.completeDailyCheckIn(this.blumFrame);
       await wait(4212, 6421);
+      await this.completeDailyCheckIn(this.blumFrame);
+      await wait(2212, 4421);
 
       await this.claimAndRunFarmPoints(this.blumFrame);
       await wait(1304, 4210);

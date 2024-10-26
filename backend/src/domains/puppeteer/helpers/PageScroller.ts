@@ -1,5 +1,5 @@
 // @ts-nocheck
-import {wait} from "#src/automatization/helpers/puppeteerHelpers.js";
+import {wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
 import {Frame, Page} from 'puppeteer';
 
 const randomOptions = {

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import shuffleArray from "#src/automatization/helpers/shuffleArray.js";
+import shuffleArray from "#src/helpers/shuffleArray.js";
 import TwitterPostQueue from "#src/domains/twitter/queues/TwitterPostQueue.js";
 import TwitterPostDTO from "#src/domains/twitter/dto/TwitterPostDTO.js";
 import {TWITTER_POST_AUTOMATION_TYPES} from "#src/domains/twitter/structures/TwitterAutomationTypes.js";
