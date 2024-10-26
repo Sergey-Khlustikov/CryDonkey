@@ -1,13 +1,13 @@
 import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
 import {hoverAndClick, minimizeBrowser, wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
-import IIdaoJobOptions from "#src/domains/automatization/idao/interfaces/IIdaoJobOptions";
-import IIdaoProfile from "#src/domains/automatization/idao/interfaces/IIdaoProfile";
+import IIdaoJobOptions from "#src/domains/automatization/idao/interfaces/IIdaoJobOptions.js";
+import IIdaoProfile from "#src/domains/automatization/idao/interfaces/IIdaoProfile.js";
 import {Browser, Page} from "puppeteer";
-import Metamask from "#src/domains/extensions/metamask/Metamask";
-import getButtonByText from "#src/domains/puppeteer/helpers/getButtonByText";
-import IdaoForecastHandler from "#src/domains/automatization/idao/jobs/handlers/IdaoForecastHandler";
-import IIdaoForecastOptions from "#src/domains/automatization/idao/interfaces/IIdaoForecastOptions";
-import PageScroller from "#src/domains/puppeteer/helpers/PageScroller";
+import Metamask from "#src/domains/extensions/metamask/Metamask.js";
+import getButtonByText from "#src/domains/puppeteer/helpers/getButtonByText.js";
+import IdaoForecastHandler from "#src/domains/automatization/idao/jobs/handlers/IdaoForecastHandler.js";
+import IIdaoForecastOptions from "#src/domains/automatization/idao/interfaces/IIdaoForecastOptions.js";
+import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
 
 class IdaoJob {
   protected job: IIdaoJobOptions;

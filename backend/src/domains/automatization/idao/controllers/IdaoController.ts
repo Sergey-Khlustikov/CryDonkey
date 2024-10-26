@@ -1,7 +1,7 @@
 import shuffleArray from "#src/helpers/shuffleArray.js";
 import {Request, Response} from "express";
-import IdaoQueue from "#src/domains/automatization/idao/queues/IdaoQueue";
-import IdaoDTO from "#src/domains/automatization/idao/dto/IdaoDTO";
+import IdaoQueue from "#src/domains/automatization/idao/queues/IdaoQueue.js";
+import IdaoDTO from "#src/domains/automatization/idao/dto/IdaoDTO.js";
 
 class IdaoController {
   async run(req: Request, res: Response) {

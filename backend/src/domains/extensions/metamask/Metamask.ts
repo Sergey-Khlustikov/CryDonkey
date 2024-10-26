@@ -1,9 +1,9 @@
-import {hoverAndClick, wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers";
-import ENV from "#src/structures/env";
+import {hoverAndClick, wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
+import ENV from "#src/structures/env.js";
 import {Browser, Page} from "puppeteer";
-import PageScroller from "#src/domains/puppeteer/helpers/PageScroller";
-import getTextInElement from "#src/domains/puppeteer/helpers/getTextInElement";
-import extractNumbersFromString from "#src/helpers/extractNumbersFromString";
+import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
+import getTextInElement from "#src/domains/puppeteer/helpers/getTextInElement.js";
+import extractNumbersFromString from "#src/helpers/extractNumbersFromString.js";
 
 class Metamask {
   private id: string = 'nkbihfbeogaeaoehlefnkodbefgpgknn';

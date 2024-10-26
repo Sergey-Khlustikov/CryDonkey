@@ -6,7 +6,7 @@ import aiRoutes from "#src/routes/aiRoutes.js";
 import twitterRoutes from "#src/routes/twitterRoutes.js";
 import blumRoutes from "#src/routes/blumRoutes.js";
 import {Application} from "express";
-import idaoRoutes from "#src/routes/idaoRoutes";
+import idaoRoutes from "#src/routes/idaoRoutes.js";
 
 const initRoutes = (app: Application) => {
   app.use('/rcade', rcadeRoutes);

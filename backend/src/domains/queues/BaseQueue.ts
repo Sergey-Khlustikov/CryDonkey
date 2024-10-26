@@ -1,8 +1,8 @@
 import {Job, JobType, ObliterateOpts, Queue, QueueOptions, Worker} from "bullmq";
 import RedisConnection from "#src/config/redis.js";
 import {Redis} from "ioredis";
-import minuteToMs from "#src/helpers/minuteToMs";
-import getRandomNumberBetween from "#src/helpers/getRandomNumberBetween";
+import minuteToMs from "#src/helpers/minuteToMs.js";
+import getRandomNumberBetween from "#src/helpers/getRandomNumberBetween.js";
 
 class BaseQueue {
   queueName: string;
