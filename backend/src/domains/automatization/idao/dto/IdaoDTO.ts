@@ -1,5 +1,5 @@
-import IIdaoProfile from "#src/domains/automatization/idao/interfaces/IIdaoProfile";
-import IIdaoForecastOptions from "#src/domains/automatization/idao/interfaces/IIdaoForecastOptions";
+import IIdaoProfile from "#src/domains/automatization/idao/interfaces/IIdaoProfile.js";
+import IIdaoForecastOptions from "#src/domains/automatization/idao/interfaces/IIdaoForecastOptions.js";
 
 interface IdaoDTOOptions {
   profiles: IIdaoProfile[];

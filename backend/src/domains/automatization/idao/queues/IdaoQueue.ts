@@ -1,9 +1,9 @@
-import BaseQueue from "#src/domains/queues/BaseQueue";
-import QUEUE_NAMES from "#src/structures/queueNames";
-import IdaoJob from "#src/domains/automatization/idao/jobs/IdaoJob";
-import IdaoDTO from "#src/domains/automatization/idao/dto/IdaoDTO";
-import IIdaoProfile from "#src/domains/automatization/idao/interfaces/IIdaoProfile";
-import IIdaoJobOptions from "#src/domains/automatization/idao/interfaces/IIdaoJobOptions";
+import BaseQueue from "#src/domains/queues/BaseQueue.js";
+import QUEUE_NAMES from "#src/structures/queueNames.js";
+import IdaoJob from "#src/domains/automatization/idao/jobs/IdaoJob.js";
+import IdaoDTO from "#src/domains/automatization/idao/dto/IdaoDTO.js";
+import IIdaoProfile from "#src/domains/automatization/idao/interfaces/IIdaoProfile.js";
+import IIdaoJobOptions from "#src/domains/automatization/idao/interfaces/IIdaoJobOptions.js";
 
 class IdaoQueue extends BaseQueue {
   constructor() {

@@ -5,7 +5,7 @@ import SwanQueue from "#src/domains/swan/queues/SwanQueue.js";
 import TwitterPostQueue from "#src/domains/twitter/queues/TwitterPostQueue.js";
 import BlumQueue from "#src/domains/automatization/blum/queues/BlumQueue.js";
 import BaseQueue from "#src/domains/queues/BaseQueue";
-import IdaoQueue from "#src/domains/automatization/idao/queues/IdaoQueue";
+import IdaoQueue from "#src/domains/automatization/idao/queues/IdaoQueue.js";
 import {Request, Response} from "express";
 
 class JobsController {

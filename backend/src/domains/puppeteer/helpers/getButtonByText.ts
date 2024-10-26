@@ -1,6 +1,6 @@
 import {ElementHandle, Page} from "puppeteer";
-import getTextInElement from "#src/domains/puppeteer/helpers/getTextInElement";
-import normalizeString from "#src/helpers/normalizeString";
+import getTextInElement from "#src/domains/puppeteer/helpers/getTextInElement.js";
+import normalizeString from "#src/helpers/normalizeString.js";
 
 interface IOptions {
   searchContainerSelector?: string;
