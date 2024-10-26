@@ -1,13 +1,13 @@
 import {Browser, Page} from "puppeteer";
-import getRandomArrayElement from "#src/helpers/getRandomArrayElement";
-import {hoverAndClick, wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers";
-import normalizeString from "#src/helpers/normalizeString";
-import getTextInElement from "#src/domains/puppeteer/helpers/getTextInElement";
-import typeWithRandomDelay from "#src/domains/puppeteer/helpers/typeWithRandomDelay";
-import IIdaoForecastOptions from "#src/domains/automatization/idao/interfaces/IIdaoForecastOptions";
-import getRandomNumberBetween from "#src/helpers/getRandomNumberBetween";
-import getButtonByText from "#src/domains/puppeteer/helpers/getButtonByText";
-import Metamask from "#src/domains/extensions/metamask/Metamask";
+import getRandomArrayElement from "#src/helpers/getRandomArrayElement.js";
+import {hoverAndClick, wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
+import normalizeString from "#src/helpers/normalizeString.js";
+import getTextInElement from "#src/domains/puppeteer/helpers/getTextInElement.js";
+import typeWithRandomDelay from "#src/domains/puppeteer/helpers/typeWithRandomDelay.js";
+import IIdaoForecastOptions from "#src/domains/automatization/idao/interfaces/IIdaoForecastOptions.js";
+import getRandomNumberBetween from "#src/helpers/getRandomNumberBetween.js";
+import getButtonByText from "#src/domains/puppeteer/helpers/getButtonByText.js";
+import Metamask from "#src/domains/extensions/metamask/Metamask.js";
 
 type TCurrencyPair = 'BTC/USD' | 'ETH/USD' | 'BNB/USD' | 'XRP/USD' | 'SOL/USD';
 type TShortTermTimelines = '1 hour' | '4 hours' | '12 hours';
