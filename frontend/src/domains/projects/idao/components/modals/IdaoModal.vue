@@ -3,7 +3,7 @@ import { useDialogPluginComponent } from 'quasar';
 import { ref } from 'vue';
 import GeneralJobSettings from 'src/pages/profiles/components/modals/GeneralJobSettings.vue';
 import IdaoModalSettings from 'src/domains/projects/idao/components/modals/IdaoModalSettings.vue';
-import IdaoController from 'src/domains/projects/idao/controllers/IdaoController.vue';
+import IdaoController from 'src/domains/projects/idao/controllers/IdaoController';
 
 const props = defineProps({
   profiles: {

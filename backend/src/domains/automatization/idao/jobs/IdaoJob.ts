@@ -68,7 +68,7 @@ class IdaoJob {
     await new IdaoForecastHandler(this.browser, this.page, this.forecastOptions).run();
     await wait(2122, 5121);
     await this.claimPoints();
-    await wait(2122, 5121);
+    await wait(4122, 10121);
   }
 
   async isAuthenticated(): Promise<boolean> {
@@ -116,7 +116,7 @@ class IdaoJob {
 
     await hoverAndClick(claimBtn)
     const metamaskPage = await Metamask.waitForPageOpen(this.browser)
-    await wait(1211, 3121);
+    await wait(5211, 8121);
     await Metamask.signTransaction(metamaskPage, {maxGasFee: 0.1})
   }
 }
