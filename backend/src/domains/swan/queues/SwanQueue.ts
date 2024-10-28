@@ -1,11 +1,10 @@
-// @ts-nocheck
 import BaseQueue from "#src/domains/queues/BaseQueue.js";
-import QUEUE_NAMES from "#src/structures/queueNames.js";
+import EQueueNames from "#src/domains/queues/structures/enums/EQueueNames.js";
 import SwanJob from "#src/domains/swan/jobs/SwanJob.js";
 
 class SwanQueue extends BaseQueue {
   constructor() {
-    super(QUEUE_NAMES.swan, {
+    super(EQueueNames.Swan, {
       defaultJobOptions: {
         removeOnComplete: true,
         attempts: 3,

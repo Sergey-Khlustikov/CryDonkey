@@ -1,5 +1,5 @@
 import BaseQueue from "#src/domains/queues/BaseQueue.js";
-import QUEUE_NAMES from "#src/structures/queueNames.js";
+import EQueueNames from "#src/domains/queues/structures/enums/EQueueNames.js";
 import IdaoJob from "#src/domains/automatization/idao/jobs/IdaoJob.js";
 import IdaoDTO from "#src/domains/automatization/idao/dto/IdaoDTO.js";
 import IIdaoProfile from "#src/domains/automatization/idao/interfaces/IIdaoProfile.js";
@@ -7,7 +7,7 @@ import IIdaoJobOptions from "#src/domains/automatization/idao/interfaces/IIdaoJo
 
 class IdaoQueue extends BaseQueue {
   constructor() {
-    super(QUEUE_NAMES.idao, {
+    super(EQueueNames.Idao, {
       defaultJobOptions: {
         removeOnComplete: true,
         attempts: 3,

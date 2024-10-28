@@ -1,11 +1,10 @@
-// @ts-nocheck
-import QUEUE_NAMES from "#src/structures/queueNames.js";
+import EQueueNames from "#src/domains/queues/structures/enums/EQueueNames.js";
 import BaseQueue from "#src/domains/queues/BaseQueue.js";
 import BlumJob from "#src/domains/automatization/blum/jobs/BlumJob.js";
 
 class BlumQueue extends BaseQueue {
   constructor() {
-    super(QUEUE_NAMES.blum, {
+    super(EQueueNames.Blum, {
       defaultJobOptions: {
         removeOnComplete: true,
         attempts: 3,
