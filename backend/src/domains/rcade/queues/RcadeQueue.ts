@@ -1,11 +1,11 @@
 import BaseQueue from "#src/domains/queues/BaseQueue.js";
 import {run} from '#src/automatization/rcade/rcade.js';
-import QUEUE_NAMES from "#src/structures/queueNames.js";
+import EQueueNames from "#src/domains/queues/structures/enums/EQueueNames.js";
 import {Job} from "bullmq";
 
 class RcadeQueue extends BaseQueue {
   constructor() {
-    super(QUEUE_NAMES.rcade, {
+    super(EQueueNames.Rcade, {
       defaultJobOptions: {
         removeOnComplete: true,
         attempts: 3,

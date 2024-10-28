@@ -1,11 +1,11 @@
 // @ts-nocheck
 import BaseQueue from "#src/domains/queues/BaseQueue.js";
-import QUEUE_NAMES from "#src/structures/queueNames.js";
+import EQueueNames from "#src/domains/queues/structures/enums/EQueueNames.js";
 import TwitterPostJob from "#src/domains/twitter/jobs/TwitterPostJob.js";
 
 class TwitterPostQueue extends BaseQueue {
   constructor() {
-    super(QUEUE_NAMES.twitterPost, {
+    super(EQueueNames.TwitterPost, {
       defaultJobOptions: {
         removeOnComplete: true,
         attempts: 3,

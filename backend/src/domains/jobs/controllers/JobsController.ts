@@ -1,6 +1,6 @@
 import RcadeQueue from "#src/domains/rcade/queues/RcadeQueue.js";
 import JobResource from "#src/domains/jobs/resources/JobResource.js";
-import QUEUE_NAMES from "#src/structures/queueNames.js";
+import EQueueNames from "#src/domains/queues/structures/enums/EQueueNames.js";
 import SwanQueue from "#src/domains/swan/queues/SwanQueue.js";
 import TwitterPostQueue from "#src/domains/twitter/queues/TwitterPostQueue.js";
 import BlumQueue from "#src/domains/automatization/blum/queues/BlumQueue.js";
@@ -38,23 +38,23 @@ class JobsController {
       let queue;
 
       switch (req.body.queueName) {
-        case QUEUE_NAMES.rcade:
+        case EQueueNames.Rcade:
           queue = RcadeQueue;
           break;
 
-        case QUEUE_NAMES.swan:
+        case EQueueNames.Swan:
           queue = SwanQueue;
           break;
 
-        case QUEUE_NAMES.twitterPost:
+        case EQueueNames.TwitterPost:
           queue = TwitterPostQueue;
           break;
 
-        case QUEUE_NAMES.blum:
+        case EQueueNames.Blum:
           queue = BlumQueue;
           break;
 
-        case QUEUE_NAMES.idao:
+        case EQueueNames.Idao:
           queue = IdaoQueue;
           break
 
@@ -83,23 +83,23 @@ class JobsController {
       let queue;
 
       switch (req.query.queueName) {
-        case QUEUE_NAMES.rcade:
+        case EQueueNames.Rcade:
           queue = RcadeQueue;
           break;
 
-        case QUEUE_NAMES.swan:
+        case EQueueNames.Swan:
           queue = SwanQueue;
           break;
 
-        case QUEUE_NAMES.twitterPost:
+        case EQueueNames.TwitterPost:
           queue = TwitterPostQueue;
           break;
 
-        case QUEUE_NAMES.blum:
+        case EQueueNames.Blum:
           queue = BlumQueue;
           break;
 
-        case QUEUE_NAMES.idao:
+        case EQueueNames.Idao:
           queue = IdaoQueue
           break
       }
