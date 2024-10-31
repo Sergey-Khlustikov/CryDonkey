@@ -1,6 +1,6 @@
 // @ts-nocheck
 import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
-import {hoverAndClick, wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
+import {hoverAndClick, minimizeBrowser, wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
 import TwitterService from "#src/domains/twitter/services/TwitterService.js";
 import typeWithRandomDelay from "#src/domains/puppeteer/helpers/typeWithRandomDelay.js";
 import {TWITTER_POST_AUTOMATION_TYPES} from "#src/domains/twitter/structures/TwitterAutomationTypes.js";
@@ -24,6 +24,8 @@ class TwitterPostJob {
       } finally {
         if (!this.keepOpenProfileIds.includes(this.profile.id)) {
           await browser.close();
+        } else {
+          await minimizeBrowser(browser)
         }
       }
     } catch (e) {

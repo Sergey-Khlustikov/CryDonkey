@@ -1,6 +1,6 @@
 // @ts-nocheck
 import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
-import {wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
+import {minimizeBrowser, wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
 import getRandomArrayElement from "#src/helpers/getRandomArrayElement.js";
 import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
 import SwanDailyTaskHandler from "#src/domains/swan/jobs/handlers/SwanDailyTaskHandler.js";
@@ -34,6 +34,8 @@ class SwanJob {
         console.log(`------- Stop profile ${this.profile.name} --------`);
         if (!this.keepOpenProfileIds.includes(this.profile.id)) {
           await browser.close();
+        } else {
+          await minimizeBrowser(browser)
         }
       }
     } catch (e) {
