@@ -1,7 +1,7 @@
 // @ts-nocheck
 import getRandomArrayElement from "#src/helpers/getRandomArrayElement.js";
 import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
-import {hoverAndClick, wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
+import {hoverAndClick, minimizeBrowser, wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
 import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
 
 export async function run(data) {
@@ -13,6 +13,8 @@ export async function run(data) {
     } finally {
       if (!data.keepOpenProfileIds.includes(data.profile.id)) {
         await browser.close();
+      } else {
+        await minimizeBrowser(browser)
       }
     }
   } catch (error) {

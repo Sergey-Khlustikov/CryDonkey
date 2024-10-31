@@ -22,7 +22,7 @@ class BaseQueue {
   initWorker(workerFunction: any): void {
     new Worker(this.queueName, async (job: Job, token: string | undefined) => {
       if (await this.profileHasActiveJobInOtherQueues(job.data.profile.id)) {
-        await job.moveToDelayed(Date.now() + minuteToMs(1), token);
+        await job.moveToDelayed(Date.now() + minuteToMs(2), token);
 
         throw new DelayedError();
       }
