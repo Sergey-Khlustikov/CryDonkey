@@ -145,7 +145,8 @@ class IdaoForecastHandler {
 
     const sign = Math.random() < 0.5 ? -1 : 1;
     const newPrice = currentPrice + sign * currentPrice * (targetPriceDeviation / 100);
-    const newPriceStr = newPrice.toFixed(inputValue.includes('.') ? 2 : 0);
+    const decimalPlaces = inputValue.includes('.') ? inputValue.split('.')[1].length : 0;
+    const newPriceStr = newPrice.toFixed(decimalPlaces);
 
     await inputElement.click({count: 3})
     await typeWithRandomDelay(this.page, selector, newPriceStr)
@@ -158,10 +159,16 @@ class IdaoForecastHandler {
       throw new Error('Make forecast button not found');
     }
 
+    await this.page.waitForFunction(
+      (btn) => !btn.hasAttribute('disabled'),
+      {timeout: 10000},
+      forecastBtn
+    );
+
     await hoverAndClick(forecastBtn)
-    const metamaskPage = await Metamask.waitForPageOpen(this.browser)
+    const metamaskPage = await Metamask.waitForExtensionOpen(this.browser)
     await wait(1211, 3121);
-    await Metamask.signTransaction(metamaskPage, {maxGasFee: 0.1})
+    await Metamask.signTransaction(metamaskPage, {maxGasFee: 0.05})
   }
 }
 

@@ -8,6 +8,7 @@ import getButtonByText from "#src/domains/puppeteer/helpers/getButtonByText.js";
 import IdaoForecastHandler from "#src/domains/automatization/idao/jobs/handlers/IdaoForecastHandler.js";
 import IIdaoForecastOptions from "#src/domains/automatization/idao/interfaces/IIdaoForecastOptions.js";
 import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
+import {retryMethodWithReload} from "#src/helpers/retryMethod.js";
 
 class IdaoJob {
   protected job: IIdaoJobOptions;
@@ -67,7 +68,7 @@ class IdaoJob {
 
     await new IdaoForecastHandler(this.browser, this.page, this.forecastOptions).run();
     await wait(2122, 5121);
-    await this.claimPoints();
+    await retryMethodWithReload(this.page, () => this.claimPoints())
     await wait(4122, 10121);
   }
 
@@ -95,18 +96,38 @@ class IdaoJob {
 
     await hoverAndClick(metaMaskButton)
 
-    const metaMaskPage = await Metamask.waitForPageOpen(this.browser)
+    const metaMaskPage = await Metamask.waitForExtensionOpen(this.browser)
     await wait(1111, 2222);
-    await hoverAndClick(await getButtonByText(metaMaskPage, 'next', {searchContainerSelector: 'footer'}))
-    await wait(1111, 2222);
-    await hoverAndClick(await getButtonByText(metaMaskPage, 'confirm', {searchContainerSelector: 'footer'}))
 
+    const nextBtn = await getButtonByText(metaMaskPage, 'next', {searchContainerSelector: 'footer'})
+
+    if (!nextBtn) {
+      throw new Error('Sign in. Next button not found')
+    }
+
+    await hoverAndClick(nextBtn);
+    await wait(1111, 2222);
+
+    const confirmBtn = await getButtonByText(metaMaskPage, 'confirm', {searchContainerSelector: 'footer'})
+
+    if (!confirmBtn) {
+      throw new Error('Confirm button not found')
+    }
+
+    await hoverAndClick(confirmBtn);
   }
 
-  async claimPoints() {
+  async claimPoints(): Promise<void> {
     const pageScroller = new PageScroller({page: this.page, scrollableTag: 'html'});
     await pageScroller.scrollToBottom();
     await wait(3121, 6121);
+
+    const clearBtn = await getButtonByText(this.page, 'clear', {strict: false});
+
+    if (clearBtn) {
+      await hoverAndClick(clearBtn);
+      return
+    }
 
     const claimBtn = await getButtonByText(this.page, 'claim', {strict: false});
 
@@ -115,9 +136,15 @@ class IdaoJob {
     }
 
     await hoverAndClick(claimBtn)
-    const metamaskPage = await Metamask.waitForPageOpen(this.browser)
+    const metamaskPage = await Metamask.waitForExtensionOpen(this.browser)
     await wait(5211, 8121);
     await Metamask.signTransaction(metamaskPage, {maxGasFee: 0.1})
+
+    await this.page.waitForFunction(
+      (btn) => !btn.isConnected,
+      {},
+      claimBtn
+    );
   }
 }
 

@@ -14,28 +14,25 @@ class Metamask {
 
     try {
       await page.goto(loginUrl, {waitUntil: 'networkidle2'});
-      await wait(5000, 6000)
+      await page.waitForSelector('.loading-logo', {hidden: true});
 
       if (await page.$('.unlock-page')) {
-        await wait(1211, 2102);
-
-        await page.waitForSelector('#password')
+        await page.waitForSelector('#password', {timeout: 10000})
         await page.type('#password', ENV.RABBY_PASSWORD);
         await wait(1211, 2102);
 
         await page.click('button[data-testid="unlock-submit"]');
-        await wait(1211, 2102);
       }
 
-      if (!await page.waitForSelector('.wallet-overview')) {
-        throw new Error('Failed to unlock Metamask wallet.');
-      }
+      await page.waitForSelector('.wallet-overview', {timeout: 10000});
+    } catch (e) {
+      throw new Error(`Failed to unlock Metamask wallet. Error: ${e}`);
     } finally {
       await page.close();
     }
   }
 
-  async waitForPageOpen(browser: Browser, timeout: number = 10000): Promise<Page> {
+  async waitForExtensionOpen(browser: Browser, timeout: number = 10000): Promise<Page> {
     return new Promise((resolve, reject) => {
       let resolved = false;
 
