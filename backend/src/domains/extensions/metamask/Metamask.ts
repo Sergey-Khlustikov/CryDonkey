@@ -4,9 +4,12 @@ import {Browser, Page} from "puppeteer";
 import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
 import getTextInElement from "#src/domains/puppeteer/helpers/getTextInElement.js";
 import extractNumbersFromString from "#src/helpers/extractNumbersFromString.js";
+import Extension from "#src/domains/extensions/Extension";
 
-class Metamask {
-  private id: string = 'nkbihfbeogaeaoehlefnkodbefgpgknn';
+class Metamask extends Extension {
+  constructor() {
+    super('nkbihfbeogaeaoehlefnkodbefgpgknn', 'Metamask');
+  }
 
   async unlockFullPage(browser: Browser): Promise<void> {
     const loginUrl = `chrome-extension://${this.id}/home.html#unlock`;
@@ -32,42 +35,9 @@ class Metamask {
     }
   }
 
-  async waitForExtensionOpen(browser: Browser, timeout: number = 10000): Promise<Page> {
-    return new Promise((resolve, reject) => {
-      let resolved = false;
-
-      const timeoutId = setTimeout(() => {
-        if (!resolved) {
-          reject(new Error('MetaMask page did not open within the specified time'));
-        }
-      }, timeout);
-
-      browser.on('targetcreated', async (target) => {
-        if (target.type() === 'page') {
-          try {
-            const page = await target.page();
-
-            if (page) {
-              await page.waitForNavigation({waitUntil: 'networkidle2', timeout});
-              if (!resolved) {
-                resolved = true;
-                clearTimeout(timeoutId);
-                resolve(page);
-              }
-            }
-          } catch (error) {
-            if (!resolved) {
-              resolved = true;
-              clearTimeout(timeoutId);
-              reject(error);
-            }
-          }
-        }
-      });
-    });
-  }
-
   async signTransaction(page: Page, options: { maxGasFee: number }): Promise<void> {
+    await page.waitForSelector('div[data-testid="confirm-header"]')
+
     const pageScroller = new PageScroller({page, scrollableTag: 'div[style*="overflow: auto"]'})
     await pageScroller.scrollToBottom()
     await wait(1011, 2110);
