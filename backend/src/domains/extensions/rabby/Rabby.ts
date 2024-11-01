@@ -1,11 +1,11 @@
 import {wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
 import ENV from "#src/structures/env.js";
-import triggerBrowserExtension from "#src/domains/puppeteer/helpers/triggerBrowserExtension.js";
-import {Browser, Page} from "puppeteer";
+import {Browser} from "puppeteer";
+import Extension from "#src/domains/extensions/Extension";
 
-class Rabby {
-  getId() {
-    return 'acmacodkjbdgmoleebolmdjonilkdbch';
+class Rabby extends Extension {
+  constructor() {
+    super('acmacodkjbdgmoleebolmdjonilkdbch', 'Rabby');
   }
 
   async unlockFullPage(browser: Browser) {
@@ -29,10 +29,6 @@ class Rabby {
     } finally {
       await page.close();
     }
-  }
-
-  async trigger(browser: Browser, page: Page) {
-    return triggerBrowserExtension(browser, page, this.getId());
   }
 }
 

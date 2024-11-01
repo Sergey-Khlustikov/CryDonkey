@@ -165,8 +165,9 @@ class IdaoForecastHandler {
       forecastBtn
     );
 
+    await wait(1111, 2222)
     await hoverAndClick(forecastBtn)
-    const metamaskPage = await Metamask.waitForExtensionOpen(this.browser)
+    const metamaskPage = await Metamask.waitForExtensionOpen(this.browser, 30000)
     await wait(1211, 3121);
     await Metamask.signTransaction(metamaskPage, {maxGasFee: 0.05})
   }
