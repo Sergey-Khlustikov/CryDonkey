@@ -1,5 +1,5 @@
 import {Browser, Page, Target} from "puppeteer";
-import triggerBrowserExtension from "#src/domains/puppeteer/helpers/triggerBrowserExtension";
+import triggerBrowserExtension from "#src/domains/puppeteer/helpers/triggerBrowserExtension.js";
 
 class Extension {
   constructor(public id: string, public name: string) {

@@ -1,7 +1,7 @@
 import {wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
 import ENV from "#src/structures/env.js";
 import {Browser} from "puppeteer";
-import Extension from "#src/domains/extensions/Extension";
+import Extension from "#src/domains/extensions/Extension.js";
 
 class Rabby extends Extension {
   constructor() {
