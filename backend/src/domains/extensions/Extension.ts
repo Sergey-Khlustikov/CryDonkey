@@ -1,5 +1,4 @@
 import {Browser, Page, Target} from "puppeteer";
-import triggerBrowserExtension from "#src/domains/puppeteer/helpers/triggerBrowserExtension.js";
 
 class Extension {
   constructor(public id: string, public name: string) {
@@ -58,8 +57,23 @@ class Extension {
     ]);
   }
 
-  async triggerExtension(browser: Browser, page: Page) {
-    return triggerBrowserExtension(browser, page, this.getId());
+  async triggerExtension(browser: Browser, page: Page): Promise<void> {
+    const extBackgroundTarget = await browser.waitForTarget(target => {
+      return target.type() === 'service_worker' && target.url().includes(this.getId())
+    }, {timeout: 60000});
+
+    const extWorker = await extBackgroundTarget.worker();
+
+    await page.bringToFront();
+
+    if (!extWorker) {
+      throw new Error('Service worker not found');
+    }
+
+    await extWorker.evaluate(() => {
+      // @ts-ignore
+      chrome.action.openPopup();
+    });
   }
 }
 

@@ -14,8 +14,8 @@ class IdaoJob {
   protected job: IIdaoJobOptions;
   protected profile: IIdaoProfile;
   protected questUrl: string;
-  protected page: Page;
-  protected browser: Browser;
+  protected page!: Page;
+  protected browser!: Browser;
   private keepOpenProfileIds: string[];
   private forecastOptions: IIdaoForecastOptions;
 
