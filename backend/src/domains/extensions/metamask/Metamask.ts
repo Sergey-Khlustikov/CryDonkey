@@ -4,7 +4,7 @@ import {Browser, Page} from "puppeteer";
 import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
 import getTextInElement from "#src/domains/puppeteer/helpers/getTextInElement.js";
 import extractNumbersFromString from "#src/helpers/extractNumbersFromString.js";
-import Extension from "#src/domains/extensions/Extension";
+import Extension from "#src/domains/extensions/Extension.js";
 
 class Metamask extends Extension {
   constructor() {
