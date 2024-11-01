@@ -10,7 +10,6 @@ class SwanOnChainQuestsHandler {
   }
 
   async run(browser, page) {
-    console.log('Start onchain');
     try {
       this.browser = browser;
       this.page = page;
@@ -33,7 +32,6 @@ class SwanOnChainQuestsHandler {
       for (let quest of quests) {
         await this.processQuest(quest);
       }
-      console.log('end onchain');
     } catch (e) {
       throw e;
     }
@@ -79,23 +77,21 @@ class SwanOnChainQuestsHandler {
       await this.processRabby();
 
     } catch (error) {
-      console.error('Error occurred:', error);
-      console.error('Error name:', error.name);
       throw error;
     }
   }
 
   async completeDailyMint(quest) {
-    console.log('start mint');
+
     try {
       const verifyBtn = await quest.$('.item-title-right .btn:last-of-type');
 
       if (!verifyBtn) {
         throw new Error('On chain daily mint. Verify btn not found.');
       }
-      console.log('verifyBtn', verifyBtn);
+
       const buttonText = await verifyBtn.evaluate(el => el.innerText.trim());
-      console.log('mint.', buttonText);
+
       if (buttonText === 'Done' || buttonText === 'Verifying') {
         return;
       }
@@ -126,21 +122,14 @@ class SwanOnChainQuestsHandler {
       }
 
     } catch (e) {
-      console.error('Error occurred:', e);
-      console.error('Error name:', e.name);
       throw e;
     }
   }
 
   async processRabby() {
-    console.log('try open rabby');
-    const newPagePromise = new Promise(resolve => this.browser.once('targetcreated', target => resolve(target.page())));
-    await wait(4912, 8124);
-    const extensionPage = await newPagePromise;
+    const extensionPage = await Rabby.waitForExtensionOpen(this.browser)
 
-    console.log('rabby opened');
-
-    await wait(5024, 8123);
+    await wait(1024, 4123);
 
     await extensionPage.waitForSelector('button');
     await extensionPage
