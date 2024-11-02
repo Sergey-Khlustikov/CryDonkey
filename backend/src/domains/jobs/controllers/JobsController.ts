@@ -7,9 +7,10 @@ import BlumQueue from "#src/domains/automatization/blum/queues/BlumQueue.js";
 import BaseQueue from "#src/domains/queues/BaseQueue";
 import IdaoQueue from "#src/domains/automatization/idao/queues/IdaoQueue.js";
 import {Request, Response} from "express";
+import DawnCheckAuthQueue from "#src/domains/extensions/dawn/queues/DawnCheckAuthQueue.js";
 
 class JobsController {
-  private allQueues: BaseQueue[] = [RcadeQueue, SwanQueue, TwitterPostQueue, BlumQueue, IdaoQueue];
+  private allQueues: BaseQueue[] = [RcadeQueue, SwanQueue, TwitterPostQueue, BlumQueue, IdaoQueue, DawnCheckAuthQueue];
 
   async getList(req: Request, res: Response) {
     try {
@@ -58,6 +59,10 @@ class JobsController {
           queue = IdaoQueue;
           break
 
+        case EQueueNames.DawnAuth:
+          queue = DawnCheckAuthQueue
+          break
+
         default:
           return res.status(500).json({message: 'Unknown queue name'});
       }
@@ -101,6 +106,10 @@ class JobsController {
 
         case EQueueNames.Idao:
           queue = IdaoQueue
+          break
+
+        case EQueueNames.DawnAuth:
+          queue = DawnCheckAuthQueue
           break
       }
 

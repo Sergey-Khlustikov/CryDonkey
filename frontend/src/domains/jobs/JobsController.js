@@ -26,11 +26,6 @@ class JobsController {
   async retryFailed() {
     return this.api.post('/jobs/retryFailed');
   }
-
-  // Temp
-  async runCustom(params) {
-    return this.api.post('/jobs/runCustom', params);
-  }
 }
 
 export default new JobsController();

@@ -1,10 +1,11 @@
 <script setup>
 import SwanModal from 'src/domains/projects/swan/components/modals/SwanModal.vue';
-import { useQuasar } from 'quasar';
+import {useQuasar} from 'quasar';
 import RcadeModal from 'src/pages/profiles/components/modals/RcadeModal.vue';
 import TwitterPostModal from 'src/domains/twitter/modals/twitterPostModal/TwitterPostModal.vue';
 import BlumModal from 'src/pages/profiles/components/modals/BlumModal.vue';
 import IdaoModal from 'src/domains/projects/idao/components/modals/IdaoModal.vue';
+import DawnController from 'src/domains/projects/dawn/controllers/DawnController.js';
 
 const $q = useQuasar();
 const props = defineProps({
@@ -59,6 +60,12 @@ function openIdaoModal() {
   });
 }
 
+async function checkDawnAuth() {
+  await DawnController.checkAuth({
+    profiles: props.profiles.map(profile => ({id: profile.user_id, name: profile.name})),
+  });
+}
+
 </script>
 
 <template>
@@ -106,6 +113,15 @@ function openIdaoModal() {
             <q-item-label>
               <q-icon name="play_arrow"></q-icon>
               IDAO
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable v-close-popup @click="checkDawnAuth">
+          <q-item-section>
+            <q-item-label>
+              <q-icon name="play_arrow"></q-icon>
+              Dawn. Check Auth
             </q-item-label>
           </q-item-section>
         </q-item>
