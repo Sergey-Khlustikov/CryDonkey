@@ -2,7 +2,7 @@ import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
 import {Browser, Page} from "puppeteer";
 import IJobBulk from "#src/domains/queues/structures/interfaces/IJobBulk.js";
 import Dawn from "#src/domains/extensions/dawn/Dawn.js";
-import {minimizeBrowser} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
+import {minimizeBrowser, wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
 import minuteToMs from "#src/helpers/minuteToMs.js";
 
 class DawnCheckAuthJob {
@@ -39,15 +39,14 @@ class DawnCheckAuthJob {
 
     this.page.on('dialog', async (dialog) => await dialog.accept());
 
-    const timeout = minuteToMs(2);
-
-    await this.page.waitForNavigation({waitUntil: 'networkidle2', timeout})
+    await wait(5000, 5000)
 
     if (await this.page.$('input#email')) {
       throw new Error('Not logged in');
     }
 
     const selector = '#dawnbalance';
+    const timeout = minuteToMs(1);
 
     await this.page.waitForSelector(selector, {timeout});
     await this.page.waitForFunction(
