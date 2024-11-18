@@ -5,7 +5,7 @@ import adsRoutes from "#src/routes/adsRoutes.js";
 import aiRoutes from "#src/routes/aiRoutes.js";
 import twitterRoutes from "#src/routes/twitterRoutes.js";
 import blumRoutes from "#src/routes/blumRoutes.js";
-import {Application} from "express";
+import {Application, Request, Response} from "express";
 import idaoRoutes from "#src/routes/idaoRoutes.js";
 import dawnRoutes from "#src/routes/dawnRoutes.js";
 
@@ -20,7 +20,7 @@ const initRoutes = (app: Application) => {
   app.use('/idao', idaoRoutes);
   app.use('/dawn', dawnRoutes);
 
-  app.get('/status', async (req, res) => {
+  app.get('/status', async (_req: Request, res: Response) => {
     res.send('OK');
   });
 };

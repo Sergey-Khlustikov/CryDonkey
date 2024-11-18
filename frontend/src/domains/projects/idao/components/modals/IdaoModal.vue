@@ -24,18 +24,16 @@ const {
 } = useDialogPluginComponent();
 
 const formRef = ref(null);
+const generalSettings = ref({});
 const settings = ref({});
-const generalSettings = ref({
-  keepOpenProfileIds: [],
-});
 
 async function onSubmit() {
   await IdaoController.run({
     profiles: props.profiles.map(profile => {
       return { id: profile.user_id, name: profile.name };
     }),
-    keepOpenProfileIds: generalSettings.value.keepOpenProfileIds,
     ...settings.value,
+    ...generalSettings.value,
   });
 
   onDialogOK();

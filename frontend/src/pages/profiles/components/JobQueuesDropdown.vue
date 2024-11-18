@@ -1,6 +1,5 @@
 <script setup>
-import SwanModal from 'src/domains/projects/swan/components/modals/SwanModal.vue';
-import {useQuasar} from 'quasar';
+import { useQuasar } from 'quasar';
 import RcadeModal from 'src/pages/profiles/components/modals/RcadeModal.vue';
 import TwitterPostModal from 'src/domains/twitter/modals/twitterPostModal/TwitterPostModal.vue';
 import BlumModal from 'src/pages/profiles/components/modals/BlumModal.vue';
@@ -14,15 +13,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-function openSwanModal() {
-  $q.dialog({
-    component: SwanModal,
-    componentProps: {
-      profiles: props.profiles,
-    },
-  });
-}
 
 function openRcadeModal() {
   $q.dialog({
@@ -77,15 +67,6 @@ async function checkDawnAuth() {
             <q-item-label>
               <q-icon name="play_arrow"></q-icon>
               Rcade
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <q-item clickable v-close-popup @click="openSwanModal">
-          <q-item-section>
-            <q-item-label>
-              <q-icon name="play_arrow"></q-icon>
-              Swan
             </q-item-label>
           </q-item-section>
         </q-item>
