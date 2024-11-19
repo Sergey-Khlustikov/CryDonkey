@@ -2,7 +2,7 @@ import BaseQueue from "#src/domains/queues/BaseQueue.js";
 import EQueueNames from "#src/domains/queues/structures/enums/EQueueNames.js";
 import IdaoJob from "#src/domains/automatization/idao/jobs/IdaoJob.js";
 import IdaoDTO from "#src/domains/automatization/idao/dto/IdaoDTO.js";
-import IIdaoProfile from "#src/domains/automatization/idao/interfaces/IIdaoProfile.js";
+import IBaseJobProfile from "#src/domains/queues/structures/interfaces/IBaseJobProfile.js";
 import IIdaoJobOptions from "#src/domains/automatization/idao/interfaces/IIdaoJobOptions.js";
 
 class IdaoQueue extends BaseQueue {
@@ -26,7 +26,7 @@ class IdaoQueue extends BaseQueue {
   async addJobs(dto: IdaoDTO) {
     const profiles = dto.getProfiles();
 
-    const formattedJobs: IIdaoJobOptions[] = profiles.map((profile: IIdaoProfile, index: number) => {
+    const formattedJobs: IIdaoJobOptions[] = profiles.map((profile: IBaseJobProfile, index: number) => {
       return {
         name: this.queueName,
         data: {

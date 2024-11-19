@@ -5,6 +5,7 @@ import {Request, Response} from "express";
 
 class BlumController {
   async run(req: Request, res: Response): Promise<void> {
+
     try {
       const params = req.body;
 
@@ -13,6 +14,7 @@ class BlumController {
         minDelayMinutes: params.minDelayMinutes || 1,
         maxDelayMinutes: params.maxDelayMinutes || 5,
         keepOpenProfileIds: params.keepOpenProfileIds,
+        options: params.options
       }));
 
       res.status(200).send({message: 'Success'});

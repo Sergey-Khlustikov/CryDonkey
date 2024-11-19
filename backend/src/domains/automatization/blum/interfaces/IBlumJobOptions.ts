@@ -1,12 +1,12 @@
 import IBaseJobProfile from "#src/domains/queues/structures/interfaces/IBaseJobProfile.js";
 import IJobBulk from "#src/domains/queues/structures/interfaces/IJobBulk.js";
-import IIdaoForecastOptions from "#src/domains/automatization/idao/interfaces/IIdaoForecastOptions.js";
+import IBlumOptions from "#src/domains/automatization/blum/interfaces/IBlumOptions.js";
 
-interface IIdaoJobOptions extends IJobBulk<{
+interface IBlumJobOptions extends IJobBulk<{
   profile: IBaseJobProfile,
   keepOpenProfileIds: string[]
-  forecastOptions: IIdaoForecastOptions
+  options: IBlumOptions
 }> {
 }
 
-export default IIdaoJobOptions;
+export default IBlumJobOptions;

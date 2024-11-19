@@ -1,9 +1,9 @@
 <script setup>
 import { onMounted, reactive, ref, watch } from 'vue';
-import ArrowBtn from 'src/components/ArrowBtn.vue';
 import vRequired from 'src/helpers/validations/vRequired';
 import vMoreThan from 'src/helpers/validations/vMoreThan';
 import vLessOrEqualThan from 'src/helpers/validations/vLessOrEqualThan';
+import CollapsableModalSection from 'src/components/modals/CollapsableModalSection.vue';
 
 const forecastOptions = reactive({
   minTargetPriceDeviation: 0,
@@ -23,52 +23,39 @@ watch(forecastOptions, (newValue) => {
 </script>
 
 <template>
-  <q-card bordered>
-    <q-card-section @click="expanded = !expanded" class="flex justify-between items-center cursor-pointer">
-      <div class="text-h6">Forecast Settings</div>
-      <q-space/>
+  <collapsable-modal-section header-text="Forecast Settings">
+    <q-card-section>
+      <div class="row q-col-gutter-md">
+        <q-input
+          v-model.number="forecastOptions.minTargetPriceDeviation"
+          outlined
+          stack-label
+          label="Min target price deviation"
+          :rules="[vRequired]"
+          type="number"
+          step="0.01"
+          class="col-4"
+        >
+          <template v-slot:append>%</template>
+        </q-input>
 
-      <arrow-btn :model-value="expanded"></arrow-btn>
-    </q-card-section>
-
-    <q-slide-transition>
-      <div v-show="expanded">
-        <q-separator></q-separator>
-
-        <q-card-section>
-          <div class="row q-col-gutter-md">
-            <q-input
-              v-model.number="forecastOptions.minTargetPriceDeviation"
-              outlined
-              stack-label
-              label="Min target price deviation"
-              :rules="[vRequired]"
-              type="number"
-              step="0.01"
-              class="col-4"
-            >
-              <template v-slot:append>%</template>
-            </q-input>
-
-            <q-input
-              v-model.number="forecastOptions.maxTargetPriceDeviation"
-              outlined
-              stack-label
-              label="Max target price deviation"
-              :rules="[
+        <q-input
+          v-model.number="forecastOptions.maxTargetPriceDeviation"
+          outlined
+          stack-label
+          label="Max target price deviation"
+          :rules="[
                 vRequired,
                 value => vMoreThan(value, forecastOptions.minTargetPriceDeviation),
                 value => vLessOrEqualThan(value, 100),
               ]"
-              type="number"
-              step="0.01"
-              class="col-4"
-            >
-              <template v-slot:append>%</template>
-            </q-input>
-          </div>
-        </q-card-section>
+          type="number"
+          step="0.01"
+          class="col-4"
+        >
+          <template v-slot:append>%</template>
+        </q-input>
       </div>
-    </q-slide-transition>
-  </q-card>
+    </q-card-section>
+  </collapsable-modal-section>
 </template>

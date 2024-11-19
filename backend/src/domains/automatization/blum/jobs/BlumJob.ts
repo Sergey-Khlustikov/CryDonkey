@@ -2,33 +2,26 @@ import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
 import {hoverAndClick, minimizeBrowser, wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
 import {retryMethodWithReload} from '#src/helpers/retryMethod.js';
 import BlumPlayClickerGameHandler from "#src/domains/automatization/blum/jobs/handlers/BlumPlayClickerGameHandler.js";
-import {Job} from "bullmq";
 import {Browser, Frame, Page} from "puppeteer";
-
-interface Profile {
-  id: string | number;
-  name: string;
-}
-
-interface BlumJobOptions {
-  profile: Profile;
-  keepOpenProfileIds: string[];
-}
+import IBlumJobOptions from "#src/domains/automatization/blum/interfaces/IBlumJobOptions.js";
+import IBaseJobProfile from "#src/domains/queues/structures/interfaces/IBaseJobProfile.js";
 
 class BlumJob {
-  private job: Job;
-  private profile: Profile;
+  private profile: IBaseJobProfile;
   private keepOpenProfileIds: Array<number | string>;
   private questUrl: string;
   private browser: any;
   private tgPage: any;
   private blumFrame: any;
+  private playGame: boolean;
 
-  constructor(job: Job, {profile, keepOpenProfileIds}: BlumJobOptions) {
-    this.job = job;
+  constructor(job: IBlumJobOptions) {
+    const {profile, keepOpenProfileIds, options} = job.data;
+
     this.profile = profile;
     this.keepOpenProfileIds = keepOpenProfileIds;
     this.questUrl = 'https://web.telegram.org/a/#6865543862';
+    this.playGame = options.playGame;
 
     this.browser = null;
     this.tgPage = null;
@@ -68,7 +61,10 @@ class BlumJob {
       await wait(1304, 4210);
 
       // await new BlumJobWeeklyHandler(this.browser, this.tgPage, this.blumFrame).run();
-      await new BlumPlayClickerGameHandler().run(this.blumFrame, this.tgPage);
+      if (this.playGame) {
+        await new BlumPlayClickerGameHandler().run(this.blumFrame, this.tgPage);
+      }
+
       await wait(1304, 4210);
     } catch (e) {
       throw e;

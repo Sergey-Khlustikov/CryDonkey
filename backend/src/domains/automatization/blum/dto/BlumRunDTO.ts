@@ -1,29 +1,30 @@
+import IBaseJobProfile from "#src/domains/queues/structures/interfaces/IBaseJobProfile.js";
+import IBlumOptions from "#src/domains/automatization/blum/interfaces/IBlumOptions.js";
+
 interface BlumRunDTOParams {
-  profiles: string[];
-  minDelayMinutes?: number;
-  maxDelayMinutes?: number;
-  keepOpenProfileIds?: string[];
+  profiles: IBaseJobProfile[];
+  minDelayMinutes: number;
+  maxDelayMinutes: number;
+  keepOpenProfileIds: string[];
+  options: IBlumOptions,
 }
 
 class BlumRunDTO {
-  private readonly profiles: string[];
+  private readonly profiles: IBaseJobProfile[];
   private readonly minDelayMinutes: number;
   private readonly maxDelayMinutes: number;
-  private readonly keepOpenProfileIds?: string[];
+  private readonly keepOpenProfileIds: string[];
+  private readonly options: IBlumOptions;
 
-  constructor({
-    profiles,
-    minDelayMinutes = 1,
-    maxDelayMinutes = 5,
-    keepOpenProfileIds,
-  }: BlumRunDTOParams) {
-    this.profiles = profiles;
-    this.minDelayMinutes = minDelayMinutes;
-    this.maxDelayMinutes = maxDelayMinutes;
-    this.keepOpenProfileIds = keepOpenProfileIds;
+  constructor(dtoOptions: BlumRunDTOParams) {
+    this.profiles = dtoOptions.profiles;
+    this.minDelayMinutes = dtoOptions.minDelayMinutes;
+    this.maxDelayMinutes = dtoOptions.maxDelayMinutes;
+    this.keepOpenProfileIds = dtoOptions.keepOpenProfileIds;
+    this.options = dtoOptions.options;
   }
 
-  getProfiles(): string[] {
+  getProfiles(): IBaseJobProfile[] {
     return this.profiles;
   }
 
@@ -35,8 +36,12 @@ class BlumRunDTO {
     return this.maxDelayMinutes;
   }
 
-  getKeepOpenProfileIds(): string[] | undefined {
+  getKeepOpenProfileIds(): string[] {
     return this.keepOpenProfileIds;
+  }
+
+  getOptions(): IBlumOptions {
+    return this.options;
   }
 }
 

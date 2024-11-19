@@ -1,8 +1,8 @@
-import IIdaoProfile from "#src/domains/automatization/idao/interfaces/IIdaoProfile.js";
+import IBaseJobProfile from "#src/domains/queues/structures/interfaces/IBaseJobProfile.js";
 import IIdaoForecastOptions from "#src/domains/automatization/idao/interfaces/IIdaoForecastOptions.js";
 
 interface IdaoDTOOptions {
-  profiles: IIdaoProfile[];
+  profiles: IBaseJobProfile[];
   minDelayMinutes: number;
   maxDelayMinutes: number;
   keepOpenProfileIds: string[];
@@ -10,7 +10,7 @@ interface IdaoDTOOptions {
 }
 
 class IdaoDTO {
-  private readonly profiles: IIdaoProfile[];
+  private readonly profiles: IBaseJobProfile[];
   private readonly minDelayMinutes: number;
   private readonly maxDelayMinutes: number;
   private readonly keepOpenProfileIds: string[];
@@ -30,7 +30,7 @@ class IdaoDTO {
     this.forecastOptions = {...defaultForecastOptions, ...options.forecastOptions};
   }
 
-  getProfiles(): IIdaoProfile[] {
+  getProfiles(): IBaseJobProfile[] {
     return this.profiles;
   }
 
