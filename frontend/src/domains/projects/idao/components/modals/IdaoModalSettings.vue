@@ -6,7 +6,5 @@ const settings = defineModel();
 </script>
 
 <template>
-  <div>
-    <idao-modal-settings-forecast v-model="settings"></idao-modal-settings-forecast>
-  </div>
+  <idao-modal-settings-forecast v-model="settings"></idao-modal-settings-forecast>
 </template>

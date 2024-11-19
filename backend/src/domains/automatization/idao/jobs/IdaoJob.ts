@@ -1,7 +1,7 @@
 import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
 import {hoverAndClick, minimizeBrowser, wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
 import IIdaoJobOptions from "#src/domains/automatization/idao/interfaces/IIdaoJobOptions.js";
-import IIdaoProfile from "#src/domains/automatization/idao/interfaces/IIdaoProfile.js";
+import IBaseJobProfile from "#src/domains/queues/structures/interfaces/IBaseJobProfile.js";
 import {Browser, Page} from "puppeteer";
 import Metamask from "#src/domains/extensions/metamask/Metamask.js";
 import getButtonByText from "#src/domains/puppeteer/helpers/getButtonByText.js";
@@ -12,7 +12,7 @@ import {retryMethodWithReload} from "#src/helpers/retryMethod.js";
 
 class IdaoJob {
   protected job: IIdaoJobOptions;
-  protected profile: IIdaoProfile;
+  protected profile: IBaseJobProfile;
   protected questUrl: string;
   protected page!: Page;
   protected browser!: Browser;

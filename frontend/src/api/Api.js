@@ -26,14 +26,6 @@ class Api {
       console.error(e);
     }
   }
-
-  async runBlum(params) {
-    try {
-      await this.api.post('/blum/run', params);
-    } catch (e) {
-      console.error(e);
-    }
-  }
 }
 
 export default new Api();

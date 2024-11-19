@@ -2,7 +2,7 @@
 import { useQuasar } from 'quasar';
 import RcadeModal from 'src/pages/profiles/components/modals/RcadeModal.vue';
 import TwitterPostModal from 'src/domains/twitter/modals/twitterPostModal/TwitterPostModal.vue';
-import BlumModal from 'src/pages/profiles/components/modals/BlumModal.vue';
+import BlumModal from 'src/domains/projects/blum/components/modals/BlumModal.vue';
 import IdaoModal from 'src/domains/projects/idao/components/modals/IdaoModal.vue';
 import DawnController from 'src/domains/projects/dawn/controllers/DawnController.js';
 

@@ -44,9 +44,9 @@ async function onSubmit() {
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="q-dialog-plugin" style="width: 900px; max-width: 80vw;">
-      <q-form @submit="onSubmit" ref="formRef" no-error-focus greedy>
-        <div class="text-h6 q-ml-md q-mt-md">Idao Settings</div>
+      <div class="text-h6 q-ml-md q-mt-md">Idao Settings</div>
 
+      <q-form @submit="onSubmit" ref="formRef" no-error-focus greedy>
         <q-card-section>
           <general-job-settings
             v-model="generalSettings"

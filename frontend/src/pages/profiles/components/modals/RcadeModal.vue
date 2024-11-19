@@ -39,6 +39,8 @@ async function onSubmit() {
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="q-dialog-plugin" style="width: 600px; max-width: 80vw;">
+      <div class="text-h6 q-ml-md q-mt-md">Rcade Settings</div>
+
       <q-form @submit="onSubmit">
         <q-card-section>
           <general-job-settings
