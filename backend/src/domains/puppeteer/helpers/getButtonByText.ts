@@ -1,35 +1,15 @@
 import {ElementHandle, Page} from "puppeteer";
-import getTextInElement from "#src/domains/puppeteer/helpers/getTextInElement.js";
-import normalizeString from "#src/helpers/normalizeString.js";
-
-interface IOptions {
-  searchContainerSelector?: string;
-  buttonTag?: string;
-  strict?: boolean;
-}
+import PGetElementByText, {IGetByTextOptions} from "#src/domains/puppeteer/helpers/PGetElementByText.js";
 
 async function getButtonByText(
   page: Page,
   text: string,
   {
-    searchContainerSelector = 'html',
-    buttonTag = 'button',
+    containerSelector = 'html',
+    elementSelector = 'button',
     strict = true
-  }: IOptions = {}): Promise<ElementHandle | null> {
-  const buttons = await page.$$(`${searchContainerSelector} ${buttonTag}`);
-
-  for (const button of buttons) {
-    const buttonText = normalizeString(await getTextInElement(page, button));
-    const normalizedSearchText = normalizeString(text)
-
-    if (
-      buttonText === normalizedSearchText
-      || (!strict && buttonText.includes(normalizedSearchText))
-    ) {
-      return button;
-    }
-  }
-  return null;
+  }: IGetByTextOptions = {}): Promise<ElementHandle | null> {
+  return PGetElementByText(page, text, {containerSelector, elementSelector, strict});
 }
 
 export default getButtonByText;

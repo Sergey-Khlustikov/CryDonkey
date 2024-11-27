@@ -77,7 +77,7 @@ class IdaoJob {
   }
 
   async signIn(): Promise<void> {
-    const signInButton = await getButtonByText(this.page, 'connect wallet', {searchContainerSelector: '.sticky'});
+    const signInButton = await getButtonByText(this.page, 'connect wallet', {containerSelector: '.sticky'});
 
     if (!signInButton) {
       throw new Error('Sign-in button not found')
@@ -87,7 +87,7 @@ class IdaoJob {
     await wait(1211, 3121);
 
     const metaMaskButton = await getButtonByText(this.page, 'metamask', {
-      searchContainerSelector: 'div[role="dialog"]'
+      containerSelector: 'div[role="dialog"]'
     });
 
     if (!metaMaskButton) {
@@ -99,7 +99,7 @@ class IdaoJob {
     const metaMaskPage = await Metamask.waitForExtensionOpen(this.browser)
     await wait(1111, 2222);
 
-    const nextBtn = await getButtonByText(metaMaskPage, 'next', {searchContainerSelector: 'footer'})
+    const nextBtn = await getButtonByText(metaMaskPage, 'next', {containerSelector: 'footer'})
 
     if (!nextBtn) {
       throw new Error('Sign in. Next button not found')
@@ -108,7 +108,7 @@ class IdaoJob {
     await hoverAndClick(nextBtn);
     await wait(1111, 2222);
 
-    const confirmBtn = await getButtonByText(metaMaskPage, 'confirm', {searchContainerSelector: 'footer'})
+    const confirmBtn = await getButtonByText(metaMaskPage, 'confirm', {containerSelector: 'footer'})
 
     if (!confirmBtn) {
       throw new Error('Confirm button not found')

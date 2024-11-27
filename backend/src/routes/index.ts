@@ -8,6 +8,7 @@ import blumRoutes from "#src/routes/blumRoutes.js";
 import {Application, Request, Response} from "express";
 import idaoRoutes from "#src/routes/idaoRoutes.js";
 import dawnRoutes from "#src/routes/dawnRoutes.js";
+import peaqRoutes from "#src/routes/peaqRoutes.js";
 
 const initRoutes = (app: Application) => {
   app.use('/rcade', rcadeRoutes);
@@ -19,6 +20,7 @@ const initRoutes = (app: Application) => {
   app.use('/blum', blumRoutes);
   app.use('/idao', idaoRoutes);
   app.use('/dawn', dawnRoutes);
+  app.use('/peaq', peaqRoutes);
 
   app.get('/status', async (_req: Request, res: Response) => {
     res.send('OK');

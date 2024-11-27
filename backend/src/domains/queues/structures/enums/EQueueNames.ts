@@ -5,6 +5,7 @@ enum EQueueNames {
   Blum = 'Blum',
   Idao = 'Idao',
   DawnAuth = 'Dawn Auth',
+  Peaq = 'Peaq',
 }
 
 export default EQueueNames;

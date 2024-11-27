@@ -1,7 +1,9 @@
-import {wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
+import {hoverAndClick, wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
 import ENV from "#src/structures/env.js";
-import {Browser} from "puppeteer";
+import {Browser, Page} from "puppeteer";
 import Extension from "#src/domains/extensions/Extension.js";
+import getButtonByText from "#src/domains/puppeteer/helpers/getButtonByText.js";
+import PWaitForBtnActivated from "#src/domains/puppeteer/helpers/PWaitForBtnActivated.js";
 
 class Rabby extends Extension {
   constructor() {
@@ -29,6 +31,42 @@ class Rabby extends Extension {
     } finally {
       await page.close();
     }
+  }
+
+  async connectToSite(browser: Browser, page: Page) {
+    await page.waitForNavigation({waitUntil: 'networkidle2'})
+    const connectBtn = await getButtonByText(page, 'connect');
+
+    if (!connectBtn) {
+      throw new Error('Rabby/connectToSite. Connect btn not found');
+    }
+
+    await PWaitForBtnActivated(page, connectBtn);
+    await hoverAndClick(connectBtn)
+
+    page = await this.waitForExtensionOpen(browser)
+    await page.waitForNavigation({waitUntil: 'networkidle2'})
+    await wait(3122, 6012);
+
+    const signBtn = await getButtonByText(page, 'sign')
+
+    if (!signBtn) {
+      throw new Error('Rabby/connectToSite. Sign btn not found.')
+    }
+
+    await PWaitForBtnActivated(page, signBtn)
+    await hoverAndClick(signBtn);
+    await wait(1211, 2102);
+
+    const confirmBtn = await getButtonByText(page, 'confirm');
+
+    if (!confirmBtn) {
+      throw new Error('Rabby/connectToSite. Confirm btn not found');
+    }
+
+    await PWaitForBtnActivated(page, confirmBtn);
+    await hoverAndClick(confirmBtn)
+    await wait(1211, 2102);
   }
 }
 
