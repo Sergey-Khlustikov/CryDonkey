@@ -1,22 +1,34 @@
-// @ts-nocheck
 import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
-import {minimizeBrowser, wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
+import {hoverAndClick, minimizeBrowser, wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
 import getRandomArrayElement from "#src/helpers/getRandomArrayElement.js";
 import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
 import SwanDailyTaskHandler from "#src/domains/swan/jobs/handlers/SwanDailyTaskHandler.js";
 import SwanSocialQuestsHandler from "#src/domains/swan/jobs/handlers/SwanSocialQuestsHandler.js";
 import SwanOnChainQuestsHandler from "#src/domains/swan/jobs/handlers/SwanOnChainQuestsHandler.js";
 import {retryMethodWithReload} from '#src/helpers/retryMethod.js';
+import {Browser, Page} from "puppeteer";
+import getButtonByText from "#src/domains/puppeteer/helpers/getButtonByText.js";
+import {Job} from "bullmq";
+import IBaseJobProfile from "#src/domains/queues/structures/interfaces/IBaseJobProfile.js";
 
 class SwanJob {
-  constructor(job, { profile, onlyDaily, dailyCombo, commentQuests, keepOpenProfileIds, commentAutomationType }) {
+  private job: Job;
+  private profile: IBaseJobProfile;
+  private onlyDaily: boolean;
+  private keepOpenProfileIds: string[];
+  private questUrl: string = 'https://mission.swanchain.io/'
+
+  private DailyTaskHandler: SwanDailyTaskHandler;
+  private CommonQuestsHandler: SwanSocialQuestsHandler;
+  private OnChainQuestsHandler: SwanOnChainQuestsHandler;
+
+  constructor(job: Job, {profile, onlyDaily, dailyCombo, commentQuests, keepOpenProfileIds, commentAutomationType}) {
     this.job = job;
     this.profile = profile;
     this.onlyDaily = onlyDaily;
     this.keepOpenProfileIds = keepOpenProfileIds;
-    this.questUrl = 'https://mission.swanchain.io/';
 
-    this.DailyTaskHandler = new SwanDailyTaskHandler(job, { dailyCombo });
+    this.DailyTaskHandler = new SwanDailyTaskHandler(job, {dailyCombo});
     this.CommonQuestsHandler = new SwanSocialQuestsHandler({
       commentAutomationType, commentQuests,
     });
@@ -25,13 +37,11 @@ class SwanJob {
 
   async run() {
     try {
-      console.log(`------- Start profile ${this.profile.name} -------`);
       const browser = await AdsPowerService.connectToPuppeteer(this.profile.id);
 
       try {
         await this.startQuests(browser);
       } finally {
-        console.log(`------- Stop profile ${this.profile.name} --------`);
         if (!this.keepOpenProfileIds.includes(this.profile.id)) {
           await browser.close();
         } else {
@@ -43,20 +53,56 @@ class SwanJob {
     }
   }
 
-  async startQuests(browser) {
+  async startQuests(browser: Browser) {
     const page = await browser.newPage();
-    await page.goto(this.questUrl, { waitUntil: 'networkidle2' });
+    await page.goto(this.questUrl, {waitUntil: 'networkidle2'});
 
     await wait(1012, 5012);
+
+    if (!(await this.isAuthenticated(page))) {
+      await this.signIn(browser, page)
+      await wait(1231, 5123);
+    }
 
     const scenario = getRandomArrayElement([1, 2, 3]);
 
     await this.runScenario({browser, page, scenario});
   }
 
-  async runScenario({ browser, page, scenario }) {
-    const scroller = new PageScroller({ page, scrollableTag: '.el-main' });
-    console.log(`run scenario ${scenario}`);
+  async isAuthenticated(page: Page) {
+    return !(await page.$('.title-signup'))
+  }
+
+  async signIn(browser: Browser, page: Page) {
+    const connectBtn = await getButtonByText(page, 'CONNECT', {buttonTag: 'div'});
+
+    if (!connectBtn) {
+      throw new Error('Connect btn not found')
+    }
+
+    await hoverAndClick(connectBtn);
+
+    await page.waitForNavigation({waitUntil: 'networkidle2'});
+
+    await wait(3421, 6012);  // Пауза перед кликом на авторизацию
+    console.log('twitter ok')
+    console.log('wait for nav ok')
+    const authBtn = await page.$('#allow')
+
+    if (!authBtn) {
+      throw new Error('Auth btn not found')
+    }
+    console.log('btn ok')
+    await hoverAndClick(authBtn)
+
+    await page.waitForNavigation({waitUntil: 'networkidle2'});
+  }
+
+  async runScenario({browser, page, scenario}) {
+    const socialMissionsTabBtn = await page.locator('#tab-SocialMission');
+    await hoverAndClick(socialMissionsTabBtn);
+
+    const scroller = new PageScroller({page, scrollableTag: '.el-main'});
 
     try {
       switch (scenario) {

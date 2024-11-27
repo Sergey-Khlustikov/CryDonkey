@@ -111,12 +111,9 @@ class SwanSocialQuestsHandler {
 
   async openTwitterPage(taskTitleElement) {
     try {
-      console.log('try hover and click');
       await this.hoverAndClickTask(taskTitleElement);
-      console.log('hover and click successful');
 
       const pageTarget = this.page.target();
-      console.log('wait for twitter page');
       const twitterTarget = await this.browser.waitForTarget(target => target.opener() === pageTarget);
       const twitterPage = await twitterTarget.page();
 
@@ -129,7 +126,6 @@ class SwanSocialQuestsHandler {
         throw new Error('Twitter login failed.');
       }
 
-      console.log('Twitter page ok');
       return twitterPage;
     } catch (e) {
       throw e;
