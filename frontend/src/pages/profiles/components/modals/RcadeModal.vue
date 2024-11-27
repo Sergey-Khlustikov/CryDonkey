@@ -1,8 +1,8 @@
 <script setup>
-import {useDialogPluginComponent} from 'quasar';
-import {ref} from 'vue';
+import { useDialogPluginComponent } from 'quasar';
+import { ref } from 'vue';
 import Api from 'src/api/Api';
-import DontCloseProfiles from 'src/pages/profiles/components/DontCloseProfiles.vue';
+import GeneralJobSettings from 'src/pages/profiles/components/modals/GeneralJobSettings.vue';
 
 const props = defineProps({
   profiles: {
@@ -22,14 +22,14 @@ const {
   onDialogCancel,
 } = useDialogPluginComponent();
 
-const selectedNotToCloseProfiles = ref([]);
+const generalSettings = ref({});
 
 async function onSubmit() {
   await Api.runRcade({
     profiles: props.profiles.map(profile => {
       return {id: profile.user_id, name: profile.name};
     }),
-    keepOpenProfileIds: selectedNotToCloseProfiles.value,
+    ...generalSettings.value,
   });
 
   onDialogOK();
@@ -39,9 +39,15 @@ async function onSubmit() {
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="q-dialog-plugin" style="width: 600px; max-width: 80vw;">
+      <div class="text-h6 q-ml-md q-mt-md">Rcade Settings</div>
+
       <q-form @submit="onSubmit">
         <q-card-section>
-          <dont-close-profiles v-model="selectedNotToCloseProfiles" :profiles="profiles"></dont-close-profiles>
+          <general-job-settings
+            v-model="generalSettings"
+            :profiles="profiles"
+            class="q-mb-md"
+          ></general-job-settings>
         </q-card-section>
 
         <q-card-actions align="right" class="q-mr-sm q-mb-sm">

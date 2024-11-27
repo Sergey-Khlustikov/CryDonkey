@@ -1,9 +1,9 @@
 <script setup>
-import {useDialogPluginComponent} from 'quasar';
-import {ref} from 'vue';
+import { useDialogPluginComponent } from 'quasar';
+import { ref } from 'vue';
 import GeneralJobSettings from 'src/pages/profiles/components/modals/GeneralJobSettings.vue';
 import TwitterController from 'src/domains/twitter/TwitterController';
-import {TWITTER_POST_AUTOMATION_TYPES} from 'src/domains/twitter/structures/TwitterAutomationTypes';
+import { TWITTER_POST_AUTOMATION_TYPES } from 'src/domains/twitter/structures/TwitterAutomationTypes';
 import TwitterPostModalSettings
   from 'src/domains/twitter/modals/twitterPostModal/components/TwitterPostModalSettings.vue';
 
@@ -30,17 +30,15 @@ const settings = ref({
   posts: [],
   automationType: TWITTER_POST_AUTOMATION_TYPES.auto,
 });
-const generalSettings = ref({
-  keepOpenProfileIds: [],
-});
+const generalSettings = ref({});
 
 async function onSubmit() {
   await TwitterController.writePost({
     profiles: props.profiles.map(profile => {
       return {id: profile.user_id, name: profile.name};
     }),
-    keepOpenProfileIds: generalSettings.value.keepOpenProfileIds,
     ...settings.value,
+    ...generalSettings.value,
   });
 
   onDialogOK();
@@ -51,9 +49,9 @@ async function onSubmit() {
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="q-dialog-plugin" style="width: 900px; max-width: 80vw;">
-      <q-form @submit="onSubmit" ref="formRef" no-error-focus greedy>
-        <div class="text-h6 q-ml-md q-mt-md">Twitter Post</div>
+      <div class="text-h6 q-ml-md q-mt-md">Twitter Post</div>
 
+      <q-form @submit="onSubmit" ref="formRef" no-error-focus greedy>
         <q-card-section>
           <general-job-settings
             v-model="generalSettings"

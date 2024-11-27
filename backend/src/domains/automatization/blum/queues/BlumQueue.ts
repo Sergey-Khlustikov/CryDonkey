@@ -1,6 +1,8 @@
 import EQueueNames from "#src/domains/queues/structures/enums/EQueueNames.js";
 import BaseQueue from "#src/domains/queues/BaseQueue.js";
 import BlumJob from "#src/domains/automatization/blum/jobs/BlumJob.js";
+import BlumRunDTO from "#src/domains/automatization/blum/dto/BlumRunDTO.js";
+import IBlumJobOptions from "#src/domains/automatization/blum/interfaces/IBlumJobOptions.js";
 
 class BlumQueue extends BaseQueue {
   constructor() {
@@ -15,23 +17,24 @@ class BlumQueue extends BaseQueue {
       },
     });
 
-    this.initWorker(async (job) => {
-      await new BlumJob(job, job.data).run();
+    this.initWorker(async (job: IBlumJobOptions) => {
+      await new BlumJob(job).run();
     });
   }
 
-  async addJobs(BlumRunDTO) {
-    const profiles = BlumRunDTO.getProfiles();
+  async addJobs(dto: BlumRunDTO) {
+    const profiles = dto.getProfiles();
 
     const formattedJobs = profiles.map((profile, index) => {
       return {
         name: this.queueName,
         data: {
           profile,
-          keepOpenProfileIds: BlumRunDTO.getKeepOpenProfileIds(),
+          keepOpenProfileIds: dto.getKeepOpenProfileIds(),
+          options: dto.getOptions(),
         },
         opts: {
-          delay: this.calculateJobDelay(BlumRunDTO.getMinDelayMinutes(), BlumRunDTO.getMaxDelayMinutes(), index),
+          delay: this.calculateJobDelay(dto.getMinDelayMinutes(), dto.getMaxDelayMinutes(), index),
         },
       };
     });

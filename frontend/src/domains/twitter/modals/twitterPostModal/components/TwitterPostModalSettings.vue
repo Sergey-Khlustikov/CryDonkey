@@ -1,10 +1,10 @@
 <script setup>
 import SWAN_COMMENT_AUTOMATION_TYPES from 'src/domains/projects/swan/structures/SwanCommentAutomationTypes.mjs';
-import ArrowBtn from 'src/components/ArrowBtn.vue';
 import TwitterPostAutomationTypesRadio
   from 'src/domains/twitter/modals/twitterPostModal/components/TwitterPostAutomationTypesRadio.vue';
 import { reactive, ref, watch } from 'vue';
 import AIController from 'src/domains/ai/AIController';
+import CollapsableModalSection from 'src/components/modals/CollapsableModalSection.vue';
 
 const props = defineProps({
   profiles: {
@@ -15,7 +15,6 @@ const props = defineProps({
 
 const model = defineModel();
 
-const expanded = ref(true);
 const loading = ref(false);
 
 const posts = reactive(props.profiles.map(profile => ({post: '', profileId: profile.user_id})));
@@ -54,64 +53,52 @@ const getProfileNameById = (id) => {
 </script>
 
 <template>
-  <q-card bordered>
-    <q-card-section @click="expanded = !expanded" class="flex justify-between items-center cursor-pointer">
-      <div class="text-h6">Posts</div>
-      <q-space/>
+  <collapsable-modal-section header-text="Posts">
+    <q-card-section>
+      <twitter-post-automation-types-radio v-model="model.automationType"></twitter-post-automation-types-radio>
 
-      <arrow-btn :model-value="expanded"></arrow-btn>
-    </q-card-section>
-
-    <q-slide-transition>
-      <div v-show="expanded">
-        <q-separator></q-separator>
+      <template v-if="model.automationType === SWAN_COMMENT_AUTOMATION_TYPES.manual">
         <q-card-section>
-          <twitter-post-automation-types-radio v-model="model.automationType"></twitter-post-automation-types-radio>
+          <q-card bordered class="q-mb-md">
+            <q-form @submit="generatePosts">
+              <q-card-section>
+                <div>Generate with AI</div>
+              </q-card-section>
 
-          <template v-if="model.automationType === SWAN_COMMENT_AUTOMATION_TYPES.manual">
-            <q-card-section>
-              <q-card bordered class="q-mb-md">
-                <q-form @submit="generatePosts">
-                  <q-card-section>
-                    <div>Generate with AI</div>
-                  </q-card-section>
-
-                  <q-card-section>
-                    <q-input
-                      v-model="userPrompt"
-                      :rules="[ val => val && val.length > 0]"
-                      type="textarea"
-                      label="Prompt to AI"
-                      class="q-mb-md"
-                    ></q-input>
-                    <q-btn color="green" type="submit">
-                      Generate
-                    </q-btn>
-                  </q-card-section>
-                </q-form>
-              </q-card>
-
-              <div class="row q-col-gutter-md">
+              <q-card-section>
                 <q-input
-                  v-for="post in posts"
-                  v-model="post.post"
+                  v-model="userPrompt"
                   :rules="[ val => val && val.length > 0]"
                   type="textarea"
-                  filled
-                  :label="`Profile '${getProfileNameById(post.profileId)}' post`"
-                  :key="post.profileId"
-                  class="col-4"
-                  rows="4"
+                  label="Prompt to AI"
+                  class="q-mb-md"
                 ></q-input>
-              </div>
+                <q-btn color="green" type="submit">
+                  Generate
+                </q-btn>
+              </q-card-section>
+            </q-form>
+          </q-card>
 
-              <q-inner-loading :showing="loading">
-                <q-spinner-gears size="50px" color="primary"/>
-              </q-inner-loading>
-            </q-card-section>
-          </template>
+          <div class="row q-col-gutter-md">
+            <q-input
+              v-for="post in posts"
+              v-model="post.post"
+              :rules="[ val => val && val.length > 0]"
+              type="textarea"
+              filled
+              :label="`Profile '${getProfileNameById(post.profileId)}' post`"
+              :key="post.profileId"
+              class="col-4"
+              rows="4"
+            ></q-input>
+          </div>
+
+          <q-inner-loading :showing="loading">
+            <q-spinner-gears size="50px" color="primary"/>
+          </q-inner-loading>
         </q-card-section>
-      </div>
-    </q-slide-transition>
-  </q-card>
+      </template>
+    </q-card-section>
+  </collapsable-modal-section>
 </template>

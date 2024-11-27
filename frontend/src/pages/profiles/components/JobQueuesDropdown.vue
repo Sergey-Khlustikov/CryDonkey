@@ -1,11 +1,11 @@
 <script setup>
-import SwanModal from 'src/domains/projects/swan/components/modals/SwanModal.vue';
-import {useQuasar} from 'quasar';
+import { useQuasar } from 'quasar';
 import RcadeModal from 'src/pages/profiles/components/modals/RcadeModal.vue';
 import TwitterPostModal from 'src/domains/twitter/modals/twitterPostModal/TwitterPostModal.vue';
-import BlumModal from 'src/pages/profiles/components/modals/BlumModal.vue';
+import BlumModal from 'src/domains/projects/blum/components/modals/BlumModal.vue';
 import IdaoModal from 'src/domains/projects/idao/components/modals/IdaoModal.vue';
 import DawnController from 'src/domains/projects/dawn/controllers/DawnController.js';
+import SwanModal from 'src/domains/projects/swan/components/modals/SwanModal.vue';
 
 const $q = useQuasar();
 const props = defineProps({
@@ -14,15 +14,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-function openSwanModal() {
-  $q.dialog({
-    component: SwanModal,
-    componentProps: {
-      profiles: props.profiles,
-    },
-  });
-}
 
 function openRcadeModal() {
   $q.dialog({
@@ -66,6 +57,15 @@ async function checkDawnAuth() {
   });
 }
 
+function openSwanModal() {
+  $q.dialog({
+    component: SwanModal,
+    componentProps: {
+      profiles: props.profiles,
+    },
+  });
+}
+
 </script>
 
 <template>
@@ -77,15 +77,6 @@ async function checkDawnAuth() {
             <q-item-label>
               <q-icon name="play_arrow"></q-icon>
               Rcade
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <q-item clickable v-close-popup @click="openSwanModal">
-          <q-item-section>
-            <q-item-label>
-              <q-icon name="play_arrow"></q-icon>
-              Swan
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -122,6 +113,15 @@ async function checkDawnAuth() {
             <q-item-label>
               <q-icon name="play_arrow"></q-icon>
               Dawn. Check Auth
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable v-close-popup @click="openSwanModal">
+          <q-item-section>
+            <q-item-label>
+              <q-icon name="play_arrow"></q-icon>
+              Swan
             </q-item-label>
           </q-item-section>
         </q-item>
