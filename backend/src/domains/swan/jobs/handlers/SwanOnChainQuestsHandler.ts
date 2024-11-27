@@ -18,7 +18,7 @@ class SwanOnChainQuestsHandler {
       await Rabby.unlockFullPage(this.browser);
       this.page.bringToFront();
 
-      const onChainTabBtn = page.locator('#tab-OnchainMission');
+      const onChainTabBtn = await page.locator('#tab-OnchainMission');
       await hoverAndClick(onChainTabBtn);
       await wait(1241, 3120);
       await scroller.scrollToBottom({minDistance: 102, maxDistance: 523});
