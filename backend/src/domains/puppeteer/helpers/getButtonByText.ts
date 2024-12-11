@@ -1,4 +1,4 @@
-import {ElementHandle, Page} from "puppeteer";
+import {ElementHandle, Frame, Page} from "puppeteer";
 import getTextInElement from "#src/domains/puppeteer/helpers/getTextInElement.js";
 import normalizeString from "#src/helpers/normalizeString.js";
 
@@ -9,7 +9,7 @@ interface IOptions {
 }
 
 async function getButtonByText(
-  page: Page,
+  page: Page | Frame,
   text: string,
   {
     searchContainerSelector = 'html',

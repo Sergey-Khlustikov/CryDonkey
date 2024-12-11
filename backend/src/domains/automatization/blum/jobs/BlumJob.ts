@@ -5,14 +5,15 @@ import BlumPlayClickerGameHandler from "#src/domains/automatization/blum/jobs/ha
 import {Browser, Frame, Page} from "puppeteer";
 import IBlumJobOptions from "#src/domains/automatization/blum/interfaces/IBlumJobOptions.js";
 import IBaseJobProfile from "#src/domains/queues/structures/interfaces/IBaseJobProfile.js";
+import getButtonByText from "#src/domains/puppeteer/helpers/getButtonByText.js";
 
 class BlumJob {
   private profile: IBaseJobProfile;
   private keepOpenProfileIds: Array<number | string>;
   private questUrl: string;
-  private browser: any;
-  private tgPage: any;
-  private blumFrame: any;
+  private browser!: Browser;
+  private tgPage!: Page;
+  private blumFrame!: Frame;
   private playGame: boolean;
 
   constructor(job: IBlumJobOptions) {
@@ -22,19 +23,18 @@ class BlumJob {
     this.keepOpenProfileIds = keepOpenProfileIds;
     this.questUrl = 'https://web.telegram.org/a/#6865543862';
     this.playGame = options.playGame;
-
-    this.browser = null;
-    this.tgPage = null;
-    this.blumFrame = null;
   }
 
   public async run(): Promise<void> {
     try {
       const browser = await AdsPowerService.connectToPuppeteer(this.profile.id);
+      this.tgPage = await browser.newPage();
 
       try {
         await this.startQuests(browser);
       } finally {
+        await this.tgPage.close();
+
         if (!this.keepOpenProfileIds.includes(this.profile.id)) {
           await browser.close();
         } else {
@@ -49,40 +49,32 @@ class BlumJob {
   public async startQuests(browser: Browser): Promise<void> {
     this.browser = browser;
 
-    try {
-      this.tgPage = await this.openBlumBot();
-      await wait(4000, 7000);
-      await retryMethodWithReload(this.tgPage, async () => this.blumFrame = await this.getBlumBotFrame(this.tgPage));
-      await wait(4212, 6421);
-      await this.completeDailyCheckIn(this.blumFrame);
-      await wait(2212, 4421);
+    this.tgPage = await this.openBlumBot();
+    await wait(4000, 7000);
+    await retryMethodWithReload(this.tgPage, async () => this.blumFrame = await this.getBlumBotFrame(this.tgPage));
+    await wait(4212, 6421);
+    await this.completeDailyCheckIn(this.blumFrame);
+    await wait(2212, 4421);
 
-      await this.claimAndRunFarmPoints(this.blumFrame);
-      await wait(1304, 4210);
+    await this.claimAndRunFarmPoints(this.blumFrame);
+    await wait(1304, 4210);
 
-      // await new BlumJobWeeklyHandler(this.browser, this.tgPage, this.blumFrame).run();
-      if (this.playGame) {
-        await new BlumPlayClickerGameHandler().run(this.blumFrame, this.tgPage);
-      }
-
-      await wait(1304, 4210);
-    } catch (e) {
-      throw e;
-    } finally {
-      await this.tgPage.close();
+    // await new BlumJobWeeklyHandler(this.browser, this.tgPage, this.blumFrame).run();
+    if (this.playGame) {
+      await new BlumPlayClickerGameHandler().run(this.blumFrame, this.tgPage);
     }
+
+    await wait(1304, 4210);
   }
 
   private async openBlumBot(): Promise<Page> {
-    const page = await this.browser.newPage();
-
-    await page.goto(this.questUrl, {waitUntil: 'networkidle2'});
+    await this.tgPage.goto(this.questUrl, {waitUntil: 'networkidle2'});
     await wait(2000, 4000);
-    const btn = await page.$('button.open::-p-text(Launch Blum)');
+    const btn = await this.tgPage.$('button.open::-p-text(Launch Blum)');
 
     if (btn) {
       await hoverAndClick(btn);
-      return page;
+      return this.tgPage;
     } else {
       throw new Error('button not found');
     }
@@ -122,10 +114,19 @@ class BlumJob {
   }
 
   async claimAndRunFarmPoints(blumFrame: Frame) {
+    const homeBtn = await getButtonByText(blumFrame, 'home', {buttonTag: 'a'})
+
+    if (!homeBtn) {
+      throw new Error('Unable to find home button');
+    }
+
+    await hoverAndClick(homeBtn);
+    await wait(1134, 3123)
+
     const farmButton = await blumFrame.$('.index-farming-button button');
 
     if (!farmButton) {
-      throw new Error('Daily CheckIn. Continue button not found.');
+      throw new Error('Farm button not found.');
     }
 
     const farmButtonText = await farmButton.evaluate(el => {
@@ -140,7 +141,7 @@ class BlumJob {
 
     if (farmButtonText.includes('claim')) {
       await hoverAndClick(farmButton);
-      await wait(4000, 7000);
+      await wait(1400, 4010);
       const startFarmButton = await blumFrame.$('.index-farming-button button');
 
       if (startFarmButton) {
