@@ -1,6 +1,6 @@
-import {ElementHandle, Page} from "puppeteer";
+import {ElementHandle, Frame, Page} from "puppeteer";
 
-async function getTextInElement(page: Page, element: ElementHandle): Promise<string> {
+async function getTextInElement(page: Page | Frame, element: ElementHandle): Promise<string> {
   return page.evaluate(el => el.textContent || '', element);
 }
 
