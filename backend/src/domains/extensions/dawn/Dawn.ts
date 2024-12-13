@@ -8,6 +8,7 @@ class Dawn extends Extension {
 
   async openDashboardPage(browser: Browser): Promise<Page> {
     const page = await browser.newPage();
+    page.on('dialog', async (dialog) => await dialog.accept());
     await page.goto(`chrome-extension://${this.getId()}/dashboard.html`);
 
     return page;
