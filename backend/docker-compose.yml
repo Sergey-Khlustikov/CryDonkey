@@ -21,9 +21,9 @@ services:
     image: redis:alpine
     container_name: crydonkey-redis
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT}:${REDIS_PORT}"
     volumes:
-      - redis_data:/data
+      - ${REDIS_DATA_PATH}:/data/redis
     networks:
       - crydonkey-network
 
@@ -35,15 +35,11 @@ services:
     ports:
       - "${DB_PORT_LOCAL}:${DB_PORT}"
     volumes:
-      - mongo_data:/data/db
+      - ${DB_DATA_PATH}:/data/db
       - ./src/db/init.js:/docker-entrypoint-initdb.d/init.js:ro
       - ./mongod.conf:/etc/mongod.conf:ro
     networks:
       - crydonkey-network
-
-volumes:
-  mongo_data:
-  redis_data:
 
 networks:
   crydonkey-network:
