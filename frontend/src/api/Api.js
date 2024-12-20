@@ -3,7 +3,7 @@ import axios from 'axios';
 class Api {
   constructor() {
     this.api = axios.create({
-      baseURL: `http://localhost:${process.env.VUE_APP_SERVER_PORT}`,
+      baseURL: `http://${process.env.VUE_APP_SERVER_HOST}:${process.env.VUE_APP_SERVER_PORT}`,
     });
   }
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import getRandomArrayElement from "#src/helpers/getRandomArrayElement.js";
 import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
 import {hoverAndClick, minimizeBrowser, wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";

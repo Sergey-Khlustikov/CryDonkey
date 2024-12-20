@@ -1,3 +1,5 @@
+name: 'crydonkey-${ENVIRONMENT}'
+
 services:
   server:
     container_name: crydonkey-server
@@ -21,7 +23,7 @@ services:
     image: redis:alpine
     container_name: crydonkey-redis
     ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"
+      - "${REDIS_PORT_LOCAL}:${REDIS_PORT}"
     volumes:
       - ${REDIS_DATA_PATH}:/data/redis
     networks:
@@ -30,7 +32,6 @@ services:
   mongo:
     image: mongo:latest
     container_name: crydonkey-mongo
-    restart: always
     command: [ "mongod", "--config", "/etc/mongod.conf" ]
     ports:
       - "${DB_PORT_LOCAL}:${DB_PORT}"

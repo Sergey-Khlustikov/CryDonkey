@@ -2,7 +2,7 @@ import {boot} from 'quasar/wrappers';
 import axios from 'axios';
 import {Notify} from 'quasar';
 
-const api = axios.create({ baseURL: `http://localhost:${process.env.VUE_APP_SERVER_PORT}` });
+const api = axios.create({ baseURL: `http://${process.env.VUE_APP_SERVER_HOST}:${process.env.VUE_APP_SERVER_PORT}` });
 
 api.interceptors.response.use(
   (response) => {

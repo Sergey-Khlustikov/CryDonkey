@@ -24,7 +24,11 @@ class AdsPowerService {
   }
 
   async openProfile(profileId: string | number) {
-    const response = await this.api.get('/browser/start', {params: {user_id: profileId}});
+    const response = await this.api.get('/browser/start', {
+      params: {
+        user_id: profileId,
+      }
+    });
 
     return response.data;
   }
@@ -33,12 +37,23 @@ class AdsPowerService {
     const response = await this.openProfile(profileId);
 
     if (response.code === 0 && response.data.ws && response.data.ws.puppeteer) {
-      const puppeteerWsUrl = response.data.ws.puppeteer.replace('127.0.0.1', ENV.ADS_HOST);
+      try {
+        const puppeteerWsUrl = new URL(response.data.ws.puppeteer);
+        const originalPort = puppeteerWsUrl.port;
 
-      return await puppeteer.connect({
-        browserWSEndpoint: puppeteerWsUrl,
-        defaultViewport: null,
-      });
+        puppeteerWsUrl.hostname = ENV.ADS_HOST;
+        puppeteerWsUrl.port = '5050';
+
+        return await puppeteer.connect({
+          browserWSEndpoint: puppeteerWsUrl.toString(),
+          defaultViewport: null,
+          headers: {
+            'X-Forwarded-Port': originalPort
+          }
+        });
+      } catch (e) {
+        console.log(e)
+      }
     } else {
       throw new Error('Failed to retrieve puppeteer WebSocket URL from API');
     }

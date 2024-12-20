@@ -4,7 +4,7 @@ FROM node:${NODE_VERSION} as base
 
 WORKDIR /usr/src/app
 
-EXPOSE 3001
+EXPOSE 3002
 
 COPY package.json yarn.lock ./
 
