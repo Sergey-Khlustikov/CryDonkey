@@ -2,7 +2,7 @@ name: 'crydonkey-${ENVIRONMENT}'
 
 services:
   server:
-    container_name: crydonkey-server
+    container_name: crydonkey-server-${ENVIRONMENT}
     build:
       context: .
       target: ${ENVIRONMENT}
@@ -21,17 +21,19 @@ services:
 
   redis:
     image: redis:alpine
-    container_name: crydonkey-redis
+    container_name: crydonkey-redis-${ENVIRONMENT}
     ports:
       - "${REDIS_PORT_LOCAL}:${REDIS_PORT}"
     volumes:
       - ${REDIS_DATA_PATH}:/data/redis
     networks:
-      - crydonkey-network
+      crydonkey-network:
+        aliases:
+          - redis
 
   mongo:
     image: mongo:latest
-    container_name: crydonkey-mongo
+    container_name: crydonkey-mongo-${ENVIRONMENT}
     command: [ "mongod", "--config", "/etc/mongod.conf" ]
     ports:
       - "${DB_PORT_LOCAL}:${DB_PORT}"
@@ -40,7 +42,9 @@ services:
       - ./src/db/init.js:/docker-entrypoint-initdb.d/init.js:ro
       - ./mongod.conf:/etc/mongod.conf:ro
     networks:
-      - crydonkey-network
+      crydonkey-network:
+        aliases:
+          - mongo
 
 networks:
   crydonkey-network:

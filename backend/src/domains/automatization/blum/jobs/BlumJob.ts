@@ -9,6 +9,7 @@ import getButtonByText from "#src/domains/puppeteer/helpers/getButtonByText.js";
 
 class BlumJob {
   private profile: IBaseJobProfile;
+  private userId: string;
   private keepOpenProfileIds: Array<number | string>;
   private questUrl: string;
   private browser!: Browser;
@@ -17,9 +18,10 @@ class BlumJob {
   private playGame: boolean;
 
   constructor(job: IBlumJobOptions) {
-    const {profile, keepOpenProfileIds, options} = job.data;
+    const {profile, userId, keepOpenProfileIds, options} = job.data;
 
     this.profile = profile;
+    this.userId = userId;
     this.keepOpenProfileIds = keepOpenProfileIds;
     this.questUrl = 'https://web.telegram.org/a/#6865543862';
     this.playGame = options.playGame;
@@ -27,7 +29,7 @@ class BlumJob {
 
   public async run(): Promise<void> {
     try {
-      const browser = await AdsPowerService.connectToPuppeteer(this.profile.id);
+      const browser = await AdsPowerService.connectToPuppeteer(this.profile.id, this.userId);
       this.tgPage = await browser.newPage();
 
       try {

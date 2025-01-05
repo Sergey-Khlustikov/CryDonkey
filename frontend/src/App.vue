@@ -1,16 +1,11 @@
 <script setup>
-import useProfilesStore from 'src/stores/useProfilesStore';
-import useProfileGroupsStore from 'src/stores/useProfileGroupsStore';
+import useAuthStore from 'src/stores/useAuthStore';
 
 defineOptions({
   name: 'App',
 });
 
-const profilesStore = useProfilesStore();
-const profileGroupsStore = useProfileGroupsStore();
-
-profilesStore.loadProfiles();
-profileGroupsStore.loadGroups();
+useAuthStore();
 </script>
 
 <template>

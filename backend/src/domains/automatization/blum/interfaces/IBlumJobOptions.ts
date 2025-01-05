@@ -4,6 +4,7 @@ import IBlumOptions from "#src/domains/automatization/blum/interfaces/IBlumOptio
 
 interface IBlumJobOptions extends IJobBulk<{
   profile: IBaseJobProfile,
+  userId: string,
   keepOpenProfileIds: string[]
   options: IBlumOptions
 }> {

@@ -2,6 +2,7 @@
 import BaseQueue from "#src/domains/queues/BaseQueue.js";
 import EQueueNames from "#src/domains/queues/structures/enums/EQueueNames.js";
 import TwitterPostJob from "#src/domains/twitter/jobs/TwitterPostJob.js";
+import {getAuthUser} from "#src/middlewares/authMiddleware.js";
 
 class TwitterPostQueue extends BaseQueue {
   constructor() {
@@ -32,6 +33,7 @@ class TwitterPostQueue extends BaseQueue {
           post: TwitterPostDTO.getPosts().find(post => post.profileId === profile.id),
           automationType: TwitterPostDTO.getAutomationType(),
           keepOpenProfileIds: TwitterPostDTO.getKeepOpenProfileIds(),
+          userId: getAuthUser().id,
         },
         opts: {
           delay: this.calculateJobDelay(TwitterPostDTO.getMinDelayMinutes(), TwitterPostDTO.getMaxDelayMinutes(), index),

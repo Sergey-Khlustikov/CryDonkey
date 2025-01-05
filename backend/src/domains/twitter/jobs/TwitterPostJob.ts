@@ -7,17 +7,18 @@ import {TWITTER_POST_AUTOMATION_TYPES} from "#src/domains/twitter/structures/Twi
 import OpenAIApi from "#src/api/OpenAIApi.js";
 
 class TwitterPostJob {
-  constructor(job, {profile, keepOpenProfileIds, automationType, post}) {
+  constructor(job, {profile, keepOpenProfileIds, automationType, post, userId}) {
     this.job = job;
     this.profile = profile;
     this.keepOpenProfileIds = keepOpenProfileIds;
     this.automationType = automationType;
     this.post = post;
+    this.userId = userId;
   }
 
   async run() {
     try {
-      const browser = await AdsPowerService.connectToPuppeteer(this.profile.id);
+      const browser = await AdsPowerService.connectToPuppeteer(this.profile.id, this.userId);
 
       try {
         await this.start(browser);

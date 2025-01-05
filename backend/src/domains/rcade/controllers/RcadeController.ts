@@ -1,18 +1,18 @@
-// @ts-nocheck
 import shuffleArray from "#src/helpers/shuffleArray.js";
 import RcadeQueue from "#src/domains/rcade/queues/RcadeQueue.js";
+import {Request, Response} from "express";
 
 class RcadeController {
-  async run(req, res) {
+  async run(request: Request, response: Response) {
     try {
-      const {minDelayMinutes = 1, maxDelayMinutes = 5, keepOpenProfileIds} = req.body;
-      const profiles = shuffleArray(req.body.profiles);
+      const {minDelayMinutes = 1, maxDelayMinutes = 5, keepOpenProfileIds} = request.body;
+      const profiles = shuffleArray(request.body.profiles);
 
       await RcadeQueue.addJobs({profiles, minDelayMinutes, maxDelayMinutes, keepOpenProfileIds});
 
-      res.status(200).send({ message: 'Success' });
+      response.status(200).send({message: 'Success'});
     } catch (error) {
-      res.status(500).send({ message: error.message });
+      response.status(500).send({message: error.message});
     }
   }
 }

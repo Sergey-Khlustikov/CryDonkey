@@ -1,4 +1,3 @@
-// @ts-nocheck
 import express from 'express';
 import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
 

@@ -1,40 +1,62 @@
-import {boot} from 'quasar/wrappers';
+import { boot } from 'quasar/wrappers';
 import axios from 'axios';
-import {Notify} from 'quasar';
+import { Notify } from 'quasar';
+import ROUTE_NAMES from 'src/router/structures/routeNames';
 
-const api = axios.create({ baseURL: `http://${process.env.VUE_APP_SERVER_HOST}:${process.env.VUE_APP_SERVER_PORT}` });
+const api = axios.create({
+  baseURL: `http://${process.env.VUE_APP_SERVER_HOST}:${process.env.VUE_APP_SERVER_PORT}`,
+});
 
-api.interceptors.response.use(
-  (response) => {
-    if (response.config.method === 'post' || response.config.method === 'delete') {
+export default boot(({ app, router }) => {
+  app.config.globalProperties.$axios = axios;
+  app.config.globalProperties.$api = api;
+
+  api.interceptors.request.use(
+    (config) => {
+      const token = localStorage.getItem('token');
+      console.log(token);
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    },
+  );
+
+  api.interceptors.response.use(
+    (response) => {
+      if (response.config.method === 'post' || response.config.method === 'delete') {
+        Notify.create({
+          type: 'positive',
+          message: response.data.message || 'Success',
+          position: 'top-right',
+          progress: true,
+          closeBtn: true,
+        });
+      }
+
+      return response;
+    },
+    async (error) => {
       Notify.create({
-        type: 'positive',
-        message: response.data.message || 'Success',
+        type: 'negative',
+        message: error.message,
+        caption: error.response?.data?.message,
         position: 'top-right',
         progress: true,
         closeBtn: true,
       });
-    }
 
-    return response;
-  },
-  (error) => {
-    Notify.create({
-      type: 'negative',
-      message: error.message,
-      caption: error.response?.data?.message,
-      position: 'top-right',
-      progress: true,
-      closeBtn: true,
-    });
+      if (error.response?.status === 401) {
+        await router.push({ name: ROUTE_NAMES.login });
+      }
 
-    return Promise.reject(error);
-  },
-);
-
-export default boot(({ app }) => {
-  app.config.globalProperties.$axios = axios;
-  app.config.globalProperties.$api = api;
+      return Promise.reject(error);
+    },
+  );
 });
 
 export { api };
