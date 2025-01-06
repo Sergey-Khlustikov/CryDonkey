@@ -13,6 +13,7 @@ import {retryMethodWithReload} from "#src/helpers/retryMethod.js";
 class IdaoJob {
   protected job: IIdaoJobOptions;
   protected profile: IBaseJobProfile;
+  protected userId: string;
   protected questUrl: string;
   protected page!: Page;
   protected browser!: Browser;
@@ -20,10 +21,11 @@ class IdaoJob {
   private forecastOptions: IIdaoForecastOptions;
 
   constructor(job: IIdaoJobOptions) {
-    const {profile, keepOpenProfileIds, forecastOptions} = job.data;
+    const {profile, userId, keepOpenProfileIds, forecastOptions} = job.data;
 
     this.job = job;
     this.profile = profile;
+    this.userId = userId;
     this.keepOpenProfileIds = keepOpenProfileIds;
     this.forecastOptions = forecastOptions;
     this.questUrl = 'https://forecast.idao.finance/';
@@ -31,7 +33,7 @@ class IdaoJob {
 
   async run(): Promise<void> {
     try {
-      const browser = await AdsPowerService.connectToPuppeteer(this.profile.id);
+      const browser = await AdsPowerService.connectToPuppeteer(this.profile.id, this.userId);
 
       try {
         await this.startQuests(browser);

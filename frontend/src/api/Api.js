@@ -1,10 +1,11 @@
-import axios from 'axios';
+import { api } from 'src/boot/axios';
 
+/**
+ * @deprecated Refactor to dedicated controllers
+ */
 class Api {
   constructor() {
-    this.api = axios.create({
-      baseURL: `http://localhost:${process.env.VUE_APP_SERVER_PORT}`,
-    });
+    this.api = api;
   }
 
   async status() {

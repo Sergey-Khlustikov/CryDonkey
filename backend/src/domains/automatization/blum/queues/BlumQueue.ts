@@ -3,6 +3,7 @@ import BaseQueue from "#src/domains/queues/BaseQueue.js";
 import BlumJob from "#src/domains/automatization/blum/jobs/BlumJob.js";
 import BlumRunDTO from "#src/domains/automatization/blum/dto/BlumRunDTO.js";
 import IBlumJobOptions from "#src/domains/automatization/blum/interfaces/IBlumJobOptions.js";
+import {getAuthUser} from "#src/middlewares/authMiddleware.js";
 
 class BlumQueue extends BaseQueue {
   constructor() {
@@ -31,6 +32,7 @@ class BlumQueue extends BaseQueue {
         data: {
           profile,
           keepOpenProfileIds: dto.getKeepOpenProfileIds(),
+          userId: getAuthUser().id,
           options: dto.getOptions(),
         },
         opts: {

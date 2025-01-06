@@ -5,6 +5,7 @@ import express, {Express} from 'express';
 import cors from 'cors'
 import initRoutes from "#src/routes/index.js";
 import connectDB from "#src/config/db.js";
+import registerListeners from "#src/events/registerListeners.js";
 
 (async () => {
   await connectDB();
@@ -15,6 +16,7 @@ import connectDB from "#src/config/db.js";
   app.use(cors());
   app.use(express.urlencoded({extended: false}));
 
+  registerListeners();
   initRoutes(app);
 
   app.listen(ENV.EXPRESS_SERVER_PORT, () => {

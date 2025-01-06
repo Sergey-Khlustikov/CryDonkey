@@ -1,10 +1,7 @@
 import { route } from 'quasar/wrappers';
-import {
-  createRouter,
-  createMemoryHistory,
-  createWebHistory,
-  createWebHashHistory,
-} from 'vue-router';
+import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
+import useAuthStore from 'src/stores/useAuthStore';
+import ROUTE_NAMES from 'src/router/structures/routeNames';
 import routes from './routes';
 
 /*
@@ -16,7 +13,7 @@ import routes from './routes';
  * with the Router instance.
  */
 
-export default route(function (/* { store, ssrContext } */) {
+export default route((/* { store, ssrContext } */) => {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
@@ -29,6 +26,17 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
+  });
+
+  Router.beforeEach((to, from, next) => {
+    const authStore = useAuthStore();
+    const { isAuthenticated } = authStore;
+
+    if (!isAuthenticated && to.name !== ROUTE_NAMES.login) {
+      next({ name: ROUTE_NAMES.login });
+    } else {
+      next();
+    }
   });
 
   return Router;
