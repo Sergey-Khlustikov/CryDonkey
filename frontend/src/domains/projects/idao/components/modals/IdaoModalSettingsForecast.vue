@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, reactive, ref, watch } from 'vue';
+import { onMounted, reactive, watch } from 'vue';
 import vRequired from 'src/helpers/validations/vRequired';
 import vMoreThan from 'src/helpers/validations/vMoreThan';
 import vLessOrEqualThan from 'src/helpers/validations/vLessOrEqualThan';
@@ -10,7 +10,6 @@ const forecastOptions = reactive({
   maxTargetPriceDeviation: 1,
 });
 
-const expanded = ref(true);
 const emit = defineEmits(['update:modelValue']);
 
 onMounted(() => {

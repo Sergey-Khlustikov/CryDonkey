@@ -32,3 +32,6 @@ yarn-error.log*
 # local .env files
 .env.local*
 .env
+
+/data/*
+/src/domains/extensions/dawn/structures/accountsData.ts

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import getRandomArrayElement from "#src/helpers/getRandomArrayElement.js";
 import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
 import {hoverAndClick, minimizeBrowser, wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
@@ -6,7 +5,7 @@ import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
 
 export async function run(data) {
   try {
-    const browser = await AdsPowerService.connectToPuppeteer(data.profile.id);
+    const browser = await AdsPowerService.connectToPuppeteer(data.profile.id, data.userId);
 
     try {
       await startQuests({ browser });

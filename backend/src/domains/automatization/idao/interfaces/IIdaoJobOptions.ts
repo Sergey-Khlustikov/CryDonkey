@@ -4,6 +4,7 @@ import IIdaoForecastOptions from "#src/domains/automatization/idao/interfaces/II
 
 interface IIdaoJobOptions extends IJobBulk<{
   profile: IBaseJobProfile,
+  userId: string,
   keepOpenProfileIds: string[]
   forecastOptions: IIdaoForecastOptions
 }> {

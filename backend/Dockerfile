@@ -4,8 +4,6 @@ FROM node:${NODE_VERSION} as base
 
 WORKDIR /usr/src/app
 
-EXPOSE 3001
-
 COPY package.json yarn.lock ./
 
 RUN yarn install --frozen-lockfile

@@ -2,6 +2,7 @@ import BaseQueue from "#src/domains/queues/BaseQueue.js";
 import EQueueNames from "#src/domains/queues/structures/enums/EQueueNames.js";
 import IJobBulk from "#src/domains/queues/structures/interfaces/IJobBulk.js";
 import DawnCheckAuthJob from "#src/domains/extensions/dawn/jobs/DawnCheckAuthJob.js";
+import {getAuthUser} from "#src/middlewares/authMiddleware.js";
 
 class DawnCheckAuthQueue extends BaseQueue {
   constructor() {
@@ -29,6 +30,7 @@ class DawnCheckAuthQueue extends BaseQueue {
         name: this.queueName,
         data: {
           profile,
+          userId: getAuthUser().id
         },
       };
     });

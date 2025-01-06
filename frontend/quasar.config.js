@@ -63,7 +63,8 @@ module.exports = configure((/* ctx */) => {
       // publicPath: '/',
       // analyze: true,
       env: {
-        VUE_APP_SERVER_PORT: env.VUE_APP_EXPRESS_SERVER_PORT,
+        VUE_APP_SERVER_PORT: env.VUE_APP_SERVER_PORT,
+        VUE_APP_SERVER_HOST: env.VUE_APP_SERVER_HOST,
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
@@ -98,6 +99,8 @@ module.exports = configure((/* ctx */) => {
     devServer: {
       // https: true
       open: true, // opens browser window automatically
+      host: env.VUE_APP_DEV_SERVER_HOST || 'localhost',
+      port: env.VUE_APP_DEV_SERVER_PORT || 8080,
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework

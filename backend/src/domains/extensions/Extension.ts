@@ -21,30 +21,34 @@ class Extension {
     });
 
     async function onTargetCreatedHandler(target: Target) {
-      if (target.type() === 'page') {
-        const newPage = await target.page();
+      try {
+        if (target.type() === 'page') {
+          const newPage = await target.page();
 
-        if (newPage === null) {
-          throw new Error(`newPage was null`);
+          if (newPage === null) {
+            throw new Error(`newPage was null`);
+          }
+
+          const newPagePromise = new Promise<Page>((resolve) =>
+            newPage.once('domcontentloaded', () => {
+              resolve(newPage);
+            })
+          );
+
+          const isPageLoaded = await newPage.evaluate(() => document.readyState);
+
+          browser.off('targetcreated', onTargetCreatedHandler);
+
+          if (isPageLoaded.match('complete|interactive')) {
+            clearTimeout(timeoutId);
+            return resultPromise(newPage);
+          } else {
+            clearTimeout(timeoutId);
+            return resultPromise(newPagePromise);
+          }
         }
-
-        const newPagePromise = new Promise<Page>((resolve) =>
-          newPage.once('domcontentloaded', () => {
-            resolve(newPage);
-          })
-        );
-
-        const isPageLoaded = await newPage.evaluate(() => document.readyState);
-
-        browser.off('targetcreated', onTargetCreatedHandler);
-
-        if (isPageLoaded.match('complete|interactive')) {
-          clearTimeout(timeoutId);
-          return resultPromise(newPage);
-        } else {
-          clearTimeout(timeoutId);
-          return resultPromise(newPagePromise);
-        }
+      } catch (e) {
+        console.log(e)
       }
     }
 

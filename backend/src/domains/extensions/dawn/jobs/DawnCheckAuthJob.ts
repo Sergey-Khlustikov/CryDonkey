@@ -4,24 +4,27 @@ import Dawn from "#src/domains/extensions/dawn/Dawn.js";
 import {minimizeBrowser, wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
 import minuteToMs from "#src/helpers/minuteToMs.js";
 import accountsData from "#src/domains/extensions/dawn/structures/accountsData.js";
-import {Job, UnrecoverableError} from "bullmq";
+import {UnrecoverableError} from "bullmq";
+import IJobBulk from "#src/domains/queues/structures/interfaces/IJobBulk.js";
 
 class DawnCheckAuthJob {
-  protected job: Job;
+  protected job: IJobBulk;
   protected profile: { id: string, name: string };
+  protected userId: string;
   protected page!: Page;
   protected browser!: Browser;
 
-  constructor(job: Job) {
-    const {profile} = job.data;
+  constructor(job: IJobBulk) {
+    const {profile, userId} = job.data;
 
     this.job = job;
     this.profile = profile;
+    this.userId = userId;
   }
 
   async run(): Promise<void> {
     try {
-      const browser = await AdsPowerService.connectToPuppeteer(this.profile.id);
+      const browser = await AdsPowerService.connectToPuppeteer(this.profile.id, this.userId);
 
       try {
         await this.start(browser);
@@ -36,8 +39,6 @@ class DawnCheckAuthJob {
   async start(browser: Browser): Promise<void> {
     this.browser = browser;
     this.page = await Dawn.openDashboardPage(this.browser);
-
-    this.page.on('dialog', async (dialog) => await dialog.accept());
 
     await wait(5000, 5000)
 

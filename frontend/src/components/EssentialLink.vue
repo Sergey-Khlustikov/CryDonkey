@@ -1,4 +1,5 @@
 <script setup>
+
 defineOptions({
   name: 'EssentialLink',
 });
@@ -24,6 +25,7 @@ const props = defineProps({
     default: '',
   },
 });
+
 </script>
 
 <template>

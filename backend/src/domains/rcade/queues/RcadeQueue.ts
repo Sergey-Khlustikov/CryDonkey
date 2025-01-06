@@ -2,6 +2,7 @@ import BaseQueue from "#src/domains/queues/BaseQueue.js";
 import {run} from '#src/automatization/rcade/rcade.js';
 import EQueueNames from "#src/domains/queues/structures/enums/EQueueNames.js";
 import {Job} from "bullmq";
+import {getAuthUser} from "#src/middlewares/authMiddleware.js";
 
 class RcadeQueue extends BaseQueue {
   constructor() {
@@ -27,7 +28,7 @@ class RcadeQueue extends BaseQueue {
     const formattedJobs = data.profiles.map((profile, index) => {
       return {
         name: this.queueName,
-        data: {profile, keepOpenProfileIds},
+        data: {userId: getAuthUser().id, profile, keepOpenProfileIds},
         opts: {
           delay: index === 0 ? 0 : this.calculateJobDelay(minDelayMinutes, maxDelayMinutes, index),
         },

@@ -4,6 +4,7 @@ import IdaoJob from "#src/domains/automatization/idao/jobs/IdaoJob.js";
 import IdaoDTO from "#src/domains/automatization/idao/dto/IdaoDTO.js";
 import IBaseJobProfile from "#src/domains/queues/structures/interfaces/IBaseJobProfile.js";
 import IIdaoJobOptions from "#src/domains/automatization/idao/interfaces/IIdaoJobOptions.js";
+import {getAuthUser} from "#src/middlewares/authMiddleware.js";
 
 class IdaoQueue extends BaseQueue {
   constructor() {
@@ -31,6 +32,7 @@ class IdaoQueue extends BaseQueue {
         name: this.queueName,
         data: {
           profile,
+          userId: getAuthUser().id,
           keepOpenProfileIds: dto.getKeepOpenProfileIds(),
           forecastOptions: dto.getForecastOptions()
         },
