@@ -6,27 +6,27 @@ class AdsPowerAddressController {
   }
 
   async getList() {
-    const response = await this.api.get('/adsPowerAddress/getList');
+    const response = await this.api.get('/ads-power-address');
 
-    return response.data;
+    return response.data.data;
   }
 
   async create(params) {
-    const response = await this.api.post('/adsPowerAddress/create', params);
+    const response = await this.api.post('/ads-power-address', params);
 
-    return response.data;
+    return response.data.data;
   }
 
   async update(id, params) {
-    const response = await this.api.patch(`/adsPowerAddress/update/${id}`, params);
+    const response = await this.api.patch(`/ads-power-address/${id}`, params);
 
-    return response.data;
+    return response.data.data;
   }
 
   async delete(id) {
-    const response = await this.api.delete(`/adsPowerAddress/delete/${id}`);
+    const response = await this.api.delete(`/ads-power-address/${id}`);
 
-    return response.data;
+    return response.data.data;
   }
 }
 

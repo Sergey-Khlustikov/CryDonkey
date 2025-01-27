@@ -6,25 +6,25 @@ class JobsController {
   }
 
   async getList(params) {
-    const response = await this.api.get('/jobs', params);
+    const response = await this.api.get('/projects/queues/jobs', params);
 
-    return response.data;
+    return response.data.data;
   }
 
   async retry(jobId, queueName) {
-    return this.api.post(`/jobs/${jobId}/retry`, { queueName });
+    return this.api.post('/projects/queues/jobs/retry', { id: jobId, queueName });
   }
 
   async remove(jobId, queueName) {
-    return this.api.delete(`/jobs/${jobId}/remove`, { params: { queueName } });
+    return this.api.delete('/projects/queues/jobs/remove', { params: { queueName, id: jobId } });
   }
 
   async deleteAll() {
-    return this.api.delete('/jobs/deleteAll');
+    return this.api.delete('/projects/queues/jobs/delete-all');
   }
 
   async retryFailed() {
-    return this.api.post('/jobs/retryFailed');
+    return this.api.post('/projects/queues/jobs/retry-failed');
   }
 }
 

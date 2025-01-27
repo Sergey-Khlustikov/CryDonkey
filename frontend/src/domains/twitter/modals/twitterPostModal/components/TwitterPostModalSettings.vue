@@ -1,10 +1,10 @@
 <script setup>
-import SWAN_COMMENT_AUTOMATION_TYPES from 'src/domains/projects/swan/structures/SwanCommentAutomationTypes.mjs';
 import TwitterPostAutomationTypesRadio
   from 'src/domains/twitter/modals/twitterPostModal/components/TwitterPostAutomationTypesRadio.vue';
 import { reactive, ref, watch } from 'vue';
 import AIController from 'src/domains/ai/AIController';
 import CollapsableModalSection from 'src/components/modals/CollapsableModalSection.vue';
+import { TWITTER_POST_AUTOMATION_TYPES } from 'src/domains/twitter/structures/TwitterAutomationTypes';
 
 const props = defineProps({
   profiles: {
@@ -17,7 +17,7 @@ const model = defineModel();
 
 const loading = ref(false);
 
-const posts = reactive(props.profiles.map(profile => ({post: '', profileId: profile.user_id})));
+const posts = reactive(props.profiles.map(profile => ({ post: '', profileId: profile.user_id })));
 
 watch(posts, (newValue) => {
   model.value.posts = newValue;
@@ -57,7 +57,7 @@ const getProfileNameById = (id) => {
     <q-card-section>
       <twitter-post-automation-types-radio v-model="model.automationType"></twitter-post-automation-types-radio>
 
-      <template v-if="model.automationType === SWAN_COMMENT_AUTOMATION_TYPES.manual">
+      <template v-if="model.automationType === TWITTER_POST_AUTOMATION_TYPES.manual">
         <q-card-section>
           <q-card bordered class="q-mb-md">
             <q-form @submit="generatePosts">
@@ -95,7 +95,7 @@ const getProfileNameById = (id) => {
           </div>
 
           <q-inner-loading :showing="loading">
-            <q-spinner-gears size="50px" color="primary"/>
+            <q-spinner-gears size="50px" color="primary" />
           </q-inner-loading>
         </q-card-section>
       </template>

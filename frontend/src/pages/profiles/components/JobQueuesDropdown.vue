@@ -5,7 +5,6 @@ import TwitterPostModal from 'src/domains/twitter/modals/twitterPostModal/Twitte
 import BlumModal from 'src/domains/projects/blum/components/modals/BlumModal.vue';
 import IdaoModal from 'src/domains/projects/idao/components/modals/IdaoModal.vue';
 import DawnController from 'src/domains/projects/dawn/controllers/DawnController.js';
-import SwanModal from 'src/domains/projects/swan/components/modals/SwanModal.vue';
 
 const $q = useQuasar();
 const props = defineProps({
@@ -57,15 +56,6 @@ async function checkDawnAuth() {
   });
 }
 
-function openSwanModal() {
-  $q.dialog({
-    component: SwanModal,
-    componentProps: {
-      profiles: props.profiles,
-    },
-  });
-}
-
 </script>
 
 <template>
@@ -113,15 +103,6 @@ function openSwanModal() {
             <q-item-label>
               <q-icon name="play_arrow"></q-icon>
               Dawn. Check Auth
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <q-item clickable v-close-popup @click="openSwanModal">
-          <q-item-section>
-            <q-item-label>
-              <q-icon name="play_arrow"></q-icon>
-              Swan
             </q-item-label>
           </q-item-section>
         </q-item>

@@ -1,0 +1,78 @@
+name: 'crydonkey-production'
+
+services:
+  server:
+    container_name: crydonkey-server
+    build:
+      context: ./backend
+      target: ${ENVIRONMENT}
+    image: crydonkey-server
+    ports:
+      - "${EXPRESS_SERVER_PORT}:${EXPRESS_SERVER_PORT}"
+    depends_on:
+      - redis
+      - mongo
+    env_file:
+      - ./.env
+      - ./backend/.env
+    volumes:
+      - ./backend/src:/usr/src/app/src
+    networks:
+      - crydonkey-network
+
+  redis:
+    image: redis:alpine
+    container_name: crydonkey-redis
+    ports:
+      - "${REDIS_PORT_LOCAL}:${REDIS_PORT}"
+    volumes:
+      - ${REDIS_DATA_PATH}:/data/redis
+    networks:
+      crydonkey-network:
+        aliases:
+          - redis
+
+  mongo:
+    image: mongo:latest
+    container_name: crydonkey-mongo
+    command: [ "mongod", "--config", "/etc/mongod.conf" ]
+    ports:
+      - "${DB_PORT_LOCAL}:${DB_PORT}"
+    volumes:
+      - ${DB_DATA_PATH}:/data/db
+      - ./backend/mongod.conf:/etc/mongod.conf:ro
+    networks:
+      crydonkey-network:
+        aliases:
+          - mongo
+
+  frontend:
+    container_name: crydonkey-frontend
+    build:
+      context: ./frontend
+      target: ${ENVIRONMENT}
+    image: crydonkey-frontend
+    expose:
+      - "80"
+    env_file:
+      - ./.env
+      - ./frontend/.env
+    networks:
+      - crydonkey-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: crydonkey-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - server
+      - frontend
+    networks:
+      - crydonkey-network
+
+networks:
+  crydonkey-network:
+    driver: bridge

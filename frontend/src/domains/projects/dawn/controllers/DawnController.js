@@ -1,4 +1,4 @@
-import {api} from 'src/boot/axios';
+import { api } from 'src/boot/axios';
 
 class DawnController {
   constructor() {
@@ -6,7 +6,7 @@ class DawnController {
   }
 
   async checkAuth(params) {
-    const response = await this.api.post('/dawn/checkAuth', params);
+    const response = await this.api.post('/projects/dawn/check-auth', params);
 
     return response.data;
   }

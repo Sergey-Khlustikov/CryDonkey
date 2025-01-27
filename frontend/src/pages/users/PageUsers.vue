@@ -33,7 +33,7 @@ const openAddUserModal = async () => {
 };
 
 const onUserRemoved = (user) => {
-  users.value = users.value.filter(us => us._id !== user._id);
+  users.value = users.value.filter(us => us.id !== user.id);
 };
 </script>
 

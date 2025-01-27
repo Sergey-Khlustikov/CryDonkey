@@ -6,17 +6,17 @@ class AdsController {
   }
 
   async openAdsProfile(profileId) {
-    return this.api.get('/ads/openProfile', { params: { profileId } });
+    return this.api.get(`/ads-power/open-profile/${profileId}`);
   }
 
   async getProfiles(params = { page_size: 1000 }) {
-    const response = await this.api.get('/ads/getProfiles', { params });
+    const response = await this.api.get('/ads-power/profiles', { params });
 
     return response.data.data.list;
   }
 
   async getGroups(params = { page_size: 50 }) {
-    const response = await this.api.get('/ads/getGroups', { params });
+    const response = await this.api.get('/ads-power/groups', { params });
 
     return response.data.data.list;
   }
