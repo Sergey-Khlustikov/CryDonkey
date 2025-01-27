@@ -5,10 +5,10 @@ class AIController {
     this.api = api;
   }
 
-  async generate(message) {
-    const response = await this.api.post('/ai/generate', { message });
+  async generate(prompt) {
+    const response = await this.api.post('/open-ai/generate-message', { prompt });
 
-    return response.data;
+    return response.data.data;
   }
 }
 

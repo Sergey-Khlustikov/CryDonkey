@@ -6,7 +6,7 @@ class BlumController {
   }
 
   async run(params) {
-    const response = await this.api.post('/blum/run', params);
+    const response = await this.api.post('/projects/blum/run', params);
 
     return response.data;
   }

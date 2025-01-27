@@ -68,7 +68,7 @@ const deleteUser = (row) => {
       color: 'primary',
     },
   }).onOk(async () => {
-    await UserController.delete(row._id);
+    await UserController.delete(row.id);
     emit('userRemoved', row);
   });
 };

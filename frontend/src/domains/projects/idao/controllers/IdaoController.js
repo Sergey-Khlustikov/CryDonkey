@@ -6,7 +6,13 @@ class IdaoController {
   }
 
   async run(params) {
-    const response = await this.api.post('/idao/run', params);
+    const response = await this.api.post('/projects/idao/run', params);
+
+    return response.data;
+  }
+
+  async retryJob(id) {
+    const response = await this.api.post(`/projects/idao/jobs/${id}/retry`);
 
     return response.data;
   }

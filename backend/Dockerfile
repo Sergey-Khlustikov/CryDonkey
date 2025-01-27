@@ -11,8 +11,8 @@ RUN yarn install --frozen-lockfile
 COPY . .
 
 FROM base as dev
-CMD ["yarn", "dev"]
+CMD ["yarn", "start:dev"]
 
 FROM base as production
 RUN yarn build
-CMD ["yarn", "start"]
+CMD ["yarn", "start:prod"]

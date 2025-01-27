@@ -14,7 +14,7 @@ export default defineStore('auth', {
   actions: {
     async login(username, password) {
       const response = await AuthController.login(username, password);
-      this.token = response.token;
+      this.token = response.data.accessToken;
       localStorage.setItem('token', this.token);
     },
 

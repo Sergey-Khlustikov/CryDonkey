@@ -35,7 +35,7 @@ const generalSettings = ref({});
 async function onSubmit() {
   await TwitterController.writePost({
     profiles: props.profiles.map(profile => {
-      return {id: profile.user_id, name: profile.name};
+      return { id: profile.user_id, name: profile.name };
     }),
     ...settings.value,
     ...generalSettings.value,
