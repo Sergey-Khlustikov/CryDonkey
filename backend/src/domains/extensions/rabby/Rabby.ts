@@ -1,7 +1,10 @@
-import {wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
-import ENV from "#src/structures/env.js";
-import {Browser} from "puppeteer";
-import Extension from "#src/domains/extensions/Extension.js";
+import { hoverAndClick, wait } from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
+import ENV from '#src/structures/env.js';
+import { Browser, Page } from 'puppeteer';
+import Extension from '#src/domains/extensions/Extension.js';
+import extractNumbersFromString from '#src/helpers/extractNumbersFromString.js';
+import getTextInElement from '#src/domains/puppeteer/helpers/getTextInElement.js';
+import getButtonByText from '#src/domains/puppeteer/helpers/getButtonByText.js';
 
 class Rabby extends Extension {
   constructor() {
@@ -29,6 +32,40 @@ class Rabby extends Extension {
     } finally {
       await page.close();
     }
+  }
+
+  async signTransaction(page: Page, options: { maxGasFee: number }): Promise<void> {
+    await page.waitForSelector('div.approval');
+    await wait(1011, 2110);
+
+    const gasValueElement = await page.$('.gas-selector-card-amount span.text-r-blue-default');
+
+    if (!gasValueElement) {
+      throw new Error('Rabby: Could not find gas element');
+    }
+
+    const gasValueUsd = extractNumbersFromString(await getTextInElement(page, gasValueElement));
+
+    if (gasValueUsd > options.maxGasFee) {
+      throw new Error(`Rabby: Gas is too high. Max desired gas: ${options.maxGasFee}. Actual gas: ${gasValueUsd}`);
+    }
+
+    const signBtn = await getButtonByText(page, 'Sign');
+
+    if (!signBtn) {
+      throw new Error('Rabby: Confirm btn not found.');
+    }
+
+    await hoverAndClick(signBtn);
+    await wait(1011, 2110);
+
+    const confirmBtn = await getButtonByText(page, 'Confirm');
+
+    if (!confirmBtn) {
+      throw new Error('Rabby: Confirm btn not found.');
+    }
+
+    await hoverAndClick(confirmBtn);
   }
 }
 

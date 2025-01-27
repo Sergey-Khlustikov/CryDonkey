@@ -1,14 +1,14 @@
-import AdsPowerService from "#src/domains/ads/services/AdsPowerService.js";
-import {hoverAndClick, minimizeBrowser, wait} from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
-import IIdaoJobOptions from "#src/domains/automatization/idao/interfaces/IIdaoJobOptions.js";
-import IBaseJobProfile from "#src/domains/queues/structures/interfaces/IBaseJobProfile.js";
-import {Browser, Page} from "puppeteer";
-import Metamask from "#src/domains/extensions/metamask/Metamask.js";
-import getButtonByText from "#src/domains/puppeteer/helpers/getButtonByText.js";
-import IdaoForecastHandler from "#src/domains/automatization/idao/jobs/handlers/IdaoForecastHandler.js";
-import IIdaoForecastOptions from "#src/domains/automatization/idao/interfaces/IIdaoForecastOptions.js";
-import PageScroller from "#src/domains/puppeteer/helpers/PageScroller.js";
-import {retryMethodWithReload} from "#src/helpers/retryMethod.js";
+import AdsPowerService from '#src/domains/ads/services/AdsPowerService.js';
+import { hoverAndClick, minimizeBrowser, wait } from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
+import IIdaoJobOptions from '#src/domains/automatization/idao/interfaces/IIdaoJobOptions.js';
+import IBaseJobProfile from '#src/domains/queues/structures/interfaces/IBaseJobProfile.js';
+import { Browser, Page } from 'puppeteer';
+import getButtonByText from '#src/domains/puppeteer/helpers/getButtonByText.js';
+import IdaoForecastHandler from '#src/domains/automatization/idao/jobs/handlers/IdaoForecastHandler.js';
+import IIdaoForecastOptions from '#src/domains/automatization/idao/interfaces/IIdaoForecastOptions.js';
+import PageScroller from '#src/domains/puppeteer/helpers/PageScroller.js';
+import { retryMethodWithReload } from '#src/helpers/retryMethod.js';
+import Rabby from '#src/domains/extensions/rabby/Rabby.js';
 
 class IdaoJob {
   protected job: IIdaoJobOptions;
@@ -55,7 +55,7 @@ class IdaoJob {
   async startQuests(browser: Browser): Promise<void> {
     this.browser = browser;
 
-    await Metamask.unlockFullPage(this.browser)
+    await Rabby.unlockFullPage(this.browser);
 
     this.page = await this.browser.newPage();
 
@@ -64,8 +64,7 @@ class IdaoJob {
     await wait(1012, 5012);
 
     if (!await this.isAuthenticated()) {
-      await this.signIn()
-      await wait(2112, 4121)
+      throw new Error('Not signed in');
     }
 
     await new IdaoForecastHandler(this.browser, this.page, this.forecastOptions).run();
@@ -76,47 +75,6 @@ class IdaoJob {
 
   async isAuthenticated(): Promise<boolean> {
     return !await getButtonByText(this.page, 'connect wallet')
-  }
-
-  async signIn(): Promise<void> {
-    const signInButton = await getButtonByText(this.page, 'connect wallet', {searchContainerSelector: '.sticky'});
-
-    if (!signInButton) {
-      throw new Error('Sign-in button not found')
-    }
-
-    await hoverAndClick(signInButton)
-    await wait(1211, 3121);
-
-    const metaMaskButton = await getButtonByText(this.page, 'metamask', {
-      searchContainerSelector: 'div[role="dialog"]'
-    });
-
-    if (!metaMaskButton) {
-      throw new Error('Metamask button not found')
-    }
-
-    await hoverAndClick(metaMaskButton)
-
-    const metaMaskPage = await Metamask.waitForExtensionOpen(this.browser)
-    await wait(1111, 2222);
-
-    const nextBtn = await getButtonByText(metaMaskPage, 'next', {searchContainerSelector: 'footer'})
-
-    if (!nextBtn) {
-      throw new Error('Sign in. Next button not found')
-    }
-
-    await hoverAndClick(nextBtn);
-    await wait(1111, 2222);
-
-    const confirmBtn = await getButtonByText(metaMaskPage, 'confirm', {searchContainerSelector: 'footer'})
-
-    if (!confirmBtn) {
-      throw new Error('Confirm button not found')
-    }
-
-    await hoverAndClick(confirmBtn);
   }
 
   async claimPoints(): Promise<void> {
@@ -138,9 +96,9 @@ class IdaoJob {
     }
 
     await hoverAndClick(claimBtn)
-    const metamaskPage = await Metamask.waitForExtensionOpen(this.browser)
+    const rabbyPage = await Rabby.waitForExtensionOpen(this.browser);
     await wait(5211, 8121);
-    await Metamask.signTransaction(metamaskPage, {maxGasFee: 0.1})
+    await Rabby.signTransaction(rabbyPage, { maxGasFee: 0.1 });
 
     await this.page.waitForFunction(
       (btn) => !btn.isConnected,

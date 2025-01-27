@@ -1,13 +1,13 @@
-import {Browser, Page} from "puppeteer";
-import getRandomArrayElement from "#src/helpers/getRandomArrayElement.js";
-import {hoverAndClick, wait} from "#src/domains/puppeteer/helpers/puppeteerHelpers.js";
-import normalizeString from "#src/helpers/normalizeString.js";
-import getTextInElement from "#src/domains/puppeteer/helpers/getTextInElement.js";
-import typeWithRandomDelay from "#src/domains/puppeteer/helpers/typeWithRandomDelay.js";
-import IIdaoForecastOptions from "#src/domains/automatization/idao/interfaces/IIdaoForecastOptions.js";
-import getRandomNumberBetween from "#src/helpers/getRandomNumberBetween.js";
-import getButtonByText from "#src/domains/puppeteer/helpers/getButtonByText.js";
-import Metamask from "#src/domains/extensions/metamask/Metamask.js";
+import { Browser, Page } from 'puppeteer';
+import getRandomArrayElement from '#src/helpers/getRandomArrayElement.js';
+import { hoverAndClick, wait } from '#src/domains/puppeteer/helpers/puppeteerHelpers.js';
+import normalizeString from '#src/helpers/normalizeString.js';
+import getTextInElement from '#src/domains/puppeteer/helpers/getTextInElement.js';
+import typeWithRandomDelay from '#src/domains/puppeteer/helpers/typeWithRandomDelay.js';
+import IIdaoForecastOptions from '#src/domains/automatization/idao/interfaces/IIdaoForecastOptions.js';
+import getRandomNumberBetween from '#src/helpers/getRandomNumberBetween.js';
+import getButtonByText from '#src/domains/puppeteer/helpers/getButtonByText.js';
+import Rabby from '#src/domains/extensions/rabby/Rabby.js';
 
 type TCurrencyPair = 'BTC/USD' | 'ETH/USD' | 'BNB/USD' | 'XRP/USD' | 'SOL/USD';
 type TShortTermTimelines = '1 hour' | '4 hours' | '12 hours';
@@ -167,9 +167,9 @@ class IdaoForecastHandler {
 
     await wait(1111, 2222)
     await hoverAndClick(forecastBtn)
-    const metamaskPage = await Metamask.waitForExtensionOpen(this.browser, 30000)
+    const rabbyPage = await Rabby.waitForExtensionOpen(this.browser, 30000);
     await wait(1211, 3121);
-    await Metamask.signTransaction(metamaskPage, {maxGasFee: 0.05})
+    await Rabby.signTransaction(rabbyPage, { maxGasFee: 0.05 });
   }
 }
 
