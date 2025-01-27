@@ -1,5 +1,5 @@
-import Extension from "#src/domains/extensions/Extension.js";
-import {Browser, Page} from "puppeteer";
+import Extension from '#src/domains/extensions/Extension.js';
+import { Browser, Page } from 'puppeteer';
 
 class Dawn extends Extension {
   constructor() {
@@ -9,7 +9,7 @@ class Dawn extends Extension {
   async openDashboardPage(browser: Browser): Promise<Page> {
     const page = await browser.newPage();
     page.on('dialog', async (dialog) => await dialog.accept());
-    await page.goto(`chrome-extension://${this.getId()}/dashboard.html`);
+    await page.goto(`chrome-extension://${this.getId()}/pages/dashboard.html`);
 
     return page;
   }
