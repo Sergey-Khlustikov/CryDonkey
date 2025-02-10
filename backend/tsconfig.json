@@ -1,40 +1,33 @@
 {
   "compilerOptions": {
-    "moduleDetection": "force",
-    "module": "Preserve",
-    "resolveJsonModule": true,
-    "allowJs": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "strict": true,
-    // Включает строгие проверки типов
-    "noImplicitAny": true,
-    // Сообщает об использовании неявного типа any
-    "strictNullChecks": true,
-    // Строгая проверка на null и undefined
-    "strictFunctionTypes": true,
-    // Проверка совместимости типов функций
-    "strictPropertyInitialization": true,
-    // Проверка инициализации свойств классов
-    "noImplicitThis": true,
-    // Сообщает об использовании this без явно указанного типа
-    "alwaysStrict": true,
-    // Включает строгий режим для всех файлов
-    "noUnusedLocals": true,
-    // Сообщает о неиспользуемых локальных переменных
-    "noUnusedParameters": true,
-    // Сообщает о неиспользуемых параметрах функций
-    "noImplicitReturns": true,
-    // Сообщает о функциях, которые могут неявно возвращать undefined
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "incremental": true,
     "skipLibCheck": true,
-    // Пропускает проверку типов в библиотечных файлах
-    "forceConsistentCasingInFileNames": true,
-    // Обеспечивает одинаковое написание имен файлов
-    "baseUrl": "./",
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
     "paths": {
-      "#src/*": [
+      "@src/*": [
         "src/*"
       ]
-    }
-  },
+    },
+    "esModuleInterop": true
+  }
+  //  "include": [
+  //    "src/main.ts",
+  //    "src/app.module.ts",
+  //    "src/config/aliases.ts",
+  //    "src/modules/database/database.module.ts"
+  //  ],
 }

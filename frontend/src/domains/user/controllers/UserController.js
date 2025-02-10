@@ -6,27 +6,27 @@ class UserController {
   }
 
   async getList() {
-    const response = await this.api.get('/user/getList');
+    const response = await this.api.get('/users/');
 
-    return response.data;
+    return response.data.data;
   }
 
   async me() {
-    const response = await this.api.get('/user/me');
+    const response = await this.api.get('/users/me');
 
-    return response.data;
+    return response.data.data;
   }
 
   async create(params) {
-    const response = await this.api.post('/user/create', params);
+    const response = await this.api.post('/users/', params);
 
-    return response.data;
+    return response.data.data;
   }
 
   async delete(id) {
-    const response = await this.api.delete('/user/delete', { data: { id } });
+    const response = await this.api.delete(`/users/${id}`);
 
-    return response.data;
+    return response.data.data;
   }
 }
 

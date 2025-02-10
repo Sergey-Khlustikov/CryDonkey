@@ -14,15 +14,7 @@ class Api {
 
   async runRcade(params) {
     try {
-      await this.api.post('/rcade/run', params);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  async runSwan(params) {
-    try {
-      await this.api.post('/swan/run', params);
+      await this.api.post('/projects/rcade/run', params);
     } catch (e) {
       console.error(e);
     }

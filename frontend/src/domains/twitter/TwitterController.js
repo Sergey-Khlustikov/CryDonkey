@@ -1,4 +1,4 @@
-import {api} from 'src/boot/axios';
+import { api } from 'src/boot/axios';
 
 class TwitterController {
   constructor() {
@@ -6,7 +6,7 @@ class TwitterController {
   }
 
   async writePost(params) {
-    return this.api.post(`/twitter/writePost`, params);
+    return this.api.post('/twitter/write-post', params);
   }
 }
 

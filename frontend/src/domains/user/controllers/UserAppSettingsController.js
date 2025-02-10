@@ -6,15 +6,15 @@ class UserAppSettingsController {
   }
 
   async get() {
-    const response = await this.api.get('/userAppSetting');
+    const response = await this.api.get('/user-app-settings');
 
-    return response.data;
+    return response.data.data;
   }
 
   async update(params) {
-    const response = await this.api.patch('/userAppSetting/update', params);
+    const response = await this.api.patch('/user-app-settings', params);
 
-    return response.data;
+    return response.data.data;
   }
 }
 

@@ -4,7 +4,7 @@ import { Notify } from 'quasar';
 import ROUTE_NAMES from 'src/router/structures/routeNames';
 
 const api = axios.create({
-  baseURL: `http://${process.env.VUE_APP_SERVER_HOST}:${process.env.VUE_APP_SERVER_PORT}`,
+  baseURL: '/api',
 });
 
 export default boot(({ app, router }) => {
@@ -14,7 +14,7 @@ export default boot(({ app, router }) => {
   api.interceptors.request.use(
     (config) => {
       const token = localStorage.getItem('token');
-      console.log(token);
+
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

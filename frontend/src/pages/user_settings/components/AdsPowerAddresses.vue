@@ -40,10 +40,10 @@ const saveAddress = async (address) => {
     port: address.port,
   };
 
-  if (!address._id) {
+  if (!address.id) {
     await AdsPowerAddressController.create(params);
   } else {
-    await AdsPowerAddressController.update(address._id, params);
+    await AdsPowerAddressController.update(address.id, params);
   }
 
   await getList();
@@ -52,7 +52,7 @@ const saveAddress = async (address) => {
 const deleteAddress = async (id) => {
   await AdsPowerAddressController.delete(id);
 
-  addresses.value = addresses.value.filter(address => address._id !== id);
+  addresses.value = addresses.value.filter(address => address.id !== id);
 };
 </script>
 
@@ -60,10 +60,10 @@ const deleteAddress = async (id) => {
   <div>
     <div class="text-h6 q-mb-md">AdsPower host addresses</div>
 
-    <div v-for="(address, index) in addresses" :key="address._id + '_' + index">
+    <div v-for="(address, index) in addresses" :key="address.id + '_' + index">
       <div v-if="!address.editable" class="flex align-center q-mb-sm">
         <div>
-          <q-radio v-model="activeAddress" :val="address._id" size="sm">
+          <q-radio v-model="activeAddress" :val="address.id" size="sm">
             <div>{{ address.name }}</div>
             <div>{{ address.host }}:{{ address.port }}</div>
           </q-radio>
@@ -73,7 +73,7 @@ const deleteAddress = async (id) => {
 
         <div>
           <q-btn @click="address.editable = true" icon="edit" flat color="warning" round></q-btn>
-          <q-btn @click="deleteAddress(address._id)" icon="delete" flat color="red" round></q-btn>
+          <q-btn @click="deleteAddress(address.id)" icon="delete" flat color="red" round></q-btn>
         </div>
       </div>
 
@@ -116,7 +116,7 @@ const deleteAddress = async (id) => {
     </div>
 
     <q-btn
-      v-if="!addresses.length || addresses.every(address => !!address._id)"
+      v-if="!addresses.length || addresses.every(address => !!address.id)"
       @click="addAddress"
       class="q-mt-sm"
       label="Add new address"
