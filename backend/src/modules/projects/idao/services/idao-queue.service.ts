@@ -23,7 +23,10 @@ export class IdaoQueueService extends AutomationProjectService {
           profile,
           userId: authUser._id,
           keepOpenProfile: dto.keepOpenProfileIds.includes(profile.id),
-          forecastOptions: dto.forecastOptions,
+          forecastOptions: {
+            minTargetPriceDeviation: dto.minTargetPriceDeviation,
+            maxTargetPriceDeviation: dto.maxTargetPriceDeviation,
+          },
         },
         opts: {
           delay: this.calculateJobDelay(
