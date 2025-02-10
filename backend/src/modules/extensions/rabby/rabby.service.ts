@@ -45,6 +45,7 @@ export class RabbyService extends ExtensionAbstract {
     page: Page,
     options: { maxGasFee: number },
   ): Promise<void> {
+    await page.waitForNetworkIdle();
     await page.waitForSelector('div.approval');
     await wait(1011, 2110);
 
