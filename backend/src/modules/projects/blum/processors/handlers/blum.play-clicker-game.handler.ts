@@ -1,9 +1,9 @@
-import PageScroller from '@src/common/helpers/puppeteer/PageScroller.js';
 import {
   hoverAndClick,
   wait,
 } from '@src/common/helpers/puppeteer/puppeteerHelpers.js';
 import { ElementHandle, Frame, Page } from 'puppeteer';
+import getButtonByText from '@src/common/helpers/puppeteer/getButtonByText.js';
 
 interface IPixel {
   x: number;
@@ -13,14 +13,16 @@ interface IPixel {
 class BlumPlayClickerGameHandler {
   async run(blumFrame: Frame, tgPage: Page) {
     try {
-      await blumFrame.waitForSelector('.index-page');
-      const scroller = new PageScroller({
-        page: blumFrame,
-        scrollableTag: '.theme-default',
+      const playBtn = await getButtonByText(blumFrame, 'play', {
+        searchContainerSelector: '.pages-index-game',
+        strict: false,
       });
-      await scroller.scrollToBottom();
 
-      await blumFrame.click('a.play-btn');
+      if (!playBtn) {
+        throw new Error('Play button not found.');
+      }
+
+      await hoverAndClick(playBtn);
 
       await this.playGame(blumFrame, tgPage);
     } catch (e) {
