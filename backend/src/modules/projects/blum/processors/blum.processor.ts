@@ -80,7 +80,13 @@ export class BlumProcessor extends AutomationProjectProcessor {
       this.tgPage,
       async () => (this.blumFrame = await this.getBlumBotFrame(this.tgPage)),
     );
+
     await wait(4212, 6421);
+
+    await this.exitFullscreen();
+
+    await wait(4212, 6421);
+
     await this.navigateToPage('home', this.blumFrame);
 
     await this.completeDailyCheckIn(this.blumFrame);
@@ -123,6 +129,16 @@ export class BlumProcessor extends AutomationProjectProcessor {
     }
 
     return iframeContent;
+  }
+
+  async exitFullscreen(): Promise<void> {
+    const exitFullscreenBtn = await this.tgPage.$('i.icon.icon-down');
+
+    if (!exitFullscreenBtn) {
+      throw new Error('Fullscreen button not found');
+    }
+
+    await hoverAndClick(exitFullscreenBtn);
   }
 
   async completeDailyCheckIn(blumFrame: Frame) {
