@@ -168,7 +168,7 @@ export class IdaoForecastHandler {
 
   async setForecastPrice() {
     const selector =
-      'xpath/.//div[contains(text(), "Set target price")]/following-sibling::div//input';
+      'xpath=.//div[./div[contains(text(), "Set target price")]]/following-sibling::div[1]//input';
     const [inputElement] = await this.page.$$(selector);
 
     if (!inputElement) {

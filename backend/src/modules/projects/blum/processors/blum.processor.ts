@@ -14,6 +14,8 @@ import { retryMethodWithReload } from '@src/common/helpers/retryMethod.js';
 import BlumPlayClickerGameHandler from './handlers/blum.play-clicker-game.handler.js';
 import getButtonByText from '@src/common/helpers/puppeteer/getButtonByText.js';
 import { Processor } from '@nestjs/bullmq';
+import { PuppeteerUtil } from '@src/common/helpers/puppeteer/PuppeteerUtil.js';
+import { IBlumOptions } from '@src/modules/projects/blum/dto/blum-run.dto.js';
 
 @Processor(EQueueNames.Blum)
 export class BlumProcessor extends AutomationProjectProcessor {
@@ -36,12 +38,13 @@ export class BlumProcessor extends AutomationProjectProcessor {
   }
 
   protected handleJob(job: Job): Promise<any> {
-    const { profile, userId, keepOpenProfile, playGame } = job.data;
+    const { profile, userId, keepOpenProfile } = job.data;
+    const options: IBlumOptions = job.data.options;
 
     this.profile = profile;
     this.userId = userId;
     this.keepOpenProfile = keepOpenProfile;
-    this.playGame = playGame;
+    this.playGame = options.playGame;
 
     return this.run();
   }
@@ -78,13 +81,14 @@ export class BlumProcessor extends AutomationProjectProcessor {
       async () => (this.blumFrame = await this.getBlumBotFrame(this.tgPage)),
     );
     await wait(4212, 6421);
+    await this.navigateToPage('home', this.blumFrame);
+
     await this.completeDailyCheckIn(this.blumFrame);
     await wait(2212, 4421);
 
     await this.claimAndRunFarmPoints(this.blumFrame);
     await wait(1304, 4210);
 
-    // await new BlumWeeklyJobHandler(this.browser, this.tgPage, this.blumFrame).run();
     if (this.playGame) {
       await new BlumPlayClickerGameHandler().run(this.blumFrame, this.tgPage);
     }
@@ -122,60 +126,52 @@ export class BlumProcessor extends AutomationProjectProcessor {
   }
 
   async completeDailyCheckIn(blumFrame: Frame) {
-    await wait(5021, 9512);
-    const rewardPage = await blumFrame.$('.daily-reward-page');
+    await blumFrame.waitForSelector('.pages-index-daily-reward');
+    await wait(1021, 3512);
 
-    if (!rewardPage) {
+    const claimBtn = await blumFrame.$('.pages-index-daily-reward button');
+
+    if (!claimBtn) {
+      throw new Error('Daily CheckIn. Claim button not found.');
+    }
+
+    if (await PuppeteerUtil.elementHasClass(claimBtn, 'is-state-claimed')) {
       return;
     }
 
-    const continueBtn = await blumFrame.$('button.kit-button');
-
-    if (!continueBtn) {
-      throw new Error('Daily CheckIn. Continue button not found.');
-    }
-
-    await hoverAndClick(continueBtn);
+    await hoverAndClick(claimBtn);
   }
 
   async claimAndRunFarmPoints(blumFrame: Frame) {
-    const homeBtn = await getButtonByText(blumFrame, 'home', {
+    await wait(1134, 3123);
+
+    while (true) {
+      const claimButton = await blumFrame.$(
+        '.pages-wallet-asset-farming-slot button',
+      );
+
+      if (!claimButton) {
+        throw new Error('Claim button not found');
+      }
+
+      if (await PuppeteerUtil.elementHasClass(claimButton, 'farming')) {
+        break;
+      }
+
+      await hoverAndClick(claimButton);
+      await wait(1134, 3123);
+    }
+  }
+
+  async navigateToPage(pageName: string, blumFrame: Frame) {
+    const homeBtn = await getButtonByText(blumFrame, pageName, {
       buttonTag: 'a',
     });
 
     if (!homeBtn) {
-      throw new Error('Unable to find home button');
+      throw new Error(`Unable to find ${pageName} button`);
     }
 
     await hoverAndClick(homeBtn);
-    await wait(1134, 3123);
-
-    const farmButton = await blumFrame.$('.index-farming-button button');
-
-    if (!farmButton) {
-      throw new Error('Farm button not found.');
-    }
-
-    const farmButtonText = await farmButton.evaluate((el) => {
-      const text = el.textContent;
-      return text ? text.toLowerCase() : '';
-    });
-
-    if (farmButtonText.includes('start farming')) {
-      await hoverAndClick(farmButton);
-      return;
-    }
-
-    if (farmButtonText.includes('claim')) {
-      await hoverAndClick(farmButton);
-      await wait(1400, 4010);
-      const startFarmButton = await blumFrame.$('.index-farming-button button');
-
-      if (startFarmButton) {
-        await hoverAndClick(startFarmButton);
-      } else {
-        throw new Error('Start farming button not found.');
-      }
-    }
   }
 }
