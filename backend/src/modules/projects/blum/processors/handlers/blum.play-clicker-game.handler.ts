@@ -36,11 +36,7 @@ class BlumPlayClickerGameHandler {
         '.pages-game-process canvas',
       );
 
-      let i = 0;
-
       while (true) {
-        i++;
-
         const greenPixels = await this.findPixelsByColor(frame, 129, 255, 41);
 
         if (!greenPixels) {
@@ -50,12 +46,6 @@ class BlumPlayClickerGameHandler {
 
         if (canvasElement && greenPixels.length > 0) {
           await this.clickOnPixels(greenPixels, canvasElement, tgPage);
-        }
-
-        const whitePixels = await this.findPixelsByColor(frame, 255, 255, 255);
-
-        if (canvasElement && whitePixels && whitePixels.length > 0) {
-          await this.clickOnWhitePixels(whitePixels, canvasElement, tgPage);
         }
 
         const bluePixels = await this.findPixelsByColor(frame, 96, 207, 222);
@@ -123,39 +113,6 @@ class BlumPlayClickerGameHandler {
     } catch (e) {
       throw e;
     }
-  }
-
-  async clickOnWhitePixels(
-    pixels: IPixel[],
-    canvasElement: ElementHandle<HTMLCanvasElement>,
-    tgPage: Page,
-  ) {
-    const uniquePositions = await this.filterPixelsByCloseness(pixels);
-    const boundingBox = await canvasElement.boundingBox();
-
-    if (!boundingBox) {
-      return;
-    }
-
-    for (const position of uniquePositions) {
-      const { x, y } = position;
-      const nearbyPixels = await this.getNearbyPixels(position, pixels);
-
-      if (nearbyPixels.length >= 12) {
-        const absoluteX = boundingBox.x + x;
-        const absoluteY = boundingBox.y + y;
-
-        await tgPage.mouse.click(absoluteX, absoluteY);
-        await wait(5, 10);
-      }
-    }
-  }
-
-  async getNearbyPixels(pixel: IPixel, allPixels: IPixel[]) {
-    const { x, y } = pixel;
-    return allPixels.filter(
-      (p) => Math.abs(p.x - x) < 5 && Math.abs(p.y - y) < 12,
-    );
   }
 
   async clickOnPixels(
