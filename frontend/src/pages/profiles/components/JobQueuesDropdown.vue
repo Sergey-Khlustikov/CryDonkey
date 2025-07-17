@@ -5,6 +5,7 @@ import TwitterPostModal from 'src/domains/twitter/modals/twitterPostModal/Twitte
 import BlumModal from 'src/domains/projects/blum/components/modals/BlumModal.vue';
 import IdaoModal from 'src/domains/projects/idao/components/modals/IdaoModal.vue';
 import DawnController from 'src/domains/projects/dawn/controllers/DawnController.js';
+import RabbyController from 'src/domains/extentions/rabby/RabbyController';
 
 const $q = useQuasar();
 const props = defineProps({
@@ -52,10 +53,15 @@ function openIdaoModal() {
 
 async function checkDawnAuth() {
   await DawnController.checkAuth({
-    profiles: props.profiles.map(profile => ({id: profile.user_id, name: profile.name})),
+    profiles: props.profiles.map(profile => ({ id: profile.user_id, name: profile.name })),
   });
 }
 
+async function unlockRabby() {
+  await RabbyController.unlock({
+    profiles: props.profiles.map(profile => ({ id: profile.user_id, name: profile.name })),
+  });
+}
 </script>
 
 <template>
@@ -103,6 +109,15 @@ async function checkDawnAuth() {
             <q-item-label>
               <q-icon name="play_arrow"></q-icon>
               Dawn. Check Auth
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable v-close-popup @click="unlockRabby">
+          <q-item-section>
+            <q-item-label>
+              <q-icon name="play_arrow"></q-icon>
+              Rabby. Unlock
             </q-item-label>
           </q-item-section>
         </q-item>
