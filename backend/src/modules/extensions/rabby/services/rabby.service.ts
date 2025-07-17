@@ -3,12 +3,14 @@ import {
   wait,
 } from '@src/common/helpers/puppeteer/puppeteerHelpers.js';
 import { Browser, Page } from 'puppeteer';
-import ExtensionAbstract from '../extension.abstract.js';
+import ExtensionAbstract from '../../extension.abstract.js';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import extractNumbersFromString from '@src/common/helpers/extractNumbersFromString.js';
 import getTextInElement from '@src/common/helpers/puppeteer/getTextInElement.js';
 import getButtonByText from '@src/common/helpers/puppeteer/getButtonByText.js';
+import { attachRefocusListener } from '@src/common/helpers/puppeteer/attachRefocusListener.js';
+import { detachRefocusListener } from '@src/common/helpers/puppeteer/detachRefocusListener.js';
 
 @Injectable()
 export class RabbyService extends ExtensionAbstract {
@@ -16,28 +18,37 @@ export class RabbyService extends ExtensionAbstract {
     super('acmacodkjbdgmoleebolmdjonilkdbch', 'Rabby');
   }
 
-  async unlockFullPage(browser: Browser) {
+  async unlockFullPage(browser: Browser, options?: { keepPageOpen?: boolean }) {
     const loginUrl = `chrome-extension://${this.getId()}/index.html#/unlock`;
     const page = await browser.newPage();
+
+    await attachRefocusListener(page);
 
     try {
       await page.goto(loginUrl, { waitUntil: 'networkidle2' });
 
-      await page.waitForSelector('body');
+      await page.waitForSelector('.unlock, .dashboard', { timeout: 10000 });
 
-      if (await page.$('.unlock')) {
-        await wait(1211, 2102);
-        await page
-          .locator('#password')
-          .fill(this.configService.get('RABBY_PASSWORD'));
-        await wait(1211, 2102);
-        await page.locator('button[type=submit]').click();
-        await wait(1211, 2102);
+      if (await page.$('.dashboard')) {
+        return;
       }
+
+      await wait(1211, 2102);
+      await page
+        .locator('#password')
+        .fill(this.configService.get('RABBY_PASSWORD'));
+
+      await wait(1211, 2102);
+      await page.locator('button[type=submit]').click();
+      await wait(1211, 2102);
     } catch (e) {
       throw new Error(`Failed to unlock RabbyService wallet. Error: ${e}`);
     } finally {
-      await page.close();
+      if (!options?.keepPageOpen) {
+        await page.close();
+      }
+
+      await detachRefocusListener(page);
     }
   }
 

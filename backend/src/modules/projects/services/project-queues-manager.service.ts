@@ -15,8 +15,16 @@ export class ProjectQueuesManagerService {
     @InjectQueue(EQueueNames.DawnAuth) dawnQueue: Queue,
     @InjectQueue(EQueueNames.Blum) blumQueue: Queue,
     @InjectQueue(EQueueNames.TwitterPost) twitterQueue: Queue,
+    @InjectQueue(EQueueNames.RabbyUnlock) rabbyUnlockQueue: Queue,
   ) {
-    this.queues = [idaoQueue, rcadeQueue, dawnQueue, blumQueue, twitterQueue];
+    this.queues = [
+      idaoQueue,
+      rcadeQueue,
+      dawnQueue,
+      blumQueue,
+      twitterQueue,
+      rabbyUnlockQueue,
+    ];
   }
 
   async getList() {

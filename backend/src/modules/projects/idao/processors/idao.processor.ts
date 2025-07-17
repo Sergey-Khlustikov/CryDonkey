@@ -16,7 +16,7 @@ import { IdaoForecastHandler } from '@src/modules/projects/idao/processors/handl
 import { retryMethodWithReload } from '@src/common/helpers/retryMethod.js';
 import getButtonByText from '@src/common/helpers/puppeteer/getButtonByText.js';
 import PageScroller from '@src/common/helpers/puppeteer/PageScroller.js';
-import { RabbyService } from '@src/modules/extensions/rabby/rabby.service.js';
+import { RabbyService } from '@src/modules/extensions/rabby/services/rabby.service.js';
 
 @Processor(EQueueNames.Idao)
 export class IdaoQueueProcessor extends AutomationProjectProcessor {
