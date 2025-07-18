@@ -21,6 +21,7 @@ const defaultJobOptions = {
       { name: EQueueNames.DawnAuth, defaultJobOptions },
       { name: EQueueNames.Blum, defaultJobOptions },
       { name: EQueueNames.TwitterPost, defaultJobOptions },
+      { name: EQueueNames.RabbyUnlock, defaultJobOptions },
     ),
   ],
   providers: [ProjectQueuesManagerService],

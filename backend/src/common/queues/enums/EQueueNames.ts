@@ -4,6 +4,7 @@ enum EQueueNames {
   Blum = 'Blum',
   Idao = 'Idao',
   DawnAuth = 'Dawn Auth',
+  RabbyUnlock = 'Rabby Unlock',
 }
 
 export default EQueueNames;

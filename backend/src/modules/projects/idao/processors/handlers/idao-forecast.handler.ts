@@ -10,7 +10,7 @@ import typeWithRandomDelay from '../../../../../common/helpers/puppeteer/typeWit
 import IIdaoForecastOptions from '../../types/idao-forecast-options.interface.js';
 import getRandomNumberBetween from '../../../../../common/helpers/getRandomNumberBetween.js';
 import getButtonByText from '../../../../../common/helpers/puppeteer/getButtonByText.js';
-import { RabbyService } from '@src/modules/extensions/rabby/rabby.service.js';
+import { RabbyService } from '@src/modules/extensions/rabby/services/rabby.service.js';
 
 type TCurrencyPair = 'BTC/USD' | 'ETH/USD' | 'BNB/USD' | 'XRP/USD' | 'SOL/USD';
 type TShortTermTimelines = '1 hour' | '4 hours' | '12 hours';
