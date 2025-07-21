@@ -24,10 +24,4 @@
     },
     "esModuleInterop": true
   }
-  //  "include": [
-  //    "src/main.ts",
-  //    "src/app.module.ts",
-  //    "src/config/aliases.ts",
-  //    "src/modules/database/database.module.ts"
-  //  ],
 }

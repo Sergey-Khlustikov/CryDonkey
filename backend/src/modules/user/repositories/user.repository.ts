@@ -8,6 +8,11 @@ import { CreateUserDto } from '@src/modules/user/dto/create-user.dto.js';
 export class UserRepository {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
+  async existsByUsername(username: string): Promise<boolean> {
+    const doc = await this.userModel.exists({ username }).exec();
+    return !!doc;
+  }
+
   async findById(id: string): Promise<UserDocument> {
     return this.userModel.findById(id).exec();
   }

@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from '@src/modules/user/repositories/user.repository';
 import { User, UserDocument } from '@src/modules/user/schemas/user.schema';
 import { CreateUserDto } from '@src/modules/user/dto/create-user.dto';
@@ -18,6 +14,10 @@ export class UserService {
     private hashService: HashService,
     private eventEmitter: EventEmitter2,
   ) {}
+
+  async existsByUsername(username: string): Promise<boolean> {
+    return this.userRepository.existsByUsername(username);
+  }
 
   async findUserById(id: string): Promise<UserDocument> {
     const user = await this.userRepository.findById(id);
@@ -57,7 +57,7 @@ export class UserService {
       hashedPassword,
     );
 
-    this.eventEmitter.emit(
+    await this.eventEmitter.emitAsync(
       UserCreatedEvent.eventName,
       new UserCreatedEvent(user),
     );

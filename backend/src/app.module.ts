@@ -18,6 +18,7 @@ import { DawnExtensionModule } from '@src/modules/extensions/dawn/dawn-extension
 import { DawnModule } from '@src/modules/projects/dawn/dawn.module.js';
 import { BlumModule } from '@src/modules/projects/blum/blum.module.js';
 import { TwitterModule } from '@src/modules/twitter/twitter.module.js';
+import { SeederModule } from '@src/seeders/seeder.module.js';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { TwitterModule } from '@src/modules/twitter/twitter.module.js';
       }),
       inject: [ConfigService],
     }),
+    SeederModule,
 
     AuthModule,
     UserModule,
