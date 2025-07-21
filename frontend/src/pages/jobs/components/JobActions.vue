@@ -12,21 +12,13 @@ const props = defineProps({
 const emit = defineEmits(['jobRemoved', 'jobRetried']);
 
 const retryJob = async () => {
-  try {
-    await JobsController.retry(props.job.id, props.job.name);
-    emit('jobRetried', { id: props.job.id, queueName: props.job.name });
-  } catch (e) {
-    throw e;
-  }
+  await JobsController.retry(props.job.id, props.job.name);
+  emit('jobRetried', { id: props.job.id, queueName: props.job.name });
 };
 
 const removeJob = async () => {
-  try {
-    await JobsController.remove(props.job.id, props.job.name);
-    emit('jobRemoved', { id: props.job.id, queueName: props.job.name });
-  } catch (e) {
-    throw e;
-  }
+  await JobsController.remove(props.job.id, props.job.name);
+  emit('jobRemoved', { id: props.job.id, queueName: props.job.name });
 };
 </script>
 

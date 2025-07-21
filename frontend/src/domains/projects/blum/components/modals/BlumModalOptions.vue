@@ -1,8 +1,6 @@
 <script setup>
-import { onMounted, reactive, ref, watch } from 'vue';
+import { onMounted, reactive, watch } from 'vue';
 import CollapsableModalSection from 'src/components/modals/CollapsableModalSection.vue';
-
-const expanded = ref(true);
 
 const emit = defineEmits(['update:modelValue']);
 
