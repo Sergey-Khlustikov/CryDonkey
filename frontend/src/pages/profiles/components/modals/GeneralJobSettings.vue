@@ -32,7 +32,7 @@ watch(settings, newSettings => {
 <template>
   <collapsable-modal-section header-text="General Settings">
     <q-card-section>
-      <dont-close-profiles v-model="settings.keepOpenProfileIds" :profiles="profiles"></dont-close-profiles>
+      <dont-close-profiles v-model="settings.keepOpenProfileIds" :profiles="props.profiles"></dont-close-profiles>
     </q-card-section>
 
     <q-separator></q-separator>

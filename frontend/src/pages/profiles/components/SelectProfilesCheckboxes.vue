@@ -6,9 +6,15 @@ const props = defineProps({
   },
 });
 
-const model = defineModel({type: Array});
+const model = defineModel({ type: Array });
 </script>
 
 <template>
-  <q-checkbox v-for="profile in profiles" v-model="model" :label="profile.name" :val="profile.user_id"></q-checkbox>
+  <q-checkbox
+    v-for="profile in props.profiles"
+    v-model="model"
+    :label="profile.name"
+    :val="profile.user_id"
+    :key="profile.user_id"
+  ></q-checkbox>
 </template>

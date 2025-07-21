@@ -12,10 +12,6 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits([
-  ...useDialogPluginComponent.emits,
-]);
-
 const {
   dialogRef,
   onDialogHide,
