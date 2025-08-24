@@ -2,17 +2,13 @@ import { AutomationProjectProcessor } from '@src/common/queues/automation-projec
 import { ProjectQueuesManagerService } from '@src/modules/projects/services/project-queues-manager.service.js';
 import { AdsPowerApiService } from '@src/modules/ads-power/services/ads-power-api.service.js';
 import { DawnExtensionService } from '@src/modules/extensions/dawn/dawn-extension.service.js';
-import {
-  minimizeBrowser,
-  wait,
-} from '@src/common/helpers/puppeteer/puppeteerHelpers.js';
+import { minimizeBrowser, wait } from '@src/common/helpers/puppeteer/puppeteerHelpers.js';
 import minuteToMs from '@src/common/helpers/minuteToMs.js';
 import accountsData from '../structures/accountsData.js';
 import { Job, UnrecoverableError } from 'bullmq';
-import EQueueNames from '@src/common/queues/enums/EQueueNames.js';
-import IBaseJobProfile from '@src/modules/projects/types/IBaseJobProfile.js';
 import { Browser, Page } from 'puppeteer';
 import { Processor } from '@nestjs/bullmq';
+import { EQueueNames, IBaseJobProfile } from '@crydonkey/shared';
 
 @Processor(EQueueNames.DawnAuth)
 export class DawnCheckAuthProcessor extends AutomationProjectProcessor {

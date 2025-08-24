@@ -1,20 +1,17 @@
-<script setup>
-import AdsController from 'src/domains/ads/AdsController';
+<script setup lang="ts">
+import AdsPowerController from 'src/domains/ads-power/controllers/ads-power.controller.js';
+import type { QTableColumn } from 'quasar';
+import type { IAdsPowerProfile } from 'src/domains/ads-power/structures/ads-power-profile.interface.js';
 
 defineOptions({
   name: 'ProfilesTable',
 });
 
-const props = defineProps({
-  profiles: {
-    type: Array,
-    required: true,
-  },
-});
+defineProps<{ profiles: IAdsPowerProfile[] }>();
 
 const model = defineModel({ type: Array });
 
-const columns = [
+const columns: QTableColumn[] = [
   {
     name: 'id',
     label: 'ID',
@@ -41,6 +38,7 @@ const columns = [
   },
   {
     name: 'actions',
+    field: '',
     label: 'Actions',
     align: 'right',
   },
@@ -49,24 +47,27 @@ const columns = [
 const pagination = {
   rowsPerPage: 0,
 };
-
 </script>
 
 <template>
   <q-table
     title="Profiles"
-    :rows="props.profiles"
+    :rows="profiles"
     :columns="columns"
     :pagination="pagination"
     row-key="serial_number"
     v-model:selected="model"
     selection="multiple"
-    style="max-height: 80vh;"
+    style="max-height: 80vh"
     virtual-scroll
   >
     <template #body-cell-actions="props">
       <q-td :props="props">
-        <q-btn @click="AdsController.openAdsProfile(props.row.user_id)" color="primary" label="Open"></q-btn>
+        <q-btn
+          @click="AdsPowerController.openAdsProfile(props.row.user_id)"
+          color="primary"
+          label="Open"
+        ></q-btn>
       </q-td>
     </template>
   </q-table>

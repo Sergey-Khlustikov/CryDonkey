@@ -1,21 +1,16 @@
 import { AutomationProjectProcessor } from '@src/common/queues/automation-project.processor.js';
-import EQueueNames from '@src/common/queues/enums/EQueueNames.js';
-import IBaseJobProfile from '@src/modules/projects/types/IBaseJobProfile.js';
 import { Browser, Frame, Page } from 'puppeteer';
 import { ProjectQueuesManagerService } from '@src/modules/projects/services/project-queues-manager.service.js';
 import { AdsPowerApiService } from '@src/modules/ads-power/services/ads-power-api.service.js';
 import { Job } from 'bullmq';
-import {
-  hoverAndClick,
-  minimizeBrowser,
-  wait,
-} from '@src/common/helpers/puppeteer/puppeteerHelpers.js';
+import { hoverAndClick, minimizeBrowser, wait } from '@src/common/helpers/puppeteer/puppeteerHelpers.js';
 import { retryMethodWithReload } from '@src/common/helpers/retryMethod.js';
 import BlumPlayClickerGameHandler from './handlers/blum.play-clicker-game.handler.js';
 import getButtonByText from '@src/common/helpers/puppeteer/getButtonByText.js';
 import { Processor } from '@nestjs/bullmq';
 import { PuppeteerUtil } from '@src/common/helpers/puppeteer/PuppeteerUtil.js';
 import { IBlumOptions } from '@src/modules/projects/blum/dto/blum-run.dto.js';
+import { EQueueNames, IBaseJobProfile } from '@crydonkey/shared';
 
 @Processor(EQueueNames.Blum)
 export class BlumProcessor extends AutomationProjectProcessor {

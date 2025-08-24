@@ -29,6 +29,10 @@ yarn-error.log*
 *.njsproj
 *.sln
 
-# local .env files
+# local .env.production files
 .env.local*
 .env
+
+*.tsbuildinfo
+*.tsbuildinfo.*
+tsconfig.tsbuildinfo

@@ -42,11 +42,26 @@ export default defineConfig((ctx) => {
             eslint: {
               lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{ts,js,mjs,cjs,vue}"',
               useFlatConfig: true,
-            },
+            }
           },
-          { server: false },
+          // { server: false },
         ],
       ],
+      extendViteConf() {
+        return {
+          server: {
+            watch: {
+              usePolling: true,
+              interval: 1000,
+              awaitWriteFinish: {
+                stabilityThreshold: 200,
+                pollInterval: 100,
+              },
+            },
+          },
+          clearScreen: true,
+        };
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer

@@ -64,7 +64,6 @@ export default defineConfigWithVueTs(
     // add your custom rules here
     rules: {
       'prefer-promise-reject-errors': 'off',
-      'vue/block-lang': 'off', // @todo remove after refactoring to ts
       'vue/multi-word-component-names': 'off',
 
       // allow debugger during development only

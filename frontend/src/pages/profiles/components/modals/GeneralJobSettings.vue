@@ -1,38 +1,27 @@
-<script setup>
-import { onMounted, reactive, watch } from 'vue';
+<script setup lang="ts">
 import DontCloseProfiles from 'src/pages/profiles/components/DontCloseProfiles.vue';
-import vRequired from 'src/helpers/validations/vRequired';
-import vMoreThan from 'src/helpers/validations/vMoreThan';
+import vRequired from 'src/helpers/validators/required.validator.js';
+import vMoreThan from 'src/helpers/validators/more-than.validator.js';
 import CollapsableModalSection from 'src/components/modals/CollapsableModalSection.vue';
+import type { IAdsPowerProfile } from 'src/domains/ads-power/structures/ads-power-profile.interface.js';
+import { type IGeneralJobSettings } from 'src/domains/jobs/structures/job-general-settings.interface.js';
 
-const props = defineProps({
-  profiles: {
-    type: Array,
-    required: true,
-  },
-});
+interface Props {
+  profiles: IAdsPowerProfile[];
+}
 
-const emits = defineEmits(['update:modelValue']);
+defineProps<Props>();
 
-const settings = reactive({
-  keepOpenProfileIds: [],
-  minDelayMinutes: 2,
-  maxDelayMinutes: 7,
-});
-
-onMounted(() => {
-  emits('update:modelValue', settings);
-});
-
-watch(settings, newSettings => {
-  emits('update:modelValue', newSettings);
-}, { deep: true });
+const model = defineModel<IGeneralJobSettings>({ required: true });
 </script>
 
 <template>
   <collapsable-modal-section header-text="General Settings">
     <q-card-section>
-      <dont-close-profiles v-model="settings.keepOpenProfileIds" :profiles="props.profiles"></dont-close-profiles>
+      <dont-close-profiles
+        v-model="model.keepOpenProfileIds"
+        :profiles="profiles"
+      ></dont-close-profiles>
     </q-card-section>
 
     <q-separator></q-separator>
@@ -41,7 +30,7 @@ watch(settings, newSettings => {
       <div class="q-mb-md">Set random job delay (minutes)</div>
       <div class="row q-col-gutter-md">
         <q-input
-          v-model.number="settings.minDelayMinutes"
+          v-model.number="model.minDelayMinutes"
           outlined
           stack-label
           label="Min job delay"
@@ -50,11 +39,11 @@ watch(settings, newSettings => {
           class="col-4"
         ></q-input>
         <q-input
-          v-model.number="settings.maxDelayMinutes"
+          v-model.number="model.maxDelayMinutes"
           outlined
           stack-label
           label="Max job delay"
-          :rules="[vRequired, value => vMoreThan(value, settings.minDelayMinutes)]"
+          :rules="[vRequired, (value) => vMoreThan(value, model.minDelayMinutes)]"
           type="number"
           class="col-4"
         ></q-input>

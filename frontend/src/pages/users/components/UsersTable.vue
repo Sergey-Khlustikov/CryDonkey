@@ -1,24 +1,24 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
+import type { QTableColumn } from 'quasar';
 import { date, useQuasar } from 'quasar';
-import UserController from 'src/domains/user/controllers/UserController';
+import UserController from 'src/domains/user/controllers/user.controller.js';
+import type { IUser } from 'src/domains/user/structures/user.interface.js';
 
 const $q = useQuasar();
 
-const emit = defineEmits(['userRemoved']);
+const emit = defineEmits<{
+  userRemoved: [user: IUser];
+}>();
 
-const props = defineProps({
-  users: {
-    type: Array,
-    required: true,
-  },
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-});
+interface Props {
+  users: IUser[];
+  loading?: boolean;
+}
 
-const columns = [
+const { loading = false } = defineProps<Props>();
+
+const columns: QTableColumn[] = [
   {
     name: 'username',
     label: 'Username',
@@ -44,6 +44,8 @@ const columns = [
   },
   {
     name: 'actions',
+    label: '',
+    field: '',
     align: 'right',
     headerStyle: 'width: 100px',
   },
@@ -55,10 +57,10 @@ const pagination = {
 
 const showDeletingAlert = ref(false);
 
-const deleteUser = (row) => {
+const deleteUser = (user: IUser): void => {
   $q.dialog({
     title: 'Delete user',
-    message: `Are you sure you want to delete user ${row.username}?`,
+    message: `Are you sure you want to delete user ${user.username}?`,
     persistent: true,
     ok: {
       label: 'Delete',
@@ -67,9 +69,11 @@ const deleteUser = (row) => {
     cancel: {
       color: 'primary',
     },
-  }).onOk(async () => {
-    await UserController.delete(row.id);
-    emit('userRemoved', row);
+  }).onOk(() => {
+    void (async () => {
+      await UserController.delete(user.id);
+      emit('userRemoved', user);
+    })();
   });
 };
 </script>
@@ -78,29 +82,29 @@ const deleteUser = (row) => {
   <q-dialog v-model="showDeletingAlert" persistent>
     <q-card>
       <q-card-section class="row items-center">
-        <q-avatar icon="signal_wifi_off" color="primary" text-color="white"/>
+        <q-avatar icon="signal_wifi_off" color="primary" text-color="white" />
         <span class="q-ml-sm">You are currently not connected to any network.</span>
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn flat label="Cancel" color="primary" v-close-popup/>
-        <q-btn flat label="Turn on Wifi" color="primary" v-close-popup/>
+        <q-btn flat label="Cancel" color="primary" v-close-popup />
+        <q-btn flat label="Turn on Wifi" color="primary" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
 
   <q-table
     title="Users"
-    :rows="props.users"
+    :rows="users"
     :columns="columns"
     :pagination="pagination"
     row-key="serial_number"
-    style="max-height: 80vh;"
+    style="max-height: 80vh"
     virtual-scroll
     :loading="loading"
   >
     <template v-slot:loading>
-      <q-inner-loading showing color="primary"/>
+      <q-inner-loading showing color="primary" />
     </template>
 
     <template #body-cell-actions="props">

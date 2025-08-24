@@ -1,9 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { onBeforeMount, ref } from 'vue';
-import EssentialLink from 'src/components/EssentialLink.vue';
-import ROUTE_NAMES from 'src/router/structures/routeNames';
-import useAuthStore from 'src/stores/useAuthStore';
-import useUserStore from 'src/stores/useUserStore';
+import NavigationLink, { type INavigationLink } from 'components/navigation/NavigationLink.vue';
+import { ERouteNames } from 'src/router/structures/route-names.enum.js';
+import { useAuthStore } from 'stores/auth.store.js';
+import { useUserStore } from 'stores/user.store.js';
 
 defineOptions({
   name: 'MainLayout',
@@ -16,28 +16,28 @@ onBeforeMount(async () => {
   await userStore.loadUser();
 });
 
-const linksList = [
+const linksList: INavigationLink[] = [
   {
     title: 'Profiles',
     icon: 'fact_check',
-    routeName: ROUTE_NAMES.profiles,
+    routeName: ERouteNames.Profiles,
   },
   {
     title: 'Queue Jobs',
     icon: 'queue',
-    routeName: ROUTE_NAMES.jobs,
+    routeName: ERouteNames.Jobs,
   },
   {
     title: 'Users',
     icon: 'people_outline',
-    routeName: ROUTE_NAMES.users,
+    routeName: ERouteNames.Users,
   },
 ];
 
-const leftDrawerOpen = ref(false);
+const isLeftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
+  isLeftDrawerOpen.value = !isLeftDrawerOpen.value;
 }
 
 const onLogout = async () => {
@@ -62,9 +62,9 @@ const onLogout = async () => {
           CryDonkey
         </q-toolbar-title>
 
-        <q-btn-dropdown dropdown-icon="person" no-icon-animation :label="userStore.username" flat>
+        <q-btn-dropdown dropdown-icon="person" no-icon-animation :label="userStore.username || 'User'" flat>
           <q-list>
-            <q-item :to="{name: ROUTE_NAMES.userSettings}" clickable v-close-popup>
+            <q-item :to="{name: ERouteNames.UserSettings}" clickable v-close-popup>
               <q-item-section side>
                 <q-icon name="settings"></q-icon>
               </q-item-section>
@@ -87,22 +87,24 @@ const onLogout = async () => {
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+    <q-drawer v-model="isLeftDrawerOpen" show-if-above bordered>
       <q-list>
         <q-item-label header>
           Navigation
         </q-item-label>
 
-        <EssentialLink
+        <navigation-link
           v-for="link in linksList"
           :key="link.title"
-          v-bind="link"
-        />
+          :route-name="link.routeName"
+          :title="link.title"
+          :icon="link.icon"
+        ></navigation-link>
       </q-list>
     </q-drawer>
 
     <q-page-container>
-      <router-view/>
+      <router-view />
     </q-page-container>
   </q-layout>
 </template>

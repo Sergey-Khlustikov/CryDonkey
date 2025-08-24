@@ -1,34 +1,17 @@
 # CryDonkey (crydonkey)
 
-CryDonkey
-
 ## Install the dependencies
 ```bash
-yarn
-# or
-npm install
+yarn install
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+### Start the app in development mode
 ```bash
-quasar dev
+docker compose -f docker-compose.dev.yml --env-file .env.dev up --build
 ```
-
-
-### Lint the files
-```bash
-yarn lint
-# or
-npm run lint
-```
-
 
 
 ### Build the app for production
 ```bash
-quasar build
+docker compose -f docker-compose.yml --env-file .env.production up --build
 ```
-
-### Customize the configuration
-
-See [Configuring quasar.config.ts](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).

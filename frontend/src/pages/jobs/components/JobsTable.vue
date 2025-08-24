@@ -1,29 +1,27 @@
-<script setup>
-import {date} from 'quasar';
+<script setup lang="ts">
+import { date, type QTableColumn } from 'quasar';
 import JobStatusLabel from 'src/pages/jobs/components/JobStatusLabel.vue';
-import JOB_STATUSES from 'src/domains/jobs/structures/jobStatuses';
+import EJobStatuses from 'src/domains/jobs/structures/job-statuses.enum.js';
 import Timer from 'src/components/Timer.vue';
 import JobActions from 'src/pages/jobs/components/JobActions.vue';
-import AdsController from 'src/domains/ads/AdsController';
+import AdsPowerController from 'src/domains/ads-power/controllers/ads-power.controller.js';
+import type { IProjectJob } from 'src/domains/jobs/structures/project-job.interface.js';
+import type { IJobActionsEmits } from 'pages/jobs/components/JobActions.vue';
 
 defineOptions({
   name: 'JobsTable',
 });
 
-const props = defineProps({
-  jobs: {
-    type: Array,
-    required: true,
-  },
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-});
+interface Props {
+  jobs: IProjectJob[];
+  loading?: boolean;
+}
 
-const emit = defineEmits(['jobRemoved', 'jobRetried']);
+const { loading = false } = defineProps<Props>();
 
-const columns = [
+const emit = defineEmits<IJobActionsEmits>();
+
+const columns: QTableColumn[] = [
   {
     name: 'id',
     label: 'ID',
@@ -44,6 +42,7 @@ const columns = [
   {
     name: 'profile',
     label: 'Profile',
+    field: '',
     align: 'left',
     headerStyle: 'width: 100px',
   },
@@ -75,6 +74,8 @@ const columns = [
   {
     name: 'actions',
     align: 'right',
+    label: '',
+    field: '',
     headerStyle: 'width: 100px',
   },
 ];
@@ -82,22 +83,21 @@ const columns = [
 const pagination = {
   rowsPerPage: 0,
 };
-
 </script>
 
 <template>
   <q-table
     title="Jobs"
-    :rows="props.jobs"
+    :rows="jobs"
     :columns="columns"
     :pagination="pagination"
     row-key="serial_number"
-    style="max-height: 80vh;"
+    style="max-height: 80vh"
     virtual-scroll
     :loading="loading"
   >
     <template v-slot:loading>
-      <q-inner-loading showing color="primary"/>
+      <q-inner-loading showing color="primary" />
     </template>
 
     <template #body-cell-profile="props">
@@ -105,7 +105,7 @@ const pagination = {
         <div>Name: {{ props.row.data.profile.name }}</div>
         <div>ID: {{ props.row.data.profile.id }}</div>
         <q-btn
-          @click="AdsController.openAdsProfile(props.row.data.profile.id)"
+          @click="AdsPowerController.openAdsProfile(props.row.data.profile.id)"
           color="primary"
           size="xs"
           label="Open"
@@ -116,12 +116,12 @@ const pagination = {
     <template #body-cell-status="props">
       <q-td :props="props">
         <job-status-label :status="props.row.status">
-          <q-tooltip v-if="props.row.status === JOB_STATUSES.failed">
+          <q-tooltip v-if="props.row.status === EJobStatuses.Failed">
             {{ props.row.failedReason }}
           </q-tooltip>
         </job-status-label>
         <timer
-          v-if="props.row.status === JOB_STATUSES.delayed"
+          v-if="props.row.status === EJobStatuses.Delayed"
           :delay="props.row.opts.delay"
           :timestamp="props.row.timestamp"
         ></timer>

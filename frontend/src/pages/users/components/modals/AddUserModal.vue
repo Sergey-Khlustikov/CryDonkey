@@ -1,9 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { useDialogPluginComponent } from 'quasar';
 import { reactive, ref } from 'vue';
-import vRequired from 'src/helpers/validations/vRequired';
-import { USER_ROLES_SELECT_OPTIONS } from 'src/domains/user/structures/userRoles';
-import UserController from 'src/domains/user/controllers/UserController';
+import vRequired from 'src/helpers/validators/required.validator.js';
+import { USER_ROLES_SELECT_OPTIONS } from 'src/domains/user/structures/user-roles.enum.js';
+import UserController from 'src/domains/user/controllers/user.controller.js';
+import type { RUserCreate } from 'src/domains/user/requests/user-create.request.js';
 
 const props = defineProps({
   onUserAdded: {
@@ -19,7 +20,7 @@ const {
   onDialogCancel,
 } = useDialogPluginComponent();
 
-const userData = reactive({
+const userData: RUserCreate = reactive({
   username: '',
   password: '',
   role: '',
@@ -28,7 +29,7 @@ const userData = reactive({
 const showPassword = ref(false);
 const loading = ref(false);
 
-const onSubmit = async () => {
+const onSubmit = async (): Promise<void> => {
   try {
     loading.value = true;
 
@@ -44,7 +45,7 @@ const onSubmit = async () => {
 
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
-    <q-card class="q-dialog-plugin" style="width: 600px; max-width: 80vw;">
+    <q-card class="q-dialog-plugin" style="width: 600px; max-width: 80vw">
       <div class="text-h6 q-ml-md q-mt-md">Adding user</div>
 
       <q-form @submit="onSubmit" no-error-focus greedy>

@@ -1,24 +1,22 @@
-<script setup>
-import {ref, watch} from 'vue';
+<script setup lang="ts">
+import { ref, watch } from 'vue';
 import SelectProfilesCheckboxes from 'src/pages/profiles/components/SelectProfilesCheckboxes.vue';
+import type { IAdsPowerProfile } from 'src/domains/ads-power/structures/ads-power-profile.interface.js';
 
-const props = defineProps({
-  profiles: {
-    type: Array,
-    required: true,
-  },
-});
+const props = defineProps<{
+  profiles: IAdsPowerProfile[];
+}>();
 
 const emit = defineEmits(['update:modelValue']);
 
-const selectedProfiles = ref([]);
-const selectAll = ref(false);
+const selectedProfiles = ref<string[]>([]);
+const selectAll = ref<boolean>(false);
 
 watch(selectedProfiles, (newValue) => {
   selectAll.value = newValue.length === props.profiles.length;
 });
 
-const toggleSelectAll = (value) => {
+const toggleSelectAll = (value: boolean) => {
   selectAll.value = value;
 
   if (value) {
@@ -28,7 +26,7 @@ const toggleSelectAll = (value) => {
   }
 };
 
-const onSelectedUpdated = (value) => {
+const onSelectedUpdated = (value: string[]) => {
   selectedProfiles.value = value;
   emit('update:modelValue', selectedProfiles.value);
 };

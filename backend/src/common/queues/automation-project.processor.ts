@@ -1,8 +1,8 @@
 import { WorkerHost } from '@nestjs/bullmq';
-import EQueueNames from '@src/common/queues/enums/EQueueNames.js';
 import { ProjectQueuesManagerService } from '@src/modules/projects/services/project-queues-manager.service.js';
 import { DelayedError, Job } from 'bullmq';
 import minuteToMs from '@src/common/helpers/minuteToMs.js';
+import { EQueueNames } from '@crydonkey/shared';
 
 export abstract class AutomationProjectProcessor extends WorkerHost {
   protected abstract readonly queueName: EQueueNames;

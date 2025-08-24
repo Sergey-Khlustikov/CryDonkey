@@ -1,11 +1,11 @@
 import { AutomationProjectService } from '@src/common/queues/automation-project.service.js';
 import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
-import EQueueNames from '@src/common/queues/enums/EQueueNames.js';
 import { Queue } from 'bullmq';
 import { BlumRunDto } from '@src/modules/projects/blum/dto/blum-run.dto.js';
 import { IAuthUser } from '@src/modules/user/structures/auth-user.interface.js';
 import shuffleArray from '@src/common/helpers/shuffleArray.js';
+import { EQueueNames } from '@crydonkey/shared';
 
 @Injectable()
 export class BlumService extends AutomationProjectService {

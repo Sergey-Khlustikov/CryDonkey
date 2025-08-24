@@ -1,24 +1,11 @@
-<script setup>
-import { onMounted, reactive, watch } from 'vue';
-import vRequired from 'src/helpers/validations/vRequired';
-import vMoreThan from 'src/helpers/validations/vMoreThan';
-import vLessOrEqualThan from 'src/helpers/validations/vLessOrEqualThan';
+<script setup lang="ts">
+import vRequired from 'src/helpers/validators/required.validator.js';
+import vMoreThan from 'src/helpers/validators/more-than.validator.js';
+import vLessOrEqualThan from 'src/helpers/validators/less-or-equal-than.validator.js';
 import CollapsableModalSection from 'src/components/modals/CollapsableModalSection.vue';
+import type { IIdaoRunSettings } from 'src/domains/projects/idao/structures/idao.run-settings.interface.js';
 
-const forecastOptions = reactive({
-  minTargetPriceDeviation: 0,
-  maxTargetPriceDeviation: 1,
-});
-
-const emit = defineEmits(['update:modelValue']);
-
-onMounted(() => {
-  emit('update:modelValue', forecastOptions);
-});
-
-watch(forecastOptions, (newValue) => {
-  emit('update:modelValue', newValue);
-});
+const model = defineModel<IIdaoRunSettings>({ required: true });
 </script>
 
 <template>
@@ -26,7 +13,7 @@ watch(forecastOptions, (newValue) => {
     <q-card-section>
       <div class="row q-col-gutter-md">
         <q-input
-          v-model.number="forecastOptions.minTargetPriceDeviation"
+          v-model.number="model.minTargetPriceDeviation"
           outlined
           stack-label
           label="Min target price deviation"
@@ -39,15 +26,15 @@ watch(forecastOptions, (newValue) => {
         </q-input>
 
         <q-input
-          v-model.number="forecastOptions.maxTargetPriceDeviation"
+          v-model.number="model.maxTargetPriceDeviation"
           outlined
           stack-label
           label="Max target price deviation"
           :rules="[
-                vRequired,
-                value => vMoreThan(value, forecastOptions.minTargetPriceDeviation),
-                value => vLessOrEqualThan(value, 100),
-              ]"
+            vRequired,
+            (value) => vMoreThan(value, model.minTargetPriceDeviation),
+            (value) => vLessOrEqualThan(value, 100),
+          ]"
           type="number"
           step="0.01"
           class="col-4"

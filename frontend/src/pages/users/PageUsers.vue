@@ -1,12 +1,13 @@
-<script setup>
+<script setup lang="ts">
 import { onBeforeMount, ref } from 'vue';
-import UserController from 'src/domains/user/controllers/UserController';
+import UserController from 'src/domains/user/controllers/user.controller.js';
 import UsersTable from 'src/pages/users/components/UsersTable.vue';
 import AddUserModal from 'src/pages/users/components/modals/AddUserModal.vue';
 import { useQuasar } from 'quasar';
+import type { IUser } from 'src/domains/user/structures/user.interface.js';
 
 const $q = useQuasar();
-const users = ref([]);
+const users = ref<IUser[]>([]);
 const loading = ref(false);
 
 const getUsers = async () => {
@@ -19,11 +20,11 @@ const getUsers = async () => {
   }
 };
 
-onBeforeMount(() => {
-  getUsers();
+onBeforeMount(async () => {
+  await getUsers();
 });
 
-const openAddUserModal = async () => {
+const openAddUserModal = () => {
   $q.dialog({
     component: AddUserModal,
     componentProps: {
@@ -32,7 +33,7 @@ const openAddUserModal = async () => {
   });
 };
 
-const onUserRemoved = (user) => {
+const onUserRemoved = (user: IUser) => {
   users.value = users.value.filter(us => us.id !== user.id);
 };
 </script>

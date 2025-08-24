@@ -1,41 +1,19 @@
-<script setup>
+<script setup lang="ts">
 import { useQuasar } from 'quasar';
-import RcadeModal from 'src/pages/profiles/components/modals/RcadeModal.vue';
-import TwitterPostModal from 'src/domains/twitter/modals/twitterPostModal/TwitterPostModal.vue';
-import BlumModal from 'src/domains/projects/blum/components/modals/BlumModal.vue';
+import TwitterPostModal from 'src/domains/twitter/modals/twitter-post-modal/TwitterPostModal.vue';
 import IdaoModal from 'src/domains/projects/idao/components/modals/IdaoModal.vue';
-import DawnController from 'src/domains/projects/dawn/controllers/DawnController.js';
-import RabbyController from 'src/domains/extentions/rabby/RabbyController';
+import DawnController from 'src/domains/projects/dawn/controllers/dawn.controller.js';
+import RabbyController from 'src/domains/extentions/rabby/controllers/rabby.controller.js';
+import type { IAdsPowerProfile } from 'src/domains/ads-power/structures/ads-power-profile.interface.js';
 
 const $q = useQuasar();
-const props = defineProps({
-  profiles: {
-    type: Array,
-    required: true,
-  },
-});
-
-function openRcadeModal() {
-  $q.dialog({
-    component: RcadeModal,
-    componentProps: {
-      profiles: props.profiles,
-    },
-  });
-}
+const props = defineProps<{
+  profiles: IAdsPowerProfile[]
+}>();
 
 function openTwitterPostModal() {
   $q.dialog({
     component: TwitterPostModal,
-    componentProps: {
-      profiles: props.profiles,
-    },
-  });
-}
-
-function openBlumModal() {
-  $q.dialog({
-    component: BlumModal,
     componentProps: {
       profiles: props.profiles,
     },
@@ -68,29 +46,11 @@ async function unlockRabby() {
   <div class="q-pa-md">
     <q-btn-dropdown color="primary" label="Run Job" :disable="!profiles.length">
       <q-list>
-        <q-item clickable v-close-popup @click="openRcadeModal">
-          <q-item-section>
-            <q-item-label>
-              <q-icon name="play_arrow"></q-icon>
-              Rcade
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-
         <q-item clickable v-close-popup @click="openTwitterPostModal">
           <q-item-section>
             <q-item-label>
               <q-icon name="play_arrow"></q-icon>
               Twitter Post
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <q-item clickable v-close-popup @click="openBlumModal">
-          <q-item-section>
-            <q-item-label>
-              <q-icon name="play_arrow"></q-icon>
-              Blum
             </q-item-label>
           </q-item-section>
         </q-item>

@@ -1,5 +1,6 @@
 .DS_Store
 .thumbs.db
+node_modules
 
 .idea
 *.suo
@@ -7,4 +8,5 @@
 *.njsproj
 *.sln
 
-.env
+.env.production
+.env.dev
