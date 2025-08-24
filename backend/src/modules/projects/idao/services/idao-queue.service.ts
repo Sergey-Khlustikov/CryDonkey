@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { AutomationProjectService } from '@src/common/queues/automation-project.service.js';
 import { InjectQueue } from '@nestjs/bullmq';
-import EQueueNames from '@src/common/queues/enums/EQueueNames.js';
 import { Queue } from 'bullmq';
 import { IdaoRunDTO } from '@src/modules/projects/idao/dto/idao-run.dto.js';
 import shuffleArray from '@src/common/helpers/shuffleArray.js';
 import { IAuthUser } from '@src/modules/user/structures/auth-user.interface.js';
+import { EQueueNames } from '@crydonkey/shared';
 
 @Injectable()
 export class IdaoQueueService extends AutomationProjectService {

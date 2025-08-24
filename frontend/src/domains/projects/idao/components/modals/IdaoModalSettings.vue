@@ -1,8 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import IdaoModalSettingsForecast from 'src/domains/projects/idao/components/modals/IdaoModalSettingsForecast.vue';
+import type { IIdaoRunSettings } from 'src/domains/projects/idao/structures/idao.run-settings.interface.js';
 
-const settings = defineModel();
-
+const settings = defineModel<IIdaoRunSettings>({ required: true });
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 import { Exclude, Expose, plainToInstance } from 'class-transformer';
-import { Job } from 'bullmq';
+import { Job, JobsOptions } from 'bullmq';
 
 @Exclude()
 export class ProjectJobEntity {
@@ -13,7 +13,7 @@ export class ProjectJobEntity {
   data: any;
 
   @Expose()
-  opts: any;
+  opts: JobsOptions;
 
   @Expose()
   progress: number;

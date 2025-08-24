@@ -1,8 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import ArrowBtn from 'src/components/ArrowBtn.vue';
 import { ref } from 'vue';
 
-const props = defineProps({
+defineProps({
   headerText: {
     type: String,
     default: '',
@@ -15,7 +15,7 @@ const expanded = ref(true);
 <template>
   <q-card bordered>
     <q-card-section @click="expanded = !expanded" class="flex justify-between items-center cursor-pointer">
-      <div class="text-h6">{{ props.headerText }}</div>
+      <div class="text-h6">{{ headerText }}</div>
       <q-space/>
 
       <arrow-btn :model-value="expanded"></arrow-btn>

@@ -4,7 +4,8 @@ services:
   server:
     container_name: crydonkey-server
     build:
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
       target: ${ENVIRONMENT}
     image: crydonkey-server
     ports:
@@ -13,10 +14,23 @@ services:
       - redis
       - mongo
     env_file:
-      - ./.env
+      - .env.production
       - ./backend/.env
-    volumes:
-      - ./backend/src:/usr/src/app/src
+    networks:
+      - crydonkey-network
+
+  frontend:
+    container_name: crydonkey-frontend
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      target: ${ENVIRONMENT}
+    image: crydonkey-frontend
+    expose:
+      - "80"
+    env_file:
+      - .env.production
+      - ./frontend/.env
     networks:
       - crydonkey-network
 
@@ -45,20 +59,6 @@ services:
       crydonkey-network:
         aliases:
           - mongo
-
-  frontend:
-    container_name: crydonkey-frontend
-    build:
-      context: ./frontend
-      target: ${ENVIRONMENT}
-    image: crydonkey-frontend
-    expose:
-      - "80"
-    env_file:
-      - ./.env
-      - ./frontend/.env
-    networks:
-      - crydonkey-network
 
   nginx:
     image: nginx:alpine

@@ -1,5 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
-import EQueueNames from '@src/common/queues/enums/EQueueNames.js';
+import { EQueueNames } from '@crydonkey/shared';
 
 export class RemoveJobDto {
   @IsNotEmpty()

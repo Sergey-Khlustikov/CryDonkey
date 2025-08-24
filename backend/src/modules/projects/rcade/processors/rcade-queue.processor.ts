@@ -1,18 +1,13 @@
 import { AutomationProjectProcessor } from '@src/common/queues/automation-project.processor.js';
-import EQueueNames from '@src/common/queues/enums/EQueueNames.js';
 import { Processor } from '@nestjs/bullmq';
 import { ProjectQueuesManagerService } from '@src/modules/projects/services/project-queues-manager.service.js';
 import { AdsPowerApiService } from '@src/modules/ads-power/services/ads-power-api.service.js';
 import { Job } from 'bullmq';
-import IBaseJobProfile from '@src/modules/projects/types/IBaseJobProfile.js';
 import { Browser, ElementHandle, Page } from 'puppeteer';
-import {
-  hoverAndClick,
-  minimizeBrowser,
-  wait,
-} from '@src/common/helpers/puppeteer/puppeteerHelpers.js';
+import { hoverAndClick, minimizeBrowser, wait } from '@src/common/helpers/puppeteer/puppeteerHelpers.js';
 import getRandomArrayElement from '@src/common/helpers/getRandomArrayElement.js';
 import PageScroller from '@src/common/helpers/puppeteer/PageScroller.js';
+import { EQueueNames, IBaseJobProfile } from '@crydonkey/shared';
 
 @Processor(EQueueNames.Rcade)
 export class RcadeQueueProcessor extends AutomationProjectProcessor {

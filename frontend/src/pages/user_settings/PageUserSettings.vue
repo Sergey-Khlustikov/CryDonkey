@@ -1,16 +1,9 @@
-<script>
+<script setup lang="ts">
 import { ref } from 'vue';
 import UserSettingsGeneralTab from 'src/pages/user_settings/components/UserSettingsGeneralTab.vue';
 
-export default {
-  components: { UserSettingsGeneralTab },
-  setup() {
-    return {
-      tab: ref('general'),
-      splitterModel: ref(20),
-    };
-  },
-};
+const tab = ref('general');
+const splitterModel = ref(20);
 </script>
 
 <template>

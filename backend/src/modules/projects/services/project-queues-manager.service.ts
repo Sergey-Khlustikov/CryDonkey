@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
-import EQueueNames from '@src/common/queues/enums/EQueueNames.js';
 import { RetryJobDto } from '@src/modules/projects/dto/retry-job.dto.js';
 import { RemoveJobDto } from '@src/modules/projects/dto/remove-job.dto.js';
+import { EQueueNames } from '@crydonkey/shared';
 
 @Injectable()
 export class ProjectQueuesManagerService {

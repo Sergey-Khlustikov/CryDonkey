@@ -1,6 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
-import JOB_STATUSES from 'src/domains/jobs/structures/jobStatuses';
+import EJobStatuses from 'src/domains/jobs/structures/job-statuses.enum.js';
 
 const props = defineProps({
   status: {
@@ -11,16 +11,16 @@ const props = defineProps({
 
 const title = computed(() => {
   switch (props.status) {
-    case JOB_STATUSES.completed:
+    case EJobStatuses.Completed:
       return 'Completed';
 
-    case JOB_STATUSES.failed:
+    case EJobStatuses.Failed:
       return 'Failed';
 
-    case JOB_STATUSES.active:
+    case EJobStatuses.Active:
       return 'Active';
 
-    case JOB_STATUSES.delayed:
+    case EJobStatuses.Delayed:
       return 'Delayed';
 
     default:
@@ -30,13 +30,13 @@ const title = computed(() => {
 
 const color = computed(() => {
   switch (props.status) {
-    case JOB_STATUSES.completed:
+    case EJobStatuses.Completed:
       return 'green';
 
-    case JOB_STATUSES.failed:
+    case EJobStatuses.Failed:
       return 'red';
 
-    case JOB_STATUSES.active:
+    case EJobStatuses.Active:
       return 'primary';
 
     default:

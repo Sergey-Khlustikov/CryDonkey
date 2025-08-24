@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ProjectQueuesManagerService } from '@src/modules/projects/services/project-queues-manager.service.js';
 import { BullModule } from '@nestjs/bullmq';
-import EQueueNames from '@src/common/queues/enums/EQueueNames.js';
 import { ProjectQueuesManagerController } from '@src/modules/projects/controllers/project-queues-manager.controller.js';
+import { EQueueNames } from '@crydonkey/shared';
 
 const defaultJobOptions = {
   removeOnComplete: true,

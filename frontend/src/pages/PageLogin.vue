@@ -1,9 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import ROUTE_NAMES from 'src/router/structures/routeNames';
-import vRequired from 'src/helpers/validations/vRequired';
-import useAuthStore from 'src/stores/useAuthStore';
+import { ERouteNames } from 'src/router/structures/route-names.enum.js';
+import vRequired from 'src/helpers/validators/required.validator.js';
+import { useAuthStore } from 'stores/auth.store.js';
 
 const authStore = useAuthStore();
 
@@ -11,9 +11,9 @@ const username = ref('');
 const password = ref('');
 const router = useRouter();
 
-const onLogin = async () => {
+const onLogin = async (): Promise<void> => {
   await authStore.login(username.value, password.value);
-  await router.push({ name: ROUTE_NAMES.profiles });
+  await router.push({ name: ERouteNames.Profiles });
 };
 </script>
 

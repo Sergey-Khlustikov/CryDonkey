@@ -2,21 +2,16 @@ import { Processor } from '@nestjs/bullmq';
 import { AutomationProjectProcessor } from '@src/common/queues/automation-project.processor.js';
 import { Job } from 'bullmq';
 import { ProjectQueuesManagerService } from '@src/modules/projects/services/project-queues-manager.service.js';
-import EQueueNames from '@src/common/queues/enums/EQueueNames.js';
 import { AdsPowerApiService } from '@src/modules/ads-power/services/ads-power-api.service.js';
-import IBaseJobProfile from '@src/modules/projects/types/IBaseJobProfile.js';
 import { Browser, Page } from 'puppeteer';
 import IIdaoForecastOptions from '@src/modules/projects/idao/types/idao-forecast-options.interface.js';
-import {
-  hoverAndClick,
-  minimizeBrowser,
-  wait,
-} from '@src/common/helpers/puppeteer/puppeteerHelpers.js';
+import { hoverAndClick, minimizeBrowser, wait } from '@src/common/helpers/puppeteer/puppeteerHelpers.js';
 import { IdaoForecastHandler } from '@src/modules/projects/idao/processors/handlers/idao-forecast.handler.js';
 import { retryMethodWithReload } from '@src/common/helpers/retryMethod.js';
 import getButtonByText from '@src/common/helpers/puppeteer/getButtonByText.js';
 import PageScroller from '@src/common/helpers/puppeteer/PageScroller.js';
 import { RabbyService } from '@src/modules/extensions/rabby/services/rabby.service.js';
+import { EQueueNames, IBaseJobProfile } from '@crydonkey/shared';
 
 @Processor(EQueueNames.Idao)
 export class IdaoQueueProcessor extends AutomationProjectProcessor {

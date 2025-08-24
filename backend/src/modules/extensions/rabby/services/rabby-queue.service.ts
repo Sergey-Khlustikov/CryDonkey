@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { RabbyUnlockDto } from '@src/modules/extensions/rabby/dto/rabby-unlock.dto.js';
 import { IAuthUser } from '@src/modules/user/structures/auth-user.interface.js';
-import EQueueNames from '@src/common/queues/enums/EQueueNames.js';
 import { AutomationProjectService } from '@src/common/queues/automation-project.service.js';
 import { Queue } from 'bullmq';
+import { EQueueNames } from '@crydonkey/shared';
 
 @Injectable()
 export class RabbyQueueService extends AutomationProjectService {

@@ -1,5 +1,5 @@
 import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import IBaseJobProfile from '@src/modules/projects/types/IBaseJobProfile.js';
+import { IBaseJobProfile } from '@crydonkey/shared';
 
 export class RunJobBaseDto {
   @IsArray()

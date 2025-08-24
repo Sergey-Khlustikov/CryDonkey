@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import useAuthStore from 'src/stores/useAuthStore';
+import { useAuthStore } from 'stores/auth.store.js';
 
 defineOptions({
   name: 'App',

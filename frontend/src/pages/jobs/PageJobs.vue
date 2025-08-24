@@ -1,9 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import { onBeforeMount, ref } from 'vue';
-import JobsController from 'src/domains/jobs/JobsController';
+import JobsController from 'src/domains/jobs/controllers/jobs.controller.js';
 import JobsTable from 'src/pages/jobs/components/JobsTable.vue';
+import type { IProjectJob } from 'src/domains/jobs/structures/project-job.interface.js';
+import type { IJobsRemovedPayload } from 'pages/jobs/components/JobActions.vue';
 
-const jobs = ref([]);
+const jobs = ref<IProjectJob[]>([]);
 const loading = ref(false);
 
 const getJobs = async () => {
@@ -16,8 +18,8 @@ const getJobs = async () => {
   }
 };
 
-onBeforeMount(() => {
-  getJobs();
+onBeforeMount(async () => {
+  await getJobs();
 });
 
 const deleteJobs = async () => {
@@ -30,7 +32,7 @@ const retryFailed = async () => {
   await getJobs();
 };
 
-const onJobRemoved = ({ id, queueName }) => {
+const onJobRemoved = ({ id, queueName }: IJobsRemovedPayload) => {
   jobs.value = jobs.value.filter(job => {
     return !(job.id === id && job.name === queueName);
   });

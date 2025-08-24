@@ -4,7 +4,8 @@ services:
   server:
     container_name: crydonkey-server-dev
     build:
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
       target: dev
     image: crydonkey-server:dev
     ports:
@@ -12,13 +13,49 @@ services:
     depends_on:
       - redis
       - mongo
+      - shared
     env_file:
-      - ./.env
+      - ./.env.dev
       - ./backend/.env
     volumes:
-      - ./backend/src:/usr/src/app/src
+      - ./backend:/usr/src/app/backend
+      - /usr/src/app/node_modules
+      - /usr/src/app/backend/node_modules
+      - ./shared:/usr/src/app/shared
     networks:
       - crydonkey-network
+
+  frontend:
+    container_name: crydonkey-frontend-dev
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      target: dev
+    image: crydonkey-frontend:dev
+    volumes:
+      - ./frontend/src:/usr/src/app/frontend/src
+      - ./shared:/usr/src/app/shared
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./.env.dev
+      - ./frontend/.env
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - shared
+    networks:
+      - crydonkey-network
+
+  shared:
+    build:
+      context: .
+      dockerfile: shared/Dockerfile
+    volumes:
+      - ./shared:/usr/src/app/shared
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    command: yarn build:watch
 
   redis:
     image: redis:alpine
@@ -45,22 +82,6 @@ services:
       crydonkey-network:
         aliases:
           - mongo
-
-  frontend:
-    container_name: crydonkey-frontend-dev
-    build:
-      context: ./frontend
-      target: dev
-    image: crydonkey-frontend:dev
-    volumes:
-      - ./frontend/src:/app/src
-    ports:
-      - "8080:8080"
-    env_file:
-      - ./.env
-      - ./frontend/.env
-    networks:
-      - crydonkey-network
 
 networks:
   crydonkey-network:

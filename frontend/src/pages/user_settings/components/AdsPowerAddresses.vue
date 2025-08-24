@@ -1,14 +1,21 @@
-<script setup>
+<script setup lang="ts">
 import { onBeforeMount, ref } from 'vue';
-import AdsPowerAddressController from 'src/domains/user/controllers/AdsPowerAddressController';
-import vRequired from 'src/helpers/validations/vRequired';
+import AdsPowerAddressController from 'src/domains/ads-power/controllers/ads-power-address.controller.js';
+import vRequired from 'src/helpers/validators/required.validator.js';
+import type { IAdsPowerAddress } from 'src/domains/ads-power/structures/ads-power-address.interface.js';
 
 const activeAddress = defineModel('activeAddress');
-const addresses = ref([]);
+
+type UIAdsPowerAddress = Omit<IAdsPowerAddress, 'id'> & {
+  id?: string;
+  editable?: boolean;
+};
+const addresses = ref<UIAdsPowerAddress[]>([]);
+
 const loading = ref(false);
 
-onBeforeMount(() => {
-  getList();
+onBeforeMount(async () => {
+  await getList();
 });
 
 const getList = async () => {
@@ -28,12 +35,12 @@ const addAddress = () => {
   addresses.value.push({
     name: '',
     host: '',
-    port: '',
+    port: 0,
     editable: true,
   });
 };
 
-const saveAddress = async (address) => {
+const saveAddress = async (address: UIAdsPowerAddress) => {
   const params = {
     name: address.name,
     host: address.host,
@@ -49,10 +56,10 @@ const saveAddress = async (address) => {
   await getList();
 };
 
-const deleteAddress = async (id) => {
+const deleteAddress = async (id: string) => {
   await AdsPowerAddressController.delete(id);
 
-  addresses.value = addresses.value.filter(address => address.id !== id);
+  addresses.value = addresses.value.filter((address) => address.id !== id);
 };
 </script>
 
@@ -73,7 +80,14 @@ const deleteAddress = async (id) => {
 
         <div>
           <q-btn @click="address.editable = true" icon="edit" flat color="warning" round></q-btn>
-          <q-btn @click="deleteAddress(address.id)" icon="delete" flat color="red" round></q-btn>
+          <q-btn
+            v-if="address.id"
+            @click="deleteAddress(address.id)"
+            icon="delete"
+            flat
+            color="red"
+            round
+          ></q-btn>
         </div>
       </div>
 
@@ -116,7 +130,7 @@ const deleteAddress = async (id) => {
     </div>
 
     <q-btn
-      v-if="!addresses.length || addresses.every(address => !!address.id)"
+      v-if="!addresses.length || addresses.every((address) => !!address.id)"
       @click="addAddress"
       class="q-mt-sm"
       label="Add new address"

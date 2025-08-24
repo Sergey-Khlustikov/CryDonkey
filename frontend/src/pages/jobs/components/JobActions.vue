@@ -1,15 +1,31 @@
-<script setup>
-import JOB_STATUSES from 'src/domains/jobs/structures/jobStatuses';
-import JobsController from 'src/domains/jobs/JobsController';
+<script setup lang="ts">
+import EJobStatuses from 'src/domains/jobs/structures/job-statuses.enum.js';
+import JobsController from 'src/domains/jobs/controllers/jobs.controller.js';
+import type { IProjectJob } from 'src/domains/jobs/structures/project-job.interface.js';
+import type { EQueueNames } from '@crydonkey/shared';
 
-const props = defineProps({
-  job: {
-    type: Object,
-    required: true,
-  },
-});
+interface Props {
+  job: IProjectJob;
+}
 
-const emit = defineEmits(['jobRemoved', 'jobRetried']);
+const props = defineProps<Props>();
+
+export interface IJobsPageRetriedPayload {
+  id: string;
+  queueName: EQueueNames,
+}
+
+export interface IJobsRemovedPayload {
+  id: string;
+  queueName: EQueueNames,
+}
+
+export interface IJobActionsEmits {
+  jobRetried: [IJobsPageRetriedPayload],
+  jobRemoved: [IJobsRemovedPayload],
+}
+
+const emit = defineEmits<IJobActionsEmits>();
 
 const retryJob = async () => {
   await JobsController.retry(props.job.id, props.job.name);
@@ -25,7 +41,7 @@ const removeJob = async () => {
 <template>
   <div>
     <q-btn
-      v-if="props.job.status === JOB_STATUSES.failed"
+      v-if="props.job.status === EJobStatuses.Failed"
       @click="retryJob"
       color="green"
       class="q-ml-sm"
@@ -34,7 +50,7 @@ const removeJob = async () => {
       <q-icon name="refresh"></q-icon>
     </q-btn>
     <q-btn
-      v-if="props.job.status !== JOB_STATUSES.active"
+      v-if="props.job.status !== EJobStatuses.Active"
       @click="removeJob"
       color="red"
       class="q-ml-sm"

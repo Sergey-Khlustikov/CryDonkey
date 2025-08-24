@@ -1,11 +1,13 @@
-<script setup>
+<script setup lang="ts">
 import { onBeforeMount, ref } from 'vue';
-import UserAppSettingsController from 'src/domains/user/controllers/UserAppSettingsController';
+import UserAppSettingsController from 'src/domains/user/controllers/user-app-settings.controller.js';
 import AdsPowerAddresses from 'src/pages/user_settings/components/AdsPowerAddresses.vue';
+import type { IUserAppSettings } from 'src/domains/user/structures/user-app-settings.interface.js';
+import type { RUserAppSettingsUpdate } from 'src/domains/user/requests/user-app-settings.update.request.js';
 
-const appSettings = ref({});
+const appSettings = ref<IUserAppSettings | null>(null);
 const loading = ref(false);
-const selectedActiveAddress = ref(null);
+const selectedActiveAddress = ref<string | null>(null);
 
 const getUserAppSettings = async () => {
   try {
@@ -18,11 +20,14 @@ const getUserAppSettings = async () => {
 };
 
 const saveSettings = async () => {
-  await UserAppSettingsController.update({ activeAdsPowerAddress: selectedActiveAddress.value });
+  const params: RUserAppSettingsUpdate = {
+    activeAdsPowerAddress: selectedActiveAddress.value,
+  };
+  await UserAppSettingsController.update(params);
 };
 
-onBeforeMount(() => {
-  getUserAppSettings();
+onBeforeMount(async () => {
+  await getUserAppSettings();
 });
 </script>
 

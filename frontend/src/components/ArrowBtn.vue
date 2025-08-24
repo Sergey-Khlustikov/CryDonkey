@@ -1,5 +1,5 @@
-<script setup>
-const model = defineModel();
+<script setup lang="ts">
+const model = defineModel<boolean>();
 const emits = defineEmits(['click']);
 
 const onClick = () => {

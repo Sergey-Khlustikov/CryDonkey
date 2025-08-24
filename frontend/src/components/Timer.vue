@@ -1,24 +1,16 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 
-const props = defineProps({
-  delay: {
-    type: Number,
-    required: true,
-  },
-  timestamp: {
-    type: Number,
-    required: true,
-  },
-});
+const props = defineProps<{
+  delay: number;
+  timestamp: number;
+}>();
 
-// Вычисляем оставшееся время до выполнения задачи
 const endTime = computed(() => props.timestamp + props.delay);
-
-// Таймер обратного отсчета
 const timeRemaining = ref(endTime.value - Date.now());
+const timerInterval = ref<ReturnType<typeof setInterval> | null>(null);
 
-const formattedTime = computed(() => {
+const formattedTime = computed<string>(() => {
   const totalSeconds = Math.max(Math.floor(timeRemaining.value / 1000), 0);
   const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
   const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
@@ -27,7 +19,7 @@ const formattedTime = computed(() => {
   return `${hours}:${minutes}:${seconds}`;
 });
 
-const updateTimer = () => {
+const updateTimer = (): void => {
   const now = Date.now();
   const remaining = endTime.value - now;
 
@@ -35,25 +27,30 @@ const updateTimer = () => {
     timeRemaining.value = remaining;
   } else {
     timeRemaining.value = 0;
-    clearInterval(timerInterval.value);
+
+    if (timerInterval.value !== null) {
+      clearInterval(timerInterval.value);
+      timerInterval.value = null;
+    }
   }
 };
 
-const timerInterval = ref(null);
-
 onMounted(() => {
-  updateTimer(); // Обновляем таймер сразу при монтировании
+  updateTimer();
   timerInterval.value = setInterval(updateTimer, 1000);
 });
 
-watch(() => [props.delay, props.timestamp], () => {
-  endTime.value = props.timestamp + props.delay;
-  timeRemaining.value = endTime.value - Date.now();
-  if (timerInterval.value) {
-    clearInterval(timerInterval.value);
-    timerInterval.value = setInterval(updateTimer, 1000);
-  }
-});
+watch(
+  () => [props.delay, props.timestamp],
+  () => {
+    timeRemaining.value = endTime.value - Date.now();
+
+    if (timerInterval.value !== null) {
+      clearInterval(timerInterval.value);
+      timerInterval.value = setInterval(updateTimer, 1000);
+    }
+  },
+);
 </script>
 
 <template>
